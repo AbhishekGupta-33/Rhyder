@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import CustomButton, { ButtonType } from '../components/CustomButtons';
+import CustomButton, { ButtonType } from '../../../components/CustomButtons';
 
 const Login: React.FC = (props: any) => {
     return (

@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Splash from '../screens/Splash';
-import Login from '../screens/Login';
-import Signup from '../screens/Signup';
-import Home from '../screens/Home';
-import Otp from '../screens/OTP';
+import Splash from '../modules/Splash';
+import Login from '../modules/Authentication/screens/Login';
+import Signup from '../modules/Authentication/screens/Signup';
+import Home from '../modules/UserNavigation/screens/Home';
+import Otp from '../modules/Authentication/screens/OTP';
 
 const Stack = createStackNavigator();
 
