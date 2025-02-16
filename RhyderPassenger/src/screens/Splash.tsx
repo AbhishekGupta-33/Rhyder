@@ -5,7 +5,7 @@ import CustomButton, { ButtonType } from '../components/CustomButtons';
 const Splash: React.FC = (props: any) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Welcome to the Splash</Text>
+            <Text style={styles.text}>Welcome to the App</Text>
             <CustomButton
                 buttonTitle="Click"
                 onPress={() => {
