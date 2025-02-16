@@ -1,25 +1,28 @@
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { appImage } from '../utils/Constants';
 
 interface AppImageProps {
   source: any;
   style?: object;
-  placeholderSource: any;
+  placeholderSource?: any;
 }
 
 const AppImage: React.FC<AppImageProps> = ({
   source,
   style,
-  placeholderSource,
+  placeholderSource = {uri: appImage.staticImage},
 }) => {
   const [loading, setLoading] = useState(true);
+
+  const loadedPlaceholderSource = placeholderSource ? placeholderSource : {uri: appImage.staticImage}
 
   return (
     <View style={[styles.container, style]}>
       {loading && (
         <FastImage
-          source={placeholderSource}
+          source={loadedPlaceholderSource}
           style={[styles.image, styles.placeholder]}
         />
       )}

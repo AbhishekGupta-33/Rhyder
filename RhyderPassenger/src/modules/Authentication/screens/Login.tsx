@@ -1,204 +1,192 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  BackHandler,
 } from 'react-native';
-import {Checkbox} from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 import {
   AppButton,
   AppHeader,
   AppText,
   AppTextInput,
   ButtonType,
+  ShadowCard,
 } from '../../../components';
+import {
+  hasData,
+  hasValidEmailOrPhoneNumber,
+  removeSpaces,
+} from '../../../utils/Validators';
+import { AppString } from '../../../utils/AppString';
 
 const Login: React.FC = (props: any) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [userLoginDetail, setUserLoginDetail] = useState({
+    userName: '',
+    userNameError: '',
+    password: '',
+    passwordError: '',
+  });
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = () => {
-    console.log('Hello Login');
+    if (!hasData(userLoginDetail.userName)) {
+      setUserLoginDetail(prev => ({
+        ...prev,
+        userNameError: AppString.screens.auth.login.emailOrPhoneError,
+      }));
+    } else if (!hasData(userLoginDetail.password)) {
+      setUserLoginDetail(prev => ({
+        ...prev,
+        passwordError: AppString.screens.auth.login.passwordError,
+      }));
+    } else {
+      // API Call Logic
+    }
+  };
+
+  const fetchInfieldEmailOrPhoneNumberData = (input: string) => {
+    let userNameError = hasValidEmailOrPhoneNumber(input)
+      ? ''
+      : AppString.screens.auth.login.emailOrPhoneError;
+
+    setUserLoginDetail(prev => ({
+      ...prev,
+      userName: removeSpaces(input),
+      userNameError,
+    }));
+  };
+
+  const fetchInfieldPasswordData = (input: string) => {
+    let passwordError = hasData(input)
+      ? ''
+      : AppString.screens.auth.login.passwordError;
+
+    setUserLoginDetail(prev => ({
+      ...prev,
+      password: removeSpaces(input),
+      passwordError,
+    }));
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <View style={styles.card}>
+        <ShadowCard style={styles.card}>
           <AppHeader
-            headerTitle={'Login'}
-            onBackPress={() => {
-              BackHandler.exitApp();
-            }}
-            onInfoPress={() => {
-              console.log('Hello info click');
-            }}
+            headerTitle={AppString.screens.auth.login.header}
+            onBackPress={() => props.navigation.goBack()}
           />
 
           <TouchableOpacity style={styles.googleButton}>
-            <AppText style={styles.googleText}>Continue With Google</AppText>
+            <AppText style={styles.googleText}>
+              {AppString.screens.auth.login.googleButton}
+            </AppText>
           </TouchableOpacity>
 
           <View style={styles.dividerContainer}>
             <View style={styles.line} />
-            <AppText style={styles.orText}>OR</AppText>
+            <AppText style={styles.orText}>
+              {AppString.screens.auth.login.orText}
+            </AppText>
             <View style={styles.line} />
           </View>
 
           <AppTextInput
-            label="Email or Phone Number"
-            value={email}
-            onChangeText={setEmail}
-            mode="outlined"
-            placeholder="Enter Email or Phone Number"
-            style={styles.input}
-            required={true}
+            label={AppString.screens.auth.login.emailOrPhoneLabel}
+            value={userLoginDetail.userName}
+            onChangeText={fetchInfieldEmailOrPhoneNumberData}
+            placeholder={AppString.screens.auth.login.emailOrPhonePlaceholder}
+            error={userLoginDetail.userNameError}
           />
 
           <AppTextInput
-            label="Password"
-            value={password}
-            onChangeText={setPassword}
-            mode="outlined"
-            placeholder="Enter Password"
+            label={AppString.screens.auth.login.passwordLabel}
+            value={userLoginDetail.password}
+            onChangeText={fetchInfieldPasswordData}
+            placeholder={AppString.screens.auth.login.passwordPlaceholder}
             secureTextEntry={!isPasswordVisible}
-            style={styles.input}
-            required={true}
+            error={userLoginDetail.passwordError}
           />
 
           <View style={styles.options}>
             <View style={styles.rememberMe}>
-              <Checkbox
-                status={rememberMe ? 'checked' : 'unchecked'}
+              <IconButton
+                icon={
+                  rememberMe ? 'checkbox-outline' : 'checkbox-blank-outline'
+                }
+                iconColor={'#FF5F9B'}
+                size={20}
                 onPress={() => setRememberMe(!rememberMe)}
-                color="#FF5F9B"
               />
-              <AppText style={styles.rememberText}>Remember me</AppText>
+              <AppText style={styles.rememberText}>
+                {AppString.screens.auth.login.rememberMe}
+              </AppText>
             </View>
 
             <TouchableOpacity
-              onPress={() => {
-                props.navigation.navigate('forgotPassword');
-              }}>
-              <AppText style={styles.forgotText}>Forgot Password?</AppText>
+              onPress={() =>
+                props.navigation.navigate(
+                  AppString.screens.auth.login.forgotPasswordNavigation,
+                )
+              }>
+              <AppText style={styles.forgotText}>
+                {AppString.screens.auth.login.forgotPassword}
+              </AppText>
             </TouchableOpacity>
           </View>
 
           <AppButton
-            buttonTitle="Login"
-            onPress={() => {
-              handleLogin();
-            }}
+            buttonTitle={AppString.screens.auth.login.loginButton}
+            onPress={handleLogin}
             buttonType={ButtonType.PRIMARY}
-            buttonTitleStyle={{color: '#ffffff'}}
-            buttonStyle={{marginVertical: 5}}
           />
 
           <AppText style={styles.footerText}>
-            Don't have an account?{' '}
+            {AppString.screens.auth.login.noAccount}{' '}
             <AppText
               style={styles.linkText}
-              onPress={() => {
-                props.navigation.navigate('signup');
-              }}>
-              Sign Up
+              onPress={() =>
+                props.navigation.navigate(
+                  AppString.screens.auth.login.signupNavigation,
+                )
+              }>
+              {AppString.screens.auth.login.signup}
             </AppText>
           </AppText>
-        </View>
+        </ShadowCard>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  scrollView: {
-    flexGrow: 1,
-    justifyContent: 'flex-end',
-  },
-  container: {
-    flex: 1,
-  },
-  logoContainer: {
-    alignItems: 'center',
-    marginTop: 60,
-  },
-  logoText: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: '#FF5F9B',
-  },
-  card: {
-    marginTop: 40,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-  },
-  googleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 10,
-    padding: 12,
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  googleText: {
-    fontSize: 16,
-    color: '#333',
-  },
+  container: { flex: 1 },
+  scrollView: { flexGrow: 1, justifyContent: 'flex-end' },
+  card: { marginTop: 40, backgroundColor: 'white', padding: 20 },
+  googleButton: { flexDirection: 'row', justifyContent: 'center', padding: 12 },
+  googleText: { fontSize: 16, color: '#333' },
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 15,
   },
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#E0E0E0',
-  },
-  orText: {
-    marginHorizontal: 10,
-    fontSize: 14,
-    color: '#888',
-  },
-  input: {
-    backgroundColor: 'white',
-  },
+  line: { flex: 1, height: 1, backgroundColor: '#E0E0E0' },
+  orText: { marginHorizontal: 10, fontSize: 14, color: '#888' },
   options: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  rememberMe: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rememberText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  forgotText: {
-    fontSize: 14,
-    color: '#007BFF',
-  },
-  footerText: {
-    textAlign: 'center',
-    marginTop: 10,
-  },
-  linkText: {
-    color: '#53a1fd',
-  },
+  rememberMe: { flexDirection: 'row', alignItems: 'center' },
+  rememberText: { fontSize: 14, color: '#333' },
+  forgotText: { fontSize: 14, color: '#007BFF' },
+  footerText: { textAlign: 'center', marginTop: 10 },
+  linkText: { color: '#53a1fd' },
 });
 
 export default Login;

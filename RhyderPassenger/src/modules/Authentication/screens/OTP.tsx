@@ -10,6 +10,7 @@ import {
 import {ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../redux/store';
+import { Surface } from 'react-native-paper';
 
 const OTPVerify: React.FC = (props: any) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -44,11 +45,11 @@ const OTPVerify: React.FC = (props: any) => {
           <AppText style={styles.subAppText}>THE ALTERNATIVE ROUTE</AppText>
         </View>
 
-        <View style={styles.card}>
+        <Surface style={styles.card}>
           <AppHeader
             headerTitle={'OTP Verify'}
             onBackPress={() => {
-              props.navigation.navigate('login');
+              props.navigation.goBack();
             }}
           />
           <AppText style={styles.subtitle}>
@@ -91,7 +92,7 @@ const OTPVerify: React.FC = (props: any) => {
             buttonTitleStyle={{color: '#ffffff'}}
             buttonStyle={{marginVertical: 5}}
           />
-        </View>
+        </Surface>
       </ScrollView>
     </SafeAreaView>
   );
@@ -100,6 +101,7 @@ const OTPVerify: React.FC = (props: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white'
   },
   scrollView: {
     flexGrow: 1,
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginTop: 60,
+    marginBottom: 30,
   },
   logo: {
     fontSize: 32,
@@ -122,16 +124,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     width: '100%',
-    marginTop: 30,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    // marginTop: 40,
-    // backgroundColor: 'white',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
-    paddingBottom: 30,
   },
   title: {
     fontSize: 22,

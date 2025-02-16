@@ -34,7 +34,7 @@ const SignUp: React.FC = (props: any) => {
         <AppHeader
           headerTitle={'Get started'}
           onBackPress={() => {
-            props.navigation.navigate('login');
+            props.navigation.goBack();
           }}
           onInfoPress={() => {
             console.log('Hello info click');

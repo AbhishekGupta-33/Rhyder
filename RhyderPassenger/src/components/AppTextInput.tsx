@@ -13,6 +13,7 @@ interface AppTextInputProps {
   placeholder?: string;
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  isLastField?: boolean
   [key: string]: any;
 }
 
@@ -26,6 +27,7 @@ const AppTextInput: React.FC<AppTextInputProps> = ({
   placeholder,
   keyboardType = 'default',
   autoCapitalize = 'none',
+  isLastField = false,
   ...rest
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -41,6 +43,7 @@ const AppTextInput: React.FC<AppTextInputProps> = ({
         placeholder={placeholder}
         keyboardType={keyboardType}
         autoCapitalize={autoCapitalize}
+        returnKeyType={isLastField ? 'done': 'next'}
         outlineColor={error ? 'red' : '#E0E0E0'}
         activeOutlineColor={error ? 'red' : '#6200EE'}
         right={
@@ -71,7 +74,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   input: {
-    backgroundColor: '#F9F9F9',
+    backgroundColor: 'white',
   },
   errorText: {
     color: 'red',
