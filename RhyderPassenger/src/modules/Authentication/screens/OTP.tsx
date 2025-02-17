@@ -1,5 +1,5 @@
-import React, {useRef, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, SafeAreaView} from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import {
   AppButton,
   AppHeader,
@@ -7,15 +7,15 @@ import {
   AppTextInput,
   ButtonType,
 } from '../../../components';
-import {ScrollView} from 'react-native';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../../redux/store';
+import { ScrollView } from 'react-native';
+import { useSelector } from 'react-redux';
 import { Surface } from 'react-native-paper';
+import { authenticationSignUp } from '../redux/selector';
 
 const OTPVerify: React.FC = (props: any) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputRefs = useRef<Array<any>>([]);
-  const phoneNumber = useSelector((state: RootState) => state.auth.phoneNumber);
+  const { phoneNumber } = useSelector(authenticationSignUp);
 
   const handleChange = (text: string, index: number) => {
     if (text.length > 1) return;
@@ -89,8 +89,8 @@ const OTPVerify: React.FC = (props: any) => {
               handleVerify();
             }}
             buttonType={ButtonType.PRIMARY}
-            buttonTitleStyle={{color: '#ffffff'}}
-            buttonStyle={{marginVertical: 5}}
+            buttonTitleStyle={{ color: '#ffffff' }}
+            buttonStyle={{ marginVertical: 5 }}
           />
         </Surface>
       </ScrollView>
@@ -101,7 +101,7 @@ const OTPVerify: React.FC = (props: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   scrollView: {
     flexGrow: 1,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     width: '100%',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,

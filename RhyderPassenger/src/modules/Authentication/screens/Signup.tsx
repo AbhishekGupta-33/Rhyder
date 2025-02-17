@@ -9,7 +9,7 @@ import {
 } from '../../../components';
 import {appImage} from '../../../utils/Constants';
 import {useDispatch} from 'react-redux';
-import {signup} from '../redux/authSlice';
+import {authenticationSignupNumber } from '../redux/authSlice';
 
 const SignUp: React.FC = (props: any) => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -22,7 +22,7 @@ const SignUp: React.FC = (props: any) => {
       return;
     }
     Alert.alert('Success', `Signed up with phone number: ${phoneNumber}`);
-    dispatch(signup(phoneNumber));
+    dispatch(authenticationSignupNumber(phoneNumber));
     props.navigation.navigate('otp');
   };
 
