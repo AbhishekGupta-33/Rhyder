@@ -1,22 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { AuthenticationState, signUpDataType } from '../../../utils/ConstantTypes/Redux';
 
-type signUpDataType = {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  password?: string;
-  email: string;
-};
-interface AuthState {
-  isAuthenticated: boolean;
-  token: string | null;
-  signUpData: signUpDataType;
-  loading: boolean;
-  loaded: boolean;
-  error: Error | undefined;
-}
-
-const initialState: AuthState = {
+export const initialState: AuthenticationState = {
   isAuthenticated: false,
   token: null,
   signUpData: {
@@ -32,7 +17,7 @@ const initialState: AuthState = {
 };
 
 export const authenticationSlice = createSlice({
-  name: 'auth',
+  name: 'Authentication',
   initialState,
   reducers: {
     userData: (state, action: PayloadAction<string>) => {
@@ -45,6 +30,9 @@ export const authenticationSlice = createSlice({
     },
     setSignupDetails: (state, action: PayloadAction<signUpDataType>) => {
       state.signUpData = action.payload;
+    },
+    authenticationSignupNumber: (state, action: PayloadAction<string>) => {
+      state.signUpData.phoneNumber = action.payload;
     },
     authenticationLoading: state => {
       (state.loading = true), (state.loaded = false), (state.error = undefined);
@@ -67,5 +55,6 @@ export const {
   authenticationLoading,
   authenticationLoaded,
   authenticationError,
+  authenticationSignupNumber
 } = authenticationSlice.actions;
 export const authenticationReducer = authenticationSlice.reducer;
