@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     paddingHorizontal: 20,
   },
   heading: {
@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   description: {
-    textAlign: 'center',
     color: '#666',
     marginVertical: 15,
   },
