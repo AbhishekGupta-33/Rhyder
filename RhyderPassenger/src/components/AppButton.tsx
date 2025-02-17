@@ -38,8 +38,7 @@ const AppButton: React.FC<AppButtonProps> = ({
     <LinearGradient
       start={{x: 0, y: 0}}
       end={{x: 1, y: 0}}
-      colors={['#d566fc', '#ec61cd', '#fd5ea9']}
-      style={[styles.commonButtonStyle, buttonStyle]}>
+      colors={['#d566fc', '#ec61cd', '#fd5ea9']}>
       <Text style={[styles.primaryButtonText, buttonTitleStyle]}>
         {buttonTitle}
       </Text>
@@ -80,7 +79,9 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   commonButtonStyle: {
-    borderRadius: 5,
+    borderRadius: 15,
+    overflow: 'hidden',
+    borderCurve: 'continuous', // continuous
     width: '100%',
   },
 });
