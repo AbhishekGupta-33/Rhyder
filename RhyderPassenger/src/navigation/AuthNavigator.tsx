@@ -6,6 +6,8 @@ import Welcome from '../modules/Authentication/screens/Welcome';
 import SignUp from '../modules/Authentication/screens/Signup';
 import ForgotPassword from '../modules/Authentication/screens/ForgotPassword';
 import OTPVerify from '../modules/Authentication/screens/OTP';
+import UploadDocuments from '../modules/Authentication/screens/UploadDocuments';
+import { AppString } from '../utils/AppString';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +24,7 @@ const AuthNavigator: React.FC = () => {
       <Stack.Screen name="forgotPassword" component={ForgotPassword} />
       <Stack.Screen name="home" component={Home} />
       <Stack.Screen name="otp" component={OTPVerify} />
+      <Stack.Screen name={AppString.NavigationScreens.auth.UploadDocuments} component={UploadDocuments}/>
     </Stack.Navigator>
   );
 };

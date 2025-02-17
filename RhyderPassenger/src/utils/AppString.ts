@@ -1,5 +1,9 @@
 export const AppString = {
-  NavigationScreens: {},
+  NavigationScreens: {
+    auth:{
+      UploadDocuments: 'UploadDocuments'
+    }
+  },
   screens: {
     auth: {
       login: {
@@ -21,6 +25,33 @@ export const AppString = {
         loginFailed: 'Invalid username or password',
         forgotPasswordNavigation: 'forgotPassword',
         signupNavigation: 'signup',
+      },
+      uploadDocuments: {
+        title: 'Upload Documents',
+        subtitle: 'Upload documents for the vehicle',
+        sections: [
+          {
+            label: 'Photo*',
+            uploadText: 'Click to Upload Photo',
+            fileType: 'JPG',
+            fileSize: 'min-400 kb to max-800 kb',
+            id: 'photo',
+          },
+          {
+            label: 'Identity Proof (Passport, National ID card)*',
+            uploadText: 'Click to Upload Identity Proof',
+            fileType: 'PDF',
+            fileSize: 'min-400 kb to max-800 kb',
+            id: 'identity',
+          },
+          {
+            label: 'Gender Identity Proof (Transgender)',
+            uploadText: 'Click to Upload Gender Identity Proof',
+            fileType: 'PDF',
+            fileSize: 'min-400 kb to max-800 kb',
+            id: 'genderIdentity',
+          },
+        ],
       },
     },
   },
