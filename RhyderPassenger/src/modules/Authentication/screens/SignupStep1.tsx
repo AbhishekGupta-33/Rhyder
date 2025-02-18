@@ -71,7 +71,7 @@ const SignupStep1: React.FC = (props: any) => {
 
   return (
     <ImageBackground
-      source={{ uri: appImage.staticImage }}
+      source={{uri: appImage.staticImage}}
       style={styles.background}>
       <AuthenticationBottomView bottomViewStyle={styles.container}>
         <AppHeader
@@ -92,15 +92,15 @@ const SignupStep1: React.FC = (props: any) => {
           value={userSignupStep1Detail.phoneNumber}
           onChangeText={fetchInputfieldPhoneNumberData}
           error={userSignupStep1Detail.phoneNumberError}
-        // required={true}
+          // required={true}
         />
 
         <AppButton
           buttonTitle={AppString.screens.auth.signupStep1.signupButton}
           onPress={handleSignupStep1}
           buttonType={ButtonType.PRIMARY}
-          buttonTitleStyle={{ color: '#ffffff' }}
-          buttonStyle={{ marginVertical: 5 }}
+          buttonTitleStyle={{color: '#ffffff'}}
+          buttonStyle={{marginVertical: 5}}
         />
 
         <AppText style={styles.footerText}>
@@ -114,6 +114,7 @@ const SignupStep1: React.FC = (props: any) => {
           </AppText>
         </AppText>
       </AuthenticationBottomView>
+      <Loader loading={isAuthenticationLoading} />
     </ImageBackground>
   );
 };

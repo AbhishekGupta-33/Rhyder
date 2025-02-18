@@ -9,7 +9,6 @@ import {
 } from './authSlice';
 import {
   ApiResponse,
-  DocumentType,
   LoginRequest,
   OtpResponse,
   uploadDocumentResponse,
