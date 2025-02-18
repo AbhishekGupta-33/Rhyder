@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
+import React, { useState, useCallback, useMemo } from 'react';
+import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { IconButton } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import {
   AppButton,
   AppHeader,
@@ -8,115 +10,87 @@ import {
   AppTextInput,
   ButtonType,
 } from '../../../components';
-import {AppString} from '../../../utils/AppString';
-import {
-  hasData,
-  hasValidEmailOrPhoneNumber,
-  removeSpaces,
-} from '../../../utils/Validators';
-import {IconButton} from 'react-native-paper';
-import {useSelector} from 'react-redux';
-import {authenticationSignUp} from '../redux/selector';
+import { AppString } from '../../../utils/AppString';
+import { hasData, hasValidateEmail } from '../../../utils/Validators';
+import { authenticationSignUp } from '../redux/selector';
 
 const SignupStep2: React.FC = (props: any) => {
-  const [userSignupStep2Detail, setUserSignupStep2Detail] = useState({
+  const [userDetails, setUserDetails] = useState({
     firstName: '',
-    firstNameError: '',
     lastName: '',
-    lastNameError: '',
     email: '',
-    emailError: '',
     password: '',
-    passwordError: '',
+    errors: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    },
   });
+
   const [rememberMe, setRememberMe] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const {phoneNumber} = useSelector(authenticationSignUp);
   const [showModal, setShowModal] = useState(false);
+  const { phoneNumber } = useSelector(authenticationSignUp);
 
-  const fetchInputFieldFirstNameData = (input: string) => {
-    let fristNameError = hasData(input)
-      ? ''
-      : AppString.screens.auth.signupStep2.firstNameError;
-
-    setUserSignupStep2Detail(prev => ({
+  const handleInputChange = useCallback((field: string, value: string) => {
+    let error = '';
+  
+    if (!hasData(value)) {
+      error = AppString.screens.auth.signupStep2[`${field}Error`];
+    } else if (field === 'email' && !hasValidateEmail(value)) {
+      error = AppString.screens.auth.signupStep2.emailError;
+    }
+  
+    setUserDetails(prev => ({
       ...prev,
-      firstName: removeSpaces(input),
-      fristNameError,
+      [field]: value,
+      errors: {
+        ...prev.errors,
+        [field]: error,
+      },
     }));
-  };
+  }, []);
 
-  const fetchInputFieldLastNameData = (input: string) => {
-    let lastNameError = hasData(input)
-      ? ''
-      : AppString.screens.auth.signupStep2.lastNameError;
+  const validateEmail = useCallback((email: string) => {
+    return hasValidateEmail(email) ? '' : AppString.screens.auth.signupStep2.emailError;
+  }, []);
 
-    setUserSignupStep2Detail(prev => ({
-      ...prev,
-      lastName: removeSpaces(input),
-      lastNameError,
-    }));
-  };
+  const handleSignupStep2 = useCallback(() => {
+    const { firstName, lastName, email, password } = userDetails;
+    const errors = {
+      firstName: hasData(firstName) ? '' : AppString.screens.auth.signupStep2.firstNameError,
+      lastName: hasData(lastName) ? '' : AppString.screens.auth.signupStep2.lastNameError,
+      email: hasData(email) ? validateEmail(email) : AppString.screens.auth.signupStep2.emailError,
+      password: hasData(password) ? '' : AppString.screens.auth.signupStep2.passwordError,
+    };
 
-  const fetchInputFieldEmailData = (input: string) => {
-    let emailError = hasValidEmailOrPhoneNumber(input)
-      ? ''
-      : AppString.screens.auth.signupStep2.emailError;
-
-    setUserSignupStep2Detail(prev => ({
-      ...prev,
-      email: removeSpaces(input),
-      emailError,
-    }));
-  };
-
-  const fetchInputFieldPasswordData = (input: string) => {
-    let passwordError = hasData(input)
-      ? ''
-      : AppString.screens.auth.signupStep2.passwordError;
-
-    setUserSignupStep2Detail(prev => ({
-      ...prev,
-      password: removeSpaces(input),
-      passwordError,
-    }));
-  };
-
-  const handleSignupStep2 = () => {
-    if (!hasData(userSignupStep2Detail.firstName)) {
-      setUserSignupStep2Detail(prev => ({
-        ...prev,
-        firstNameError: AppString.screens.auth.signupStep2.firstNameError,
-      }));
-    } else if (!hasData(userSignupStep2Detail.lastName)) {
-      setUserSignupStep2Detail(prev => ({
-        ...prev,
-        lastNameError: AppString.screens.auth.signupStep2.lastNameError,
-      }));
-    } else if (!hasData(userSignupStep2Detail.email)) {
-      setUserSignupStep2Detail(prev => ({
-        ...prev,
-        emailError: AppString.screens.auth.signupStep2.emailError,
-      }));
-    } else if (!hasData(userSignupStep2Detail.password)) {
-      setUserSignupStep2Detail(prev => ({
-        ...prev,
-        passwordError: AppString.screens.auth.signupStep2.passwordError,
-      }));
+    if (!rememberMe || Object.values(errors).some(error => error !== '')) {
+      setUserDetails(prev => ({ ...prev, errors }));
     } else {
-      // API Call Logic
-      let userSignupData = {
-        firstName: userSignupStep2Detail.firstName,
-        lastName: userSignupStep2Detail.lastName,
-        phoneNumber: phoneNumber,
-        email: userSignupStep2Detail.email,
-        password: userSignupStep2Detail.password,
-        isWomen: rememberMe,
+      const userSignupData = {
+        firstName,
+        lastName,
+        phoneNumber,
+        email,
+        password,
       };
       console.log('userSignupData==', userSignupData);
       setShowModal(true);
     }
-  };
+  }, [userDetails, phoneNumber, rememberMe, validateEmail]);
+
+  const InputField = useMemo(() => ({ label, placeholder, value, onChangeText, error, secureTextEntry, disabled }: any) => (
+    <AppTextInput
+      label={label}
+      placeholder={placeholder}
+      value={value}
+      onChangeText={onChangeText}
+      error={error}
+      secureTextEntry={secureTextEntry}
+      disabled={disabled}
+    />
+  ), []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -130,43 +104,39 @@ const SignupStep2: React.FC = (props: any) => {
             {AppString.screens.auth.signupStep2.headerDescription}
           </AppText>
 
-          <AppTextInput
+          <InputField
             label={AppString.screens.auth.signupStep2.firstNameLabel}
-            placeholder={
-              AppString.screens.auth.signupStep2.firstNamePlaceholder
-            }
-            value={userSignupStep2Detail.firstName}
-            onChangeText={fetchInputFieldFirstNameData}
-            error={userSignupStep2Detail.firstNameError}
+            placeholder={AppString.screens.auth.signupStep2.firstNamePlaceholder}
+            value={userDetails.firstName}
+            onChangeText={(text) => handleInputChange('firstName', text)}
+            error={userDetails.errors.firstName}
           />
-          <AppTextInput
+          <InputField
             label={AppString.screens.auth.signupStep2.lastNameLabel}
             placeholder={AppString.screens.auth.signupStep2.lastPlaceholder}
-            value={userSignupStep2Detail.lastName}
-            onChangeText={fetchInputFieldLastNameData}
-            error={userSignupStep2Detail.lastNameError}
+            value={userDetails.lastName}
+            onChangeText={(text) => handleInputChange('lastName', text)}
+            error={userDetails.errors.lastName}
           />
-          <AppTextInput
+          <InputField
             label={AppString.screens.auth.signupStep2.phoneLabel}
             placeholder={AppString.screens.auth.signupStep2.phoneLabel}
             value={phoneNumber}
             disabled={true}
-            // onChangeText={fetchInputFieldPhoneNumberData}
-            // error={userSignupStep2Detail.phoneNumberError}
           />
-          <AppTextInput
+          <InputField
             label={AppString.screens.auth.signupStep2.emailLabel}
             placeholder={AppString.screens.auth.signupStep2.emailPlaceholder}
-            value={userSignupStep2Detail.email}
-            onChangeText={fetchInputFieldEmailData}
-            error={userSignupStep2Detail.emailError}
+            value={userDetails.email}
+            onChangeText={(text) => handleInputChange('email', text)}
+            error={userDetails.errors.email}
           />
-          <AppTextInput
+          <InputField
             label={AppString.screens.auth.signupStep2.passwordLabel}
             placeholder={AppString.screens.auth.signupStep2.passwordPlaceholder}
-            value={userSignupStep2Detail.password}
-            onChangeText={fetchInputFieldPasswordData}
-            error={userSignupStep2Detail.passwordError}
+            value={userDetails.password}
+            onChangeText={(text) => handleInputChange('password', text)}
+            error={userDetails.errors.password}
             secureTextEntry={!isPasswordVisible}
           />
 
@@ -191,9 +161,7 @@ const SignupStep2: React.FC = (props: any) => {
         />
         <AppModal
           visible={showModal}
-          onCancelPress={() => {
-            setShowModal(false);
-          }}
+          onCancelPress={() => setShowModal(false)}
           cancelButtonTitle="OK"
         />
       </ScrollView>
@@ -206,9 +174,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  scrollView: {flexGrow: 1, paddingHorizontal: 20, backgroundColor: 'white'},
-  rememberMe: {flexDirection: 'row', alignItems: 'center'},
-  confirmationText: {fontSize: 14, color: '#333', maxWidth: '85%'},
+  scrollView: { flexGrow: 1, paddingHorizontal: 20, backgroundColor: 'white' },
+  rememberMe: { flexDirection: 'row', alignItems: 'center' },
+  confirmationText: { fontSize: 14, color: '#333', maxWidth: '85%' },
   buttonTitleStyle: {
     color: 'white',
   },

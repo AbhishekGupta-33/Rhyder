@@ -30,9 +30,9 @@ const AppModal: React.FC<AppModalProps> = ({
     <Modal visible={visible} transparent animationType="slide">
       <BlurView
         style={styles.absolute}
-        blurType="light"
+        blurType={'light'}
         blurAmount={1}
-        reducedTransparencyFallbackColor="red">
+        reducedTransparencyFallbackColor="red"/>
         <View style={styles.modalContainerStyle}>
           <View style={styles.innerViewStyle}>
             <Image
@@ -73,7 +73,6 @@ const AppModal: React.FC<AppModalProps> = ({
             )}
           </View>
         </View>
-      </BlurView>
     </Modal>
   );
 };
