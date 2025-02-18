@@ -24,3 +24,8 @@ export const authenticationData = createSelector(
   selectAuthentication,
   Authentication => Authentication.token,
 );
+
+export const otpSendResponseData = createSelector(
+  selectAuthentication,
+  Authentication => Authentication.otpSendSuccessMessage,
+);

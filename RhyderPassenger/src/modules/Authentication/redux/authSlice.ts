@@ -1,5 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { AuthenticationState, signUpDataType } from '../../../utils/ConstantTypes/Redux';
+import {
+  AuthenticationState,
+  signUpDataType,
+} from '../../../utils/ConstantTypes/Redux';
 
 export const initialState: AuthenticationState = {
   isAuthenticated: false,
@@ -14,6 +17,8 @@ export const initialState: AuthenticationState = {
   loading: false,
   loaded: false,
   error: undefined,
+  otpSendSuccessMessage: '',
+  otpVerifySuccessMessage: '',
 };
 
 export const authenticationSlice = createSlice({
@@ -45,6 +50,12 @@ export const authenticationSlice = createSlice({
         (state.loaded = true),
         (state.error = action.payload);
     },
+    otpSendResponse: (state, action: PayloadAction<string>) => {
+      state.otpSendSuccessMessage = action.payload;
+    },
+    otpVerifyResponse: (state, action: PayloadAction<string | null>) => {
+      state.otpVerifySuccessMessage = action.payload;
+    },
   },
 });
 
@@ -55,6 +66,10 @@ export const {
   authenticationLoading,
   authenticationLoaded,
   authenticationError,
-  authenticationSignupNumber
+  authenticationSignupNumber,
+
+  //Api handler
+  otpSendResponse,
+  otpVerifyResponse,
 } = authenticationSlice.actions;
 export const authenticationReducer = authenticationSlice.reducer;
