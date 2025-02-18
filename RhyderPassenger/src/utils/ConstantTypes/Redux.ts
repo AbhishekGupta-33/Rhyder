@@ -13,10 +13,12 @@ export type AuthenticationState = {
   loading: boolean;
   loaded: boolean;
   error: Error | undefined;
-}
+  otpSendSuccessMessage: string;
+  otpVerifySuccessMessage: string | null;
+};
 
 export type ReduxState = Record<string, any> & {
-  Authentication:AuthenticationState
-}
+  Authentication: AuthenticationState;
+};
 
-export type GetState = () => ReduxState
+export type GetState = () => ReduxState;

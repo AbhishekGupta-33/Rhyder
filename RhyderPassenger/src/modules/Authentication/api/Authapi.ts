@@ -1,12 +1,12 @@
 // src/api/authApi.ts
 
-import { ApiName } from "../../../api/apiName";
-import apiClient from "../../../api/axiosInstance";
+import {ApiName} from '../../../api/apiName';
+import apiClient from '../../../api/axiosInstance';
 
 // 1. Send OTP
 export const sendOtp = async (phoneNumber: string) => {
   try {
-    const response = await apiClient.post(ApiName.auth.sendOtp, { phoneNumber });
+    const response = await apiClient.post(ApiName.auth.sendOtp, {phoneNumber});
     return response.data;
   } catch (error) {
     throw error;
@@ -14,9 +14,12 @@ export const sendOtp = async (phoneNumber: string) => {
 };
 
 // 2. Verify OTP
-export const verifyOtp = async (otp: string) => {
+export const verifyOtp = async (phoneNumber: string, otp: string) => {
   try {
-    const response = await apiClient.post(ApiName.auth.verifyOtp, { otp });
+    const response = await apiClient.post(ApiName.auth.verifyOtp, {
+      phoneNumber,
+      otp,
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -57,7 +60,7 @@ export const logout = async () => {
 export const getProfile = async (token: string) => {
   try {
     const response = await apiClient.get(ApiName.auth.getProfile, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {Authorization: `Bearer ${token}`},
     });
     return response.data;
   } catch (error) {
@@ -68,7 +71,9 @@ export const getProfile = async (token: string) => {
 // 7. Refresh Token
 export const refreshToken = async (refreshToken: string) => {
   try {
-    const response = await apiClient.post(ApiName.auth.refreshToken, { refreshToken });
+    const response = await apiClient.post(ApiName.auth.refreshToken, {
+      refreshToken,
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -78,7 +83,7 @@ export const refreshToken = async (refreshToken: string) => {
 // 8. Forgot Password
 export const forgotPassword = async (email: string) => {
   try {
-    const response = await apiClient.post(ApiName.auth.forgotPassword, { email });
+    const response = await apiClient.post(ApiName.auth.forgotPassword, {email});
     return response.data;
   } catch (error) {
     throw error;
@@ -88,7 +93,9 @@ export const forgotPassword = async (email: string) => {
 // 9. Verify Password Reset OTP
 export const verifyPasswordResetOtp = async (otp: string) => {
   try {
-    const response = await apiClient.post(ApiName.auth.verifyPasswordResetOtp, { otp });
+    const response = await apiClient.post(ApiName.auth.verifyPasswordResetOtp, {
+      otp,
+    });
     return response.data;
   } catch (error) {
     throw error;
