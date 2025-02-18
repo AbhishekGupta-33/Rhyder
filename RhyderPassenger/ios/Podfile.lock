@@ -1282,6 +1282,7 @@ PODS:
   - react-native-config/App (1.5.5):
     - React-Core
   - react-native-document-picker (10.1.0):
+  - react-native-blur (4.4.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1302,6 +1303,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-config (1.5.5):
+    - react-native-config/App (= 1.5.5)
+  - react-native-config/App (1.5.5):
+    - React-Core
   - react-native-geolocation (3.4.0):
     - DoubleConversion
     - glog
@@ -1831,6 +1836,8 @@ DEPENDENCIES:
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-config (from `../node_modules/react-native-config`)
   - "react-native-document-picker (from `../node_modules/@react-native-documents/picker`)"
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
+  - react-native-config (from `../node_modules/react-native-config`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -1957,6 +1964,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-config"
   react-native-document-picker:
     :path: "../node_modules/@react-native-documents/picker"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
+  react-native-config:
+    :path: "../node_modules/react-native-config"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-netinfo:
@@ -2073,6 +2084,8 @@ SPEC CHECKSUMS:
   react-native-blur: 28b0a731ed804bed3e88757c2414305896e6b47e
   react-native-config: 3367df9c1f25bb96197007ec531c7087ed4554c3
   react-native-document-picker: a02c696ff1619c022c9247d87f18de26941e52b9
+  react-native-blur: 28b0a731ed804bed3e88757c2414305896e6b47e
+  react-native-config: 3367df9c1f25bb96197007ec531c7087ed4554c3
   react-native-geolocation: 830fca20f962efbfcd670066c58a94e5d41eb8e1
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-safe-area-context: a95e75ab816db4438a319aa4b43dfe6def22026f
