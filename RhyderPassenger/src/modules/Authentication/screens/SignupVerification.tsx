@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   },
   disabledText: {
     color: 'gray',
-  },
+  }
 });
 
 export default SignupVerification;
