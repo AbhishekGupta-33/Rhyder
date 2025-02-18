@@ -27,7 +27,7 @@ const Welcome: React.FC = (props: any) => {
         <AppButton
           buttonTitle="Sign Up"
           onPress={() => {
-            props.navigation.navigate('signup');
+            props.navigation.navigate('signupStep1');
           }}
           buttonType={ButtonType.PRIMARY}
           buttonTitleStyle={{color: '#ffffff'}}

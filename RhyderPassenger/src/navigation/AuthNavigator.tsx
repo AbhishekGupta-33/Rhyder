@@ -3,11 +3,12 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Login from '../modules/Authentication/screens/Login';
 import Home from '../modules/UserNavigation/screens/Home';
 import Welcome from '../modules/Authentication/screens/Welcome';
-import SignUp from '../modules/Authentication/screens/Signup';
 import ForgotPassword from '../modules/Authentication/screens/ForgotPassword';
-import OTPVerify from '../modules/Authentication/screens/OTP';
 import UploadDocuments from '../modules/Authentication/screens/UploadDocuments';
 import { AppString } from '../utils/AppString';
+import SignupStep1 from '../modules/Authentication/screens/SignupStep1';
+import SignupVerification from '../modules/Authentication/screens/SignupVerification';
+import SignupStep2 from '../modules/Authentication/screens/SignupStep2';
 
 const Stack = createStackNavigator();
 
@@ -20,11 +21,12 @@ const AuthNavigator: React.FC = () => {
       initialRouteName="welcome">
       <Stack.Screen name="welcome" component={Welcome} />
       <Stack.Screen name="login" component={Login} />
-      <Stack.Screen name="signup" component={SignUp} />
+      <Stack.Screen name="signupStep1" component={SignupStep1} />
+      <Stack.Screen name="signupStep2" component={SignupStep2} />
       <Stack.Screen name="forgotPassword" component={ForgotPassword} />
       <Stack.Screen name="home" component={Home} />
-      <Stack.Screen name="otp" component={OTPVerify} />
       <Stack.Screen name={AppString.NavigationScreens.auth.UploadDocuments} component={UploadDocuments}/>
+      <Stack.Screen name="signupVerification" component={SignupVerification} />
     </Stack.Navigator>
   );
 };
