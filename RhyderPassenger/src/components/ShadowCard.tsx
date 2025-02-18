@@ -4,7 +4,7 @@ import { Surface } from "react-native-paper";
 
 interface ShadowCardProps {
   children: React.ReactNode;
-  style?: ViewStyle;
+  style?: any;
 }
 
 const ShadowCard: React.FC<ShadowCardProps> = ({

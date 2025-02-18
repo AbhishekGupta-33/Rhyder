@@ -1,37 +1,33 @@
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { appImage } from '../utils/Constants';
-
+import {appImage} from '../utils/Constants';
 interface AppImageProps {
   source: any;
   style?: object;
-  placeholderSource?: any;
 }
 
-const AppImage: React.FC<AppImageProps> = ({
-  source,
-  style,
-  placeholderSource = {uri: appImage.staticImage},
-}) => {
-  const [loading, setLoading] = useState(true);
-
-  const loadedPlaceholderSource = placeholderSource ? placeholderSource : {uri: appImage.staticImage}
+const AppImage: React.FC<AppImageProps> = ({source, style}) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   return (
     <View style={[styles.container, style]}>
-      {loading && (
+      {!isLoaded && (
         <FastImage
-          source={loadedPlaceholderSource}
-          style={[styles.image, styles.placeholder]}
+          source={{uri: appImage.staticImage}}
+          style={[styles.image, style]}
         />
       )}
       <FastImage
-        source={source}
-        style={[styles.image, style]}
-        onLoadStart={() => setLoading(true)}
-        onLoadEnd={() => setLoading(false)}
-        onError={() => setLoading(false)}
+        source={isError ? {uri: appImage.staticImage} : source}
+        style={[styles.image, style, !isLoaded && styles.hidden]}
+        onLoadStart={() => setIsLoaded(false)}
+        onLoad={() => setIsLoaded(true)}
+        onError={() => {
+          setIsError(true);
+          setIsLoaded(true);
+        }}
       />
     </View>
   );
@@ -46,13 +42,10 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
-  placeholder: {
+  hidden: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    resizeMode: 'cover',
+    width: 0,
+    height: 0,
   },
 });
 

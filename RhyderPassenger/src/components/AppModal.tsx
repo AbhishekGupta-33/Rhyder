@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#ffffff',
     borderRadius: 10,
+    alignItems: 'center',
   },
   imageStyle: {
     width: '100%',
