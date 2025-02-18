@@ -2,18 +2,19 @@ import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import AppText from './AppText';
+import {removeSpaces} from '../utils/Validators';
 
 interface AppTextInputProps {
   label: string;
   value: string;
-  onChangeText: (text: string) => void;
+  onChangeText?: (text: string) => void;
   error?: string;
   required?: boolean;
   secureTextEntry?: boolean;
   placeholder?: string;
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
-  isLastField?: boolean
+  isLastField?: boolean;
   [key: string]: any;
 }
 
@@ -38,12 +39,14 @@ const AppTextInput: React.FC<AppTextInputProps> = ({
       <TextInput
         mode="outlined"
         value={value}
-        onChangeText={onChangeText}
+        onChangeText={text => {
+          if (onChangeText) onChangeText(removeSpaces(text));
+        }}
         secureTextEntry={secureTextEntry && !isPasswordVisible}
         placeholder={placeholder}
         keyboardType={keyboardType}
         autoCapitalize={autoCapitalize}
-        returnKeyType={isLastField ? 'done': 'next'}
+        returnKeyType={isLastField ? 'done' : 'next'}
         outlineColor={error ? 'red' : '#E0E0E0'}
         activeOutlineColor={error ? 'red' : '#6200EE'}
         right={

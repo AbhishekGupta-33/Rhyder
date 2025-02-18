@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import React, {useRef, useState} from 'react';
+import {View, StyleSheet, TouchableOpacity, SafeAreaView} from 'react-native';
 import {
   AppButton,
   AppHeader,
@@ -7,15 +7,15 @@ import {
   AppTextInput,
   ButtonType,
 } from '../../../components';
-import { ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
-import { Surface } from 'react-native-paper';
-import { authenticationSignUp } from '../redux/selector';
+import {ScrollView} from 'react-native';
+import {useSelector} from 'react-redux';
+import {Surface} from 'react-native-paper';
+import {authenticationSignUp} from '../redux/selector';
 
 const OTPVerify: React.FC = (props: any) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputRefs = useRef<Array<any>>([]);
-  const { phoneNumber } = useSelector(authenticationSignUp);
+  const {phoneNumber} = useSelector(authenticationSignUp);
 
   const handleChange = (text: string, index: number) => {
     if (text.length > 1) return;
@@ -35,6 +35,7 @@ const OTPVerify: React.FC = (props: any) => {
 
   const handleVerify = () => {
     console.log('Entered OTP:', otp.join(''));
+    props.navigation.navigate('signupStep2');
   };
 
   return (
@@ -89,8 +90,8 @@ const OTPVerify: React.FC = (props: any) => {
               handleVerify();
             }}
             buttonType={ButtonType.PRIMARY}
-            buttonTitleStyle={{ color: '#ffffff' }}
-            buttonStyle={{ marginVertical: 5 }}
+            buttonTitleStyle={{color: '#ffffff'}}
+            buttonStyle={{marginVertical: 5}}
           />
         </Surface>
       </ScrollView>
