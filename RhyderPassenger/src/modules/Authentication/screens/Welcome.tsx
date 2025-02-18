@@ -1,18 +1,14 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {AppButton, AppImage, ButtonType} from '../../../components';
+import { View, Text, StyleSheet } from 'react-native';
+import { AppButton, AppImage, ButtonType } from '../../../components';
+import { appImage } from '../../../utils/Constants';
 
 const Welcome: React.FC = (props: any) => {
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
         <AppImage
-          placeholderSource={{
-            uri: 'https://thumbs.dreamstime.com/b/no-thumbnail-image-placeholder-forums-blogs-websites-148010362.jpg',
-          }}
-          source={{
-            uri: 'https://storage.googleapis.com/support-forums-api/attachment/thread-146048858-12639125651610213305.PNG',
-          }}
+          source={{ uri: appImage.welcome.imageUrl }}
         />
       </View>
 
@@ -30,8 +26,8 @@ const Welcome: React.FC = (props: any) => {
             props.navigation.navigate('signupStep1');
           }}
           buttonType={ButtonType.PRIMARY}
-          buttonTitleStyle={{color: '#ffffff'}}
-          buttonStyle={{marginVertical: 5}}
+          buttonTitleStyle={{ color: '#ffffff' }}
+          buttonStyle={{ marginVertical: 5 }}
         />
 
         <AppButton
@@ -40,8 +36,8 @@ const Welcome: React.FC = (props: any) => {
             props.navigation.navigate('login');
           }}
           buttonType={ButtonType.SECONDARY}
-          buttonTitleStyle={{color: '#C471ED'}}
-          buttonStyle={{borderColor: '#C471ED', borderWidth: 2}}
+          buttonTitleStyle={{ color: '#C471ED' }}
+          buttonStyle={{ borderColor: '#C471ED', borderWidth: 2 }}
         />
       </View>
     </View>

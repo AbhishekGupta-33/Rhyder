@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, ImageBackground, StyleSheet, Alert} from 'react-native';
+import React, { useState } from 'react';
+import { View, ImageBackground, StyleSheet, Alert } from 'react-native';
 import {
   AppButton,
   AppHeader,
@@ -7,15 +7,16 @@ import {
   AppTextInput,
   ButtonType,
 } from '../../../components';
-import {appImage} from '../../../utils/Constants';
-import {useDispatch} from 'react-redux';
-import {authenticationSignupNumber} from '../redux/authSlice';
+import { appImage } from '../../../utils/Constants';
+import { useDispatch } from 'react-redux';
+import { authenticationSignupNumber } from '../redux/authSlice';
 import {
   hasData,
   hasValidPhoneNumber,
   removeSpaces,
 } from '../../../utils/Validators';
-import {AppString} from '../../../utils/AppString';
+import { AppString } from '../../../utils/AppString';
+import AuthenticationBottomView from '../components/AuthenticationBottomView';
 
 const SignupStep1: React.FC = (props: any) => {
   const dispatch = useDispatch();
@@ -55,9 +56,9 @@ const SignupStep1: React.FC = (props: any) => {
 
   return (
     <ImageBackground
-      source={{uri: appImage.staticImage}}
+      source={{ uri: appImage.staticImage }}
       style={styles.background}>
-      <View style={styles.container}>
+      <AuthenticationBottomView bottomViewStyle={styles.container}>
         <AppHeader
           headerTitle={AppString.screens.auth.signupStep1.header}
           onBackPress={() => {
@@ -76,7 +77,7 @@ const SignupStep1: React.FC = (props: any) => {
           value={userSignupStep1Detail.phoneNumber}
           onChangeText={fetchInputfieldPhoneNumberData}
           error={userSignupStep1Detail.phoneNumberError}
-          // required={true}
+        // required={true}
         />
 
         <AppButton
@@ -85,8 +86,8 @@ const SignupStep1: React.FC = (props: any) => {
             handleSignupStep1();
           }}
           buttonType={ButtonType.PRIMARY}
-          buttonTitleStyle={{color: '#ffffff'}}
-          buttonStyle={{marginVertical: 5}}
+          buttonTitleStyle={{ color: '#ffffff' }}
+          buttonStyle={{ marginVertical: 5 }}
         />
 
         <AppText style={styles.footerText}>
@@ -99,7 +100,7 @@ const SignupStep1: React.FC = (props: any) => {
             {AppString.screens.auth.signupStep1.loginButton}
           </AppText>
         </AppText>
-      </View>
+      </AuthenticationBottomView>
     </ImageBackground>
   );
 };

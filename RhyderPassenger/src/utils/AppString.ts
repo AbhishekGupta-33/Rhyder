@@ -26,33 +26,6 @@ export const AppString = {
         forgotPasswordNavigation: 'forgotPassword',
         signupNavigation: 'signup',
       },
-      uploadDocuments: {
-        title: 'Upload Documents',
-        subtitle: 'Upload documents for the vehicle',
-        sections: [
-          {
-            label: 'Photo*',
-            uploadText: 'Click to Upload Photo',
-            fileType: 'JPG',
-            fileSize: 'min-400 kb to max-800 kb',
-            id: 'photo',
-          },
-          {
-            label: 'Identity Proof (Passport, National ID card)*',
-            uploadText: 'Click to Upload Identity Proof',
-            fileType: 'PDF',
-            fileSize: 'min-400 kb to max-800 kb',
-            id: 'identity',
-          },
-          {
-            label: 'Gender Identity Proof (Transgender)',
-            uploadText: 'Click to Upload Gender Identity Proof',
-            fileType: 'PDF',
-            fileSize: 'min-400 kb to max-800 kb',
-            id: 'genderIdentity',
-          },
-        ],
-      },
       signupStep1: {
         header: 'Get started',
         phoneNumberLabel: 'Phone Number',
@@ -84,6 +57,47 @@ export const AppString = {
         confirmationText:
           'By checking this checkbox I confirm I am a woman by gender',
         signUpButton: 'Sign Up',
+      },
+      signupVerification: {
+        header: 'OTP Verify',
+        subheader: 'Please enter the verification code sent to',
+        otpLabel: 'Enter 6-Digits OTP',
+        resendButton: 'Resend OTP',
+        verifyButton: 'Verify',
+        otpError: 'Please enter OTP',
+      },
+      signupSuccessModal: {
+        title: 'Thankyou for the registration',
+        subTitle:
+          'We have received your details. also we have sent verification mail',
+        okButton: 'OK',
+      },
+      uploadDocuments: {
+        title: 'Upload Documents',
+        subtitle: 'Upload documents for the vehicle',
+        sections: [
+          {
+            label: 'Photo*',
+            uploadText: 'Click to Upload Photo',
+            fileType: 'JPG',
+            fileSize: 'min-400 kb to max-800 kb',
+            id: 'photo',
+          },
+          {
+            label: 'Identity Proof (Passport, National ID card)*',
+            uploadText: 'Click to Upload Identity Proof',
+            fileType: 'PDF',
+            fileSize: 'min-400 kb to max-800 kb',
+            id: 'identity',
+          },
+          {
+            label: 'Gender Identity Proof (Transgender)',
+            uploadText: 'Click to Upload Gender Identity Proof',
+            fileType: 'PDF',
+            fileSize: 'min-400 kb to max-800 kb',
+            id: 'genderIdentity',
+          },
+        ],
       },
     },
   },

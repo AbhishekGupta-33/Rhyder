@@ -4,6 +4,7 @@ import AppTextInput from './AppTextInput';
 import AppImage from './AppImage';
 import AppHeader from './AppHeader';
 import ShadowCard from './ShadowCard';
+import AppModal from './AppModal';
 
 export {
   AppText,
@@ -13,4 +14,5 @@ export {
   AppImage,
   AppHeader,
   ShadowCard,
+  AppModal,
 };

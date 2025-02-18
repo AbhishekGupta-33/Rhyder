@@ -3,6 +3,7 @@ import {View, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
 import {
   AppButton,
   AppHeader,
+  AppModal,
   AppText,
   AppTextInput,
   ButtonType,
@@ -11,12 +12,10 @@ import {AppString} from '../../../utils/AppString';
 import {
   hasData,
   hasValidEmailOrPhoneNumber,
-  hasValidPhoneNumber,
   removeSpaces,
 } from '../../../utils/Validators';
 import {IconButton} from 'react-native-paper';
 import {useSelector} from 'react-redux';
-import {authenticationSignupNumber} from '../redux/authSlice';
 import {authenticationSignUp} from '../redux/selector';
 
 const SignupStep2: React.FC = (props: any) => {
@@ -33,6 +32,7 @@ const SignupStep2: React.FC = (props: any) => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {phoneNumber} = useSelector(authenticationSignUp);
+  const [showModal, setShowModal] = useState(false);
 
   const fetchInputFieldFirstNameData = (input: string) => {
     let fristNameError = hasData(input)
@@ -41,7 +41,7 @@ const SignupStep2: React.FC = (props: any) => {
 
     setUserSignupStep2Detail(prev => ({
       ...prev,
-      fristName: removeSpaces(input),
+      firstName: removeSpaces(input),
       fristNameError,
     }));
   };
@@ -73,7 +73,7 @@ const SignupStep2: React.FC = (props: any) => {
   const fetchInputFieldPasswordData = (input: string) => {
     let passwordError = hasData(input)
       ? ''
-      : AppString.screens.auth.login.passwordError;
+      : AppString.screens.auth.signupStep2.passwordError;
 
     setUserSignupStep2Detail(prev => ({
       ...prev,
@@ -105,6 +105,16 @@ const SignupStep2: React.FC = (props: any) => {
       }));
     } else {
       // API Call Logic
+      let userSignupData = {
+        firstName: userSignupStep2Detail.firstName,
+        lastName: userSignupStep2Detail.lastName,
+        phoneNumber: phoneNumber,
+        email: userSignupStep2Detail.email,
+        password: userSignupStep2Detail.password,
+        isWomen: rememberMe,
+      };
+      console.log('userSignupData==', userSignupData);
+      setShowModal(true);
     }
   };
 
@@ -160,29 +170,32 @@ const SignupStep2: React.FC = (props: any) => {
             secureTextEntry={!isPasswordVisible}
           />
 
-          <View style={styles.options}>
-            <View style={styles.rememberMe}>
-              <IconButton
-                icon={
-                  rememberMe ? 'checkbox-outline' : 'checkbox-blank-outline'
-                }
-                iconColor={'#FF5F9B'}
-                size={20}
-                onPress={() => setRememberMe(!rememberMe)}
-              />
-              <AppText style={styles.rememberText}>
-                {AppString.screens.auth.login.rememberMe}
-              </AppText>
-            </View>
+          <View style={styles.rememberMe}>
+            <IconButton
+              icon={rememberMe ? 'checkbox-outline' : 'checkbox-blank-outline'}
+              iconColor={'#FF5F9B'}
+              size={20}
+              onPress={() => setRememberMe(!rememberMe)}
+            />
+            <AppText numberOfLines={2} style={styles.confirmationText}>
+              {AppString.screens.auth.signupStep2.confirmationText}
+            </AppText>
           </View>
-
-          <AppButton
-            buttonTitle={AppString.screens.auth.signupStep2.signUpButton}
-            onPress={handleSignupStep2}
-            buttonType={ButtonType.PRIMARY}
-            buttonTitleStyle={styles.buttonTitleStyle}
-          />
         </View>
+        <AppButton
+          buttonTitle={AppString.screens.auth.signupStep2.signUpButton}
+          onPress={handleSignupStep2}
+          buttonType={ButtonType.PRIMARY}
+          buttonTitleStyle={styles.buttonTitleStyle}
+          buttonStyle={styles.buttonStyle}
+        />
+        <AppModal
+          visible={showModal}
+          onCancelPress={() => {
+            setShowModal(false);
+          }}
+          cancelButtonTitle="OK"
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -194,13 +207,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   scrollView: {flexGrow: 1, paddingHorizontal: 20, backgroundColor: 'white'},
-  options: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   rememberMe: {flexDirection: 'row', alignItems: 'center'},
-  rememberText: {fontSize: 14, color: '#333'},
+  confirmationText: {fontSize: 14, color: '#333', maxWidth: '85%'},
   buttonTitleStyle: {
     color: 'white',
   },
@@ -208,6 +216,10 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 12,
     marginVertical: 10,
+  },
+  buttonStyle: {
+    marginBottom: 20,
+    backgroundColor: 'red',
   },
 });
 
