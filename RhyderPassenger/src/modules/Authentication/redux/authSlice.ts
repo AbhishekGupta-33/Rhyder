@@ -1,5 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { AuthenticationState, signUpDataType } from '../../../utils/ConstantTypes/Redux';
+import {
+  AuthenticationState,
+  signUpDataType,
+} from '../../../utils/ConstantTypes/Redux';
 
 export const initialState: AuthenticationState = {
   isAuthenticated: false,
