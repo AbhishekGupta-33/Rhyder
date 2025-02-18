@@ -17,7 +17,9 @@ export const store = configureStore<AppState, AnyAction, any>({
   reducer: rootReducer,
   devTools:{
     name: 'Rhyder'
-  }
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 });
 
 
