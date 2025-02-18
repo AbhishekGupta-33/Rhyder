@@ -25,7 +25,6 @@ const AuthNavigator: React.FC = () => {
       <Stack.Screen name="signupStep2" component={SignupStep2} />
       <Stack.Screen name="forgotPassword" component={ForgotPassword} />
       <Stack.Screen name="home" component={Home} />
-      <Stack.Screen name="signupVerification" component={SignupVerification} />
       <Stack.Screen name={AppString.NavigationScreens.auth.UploadDocuments} component={UploadDocuments}/>
       <Stack.Screen name="signupVerification" component={SignupVerification} />
     </Stack.Navigator>
