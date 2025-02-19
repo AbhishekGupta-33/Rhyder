@@ -5,30 +5,58 @@ import UploadBox from '../components/UploadBox';
 import {AppString} from '../../../utils/AppString';
 import {AppHeader, AppText} from '../../../components';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {isFileSizeValid} from '../../../utils/ConstantTypes/globalFunctions';
+import {
+  isFileSizeValid,
+  prepareFormData,
+} from '../../../utils/ConstantTypes/globalFunctions';
 import {useCameraPermission} from '../../../hooks/useCameraPermission';
 import {pick, types} from '@react-native-documents/picker';
+import {log} from '../../../utils/Logger';
+import {callUploadIdentityApi} from '../redux/thunk';
+import {useDispatch} from 'react-redux';
+import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
+
+type eachDocumentType = {
+  id: number | undefined;
+  url: string | number | undefined;
+  name: string | number | undefined;
+  uploadStatus: boolean;
+  uploadProgress: number;
+};
+interface documentType {
+  image: eachDocumentType;
+  idProof: eachDocumentType;
+  genderProof: eachDocumentType;
+}
+const initialDocument = {
+  image: {
+    id: '',
+    url: '',
+    name: '',
+    uploadStatus: false,
+    uploadProgress: 0,
+  },
+  idProof: {
+    id: '',
+    url: '',
+    name: '',
+    uploadStatus: false,
+    uploadProgress: 0,
+  },
+  genderProof: {
+    id: '',
+    url: '',
+    name: '',
+    uploadStatus: false,
+    uploadProgress: 0,
+  },
+};
 
 const UploadDocuments: React.FC = (props: any) => {
   let section = AppString.screens.auth.uploadDocuments.sections;
   const {openCamera} = useCameraPermission();
-  const [documents, setDocuments] = useState({
-    image: {
-      url: '',
-      name: '',
-      uploadStatus: false,
-    },
-    idProof: {
-      url: '',
-      name: '',
-      uploadStatus: false,
-    },
-    genderProof: {
-      url: '',
-      name: '',
-      uploadStatus: false,
-    },
-  });
+  const dispatch = useDispatch();
+  const [documents, setDocuments] = useState<documentType>(initialDocument);
 
   // Handle File Upload
   const handleFileUpload = async (type: string) => {
@@ -44,30 +72,67 @@ const UploadDocuments: React.FC = (props: any) => {
           );
         }
       } else {
-        const [{uri, size, name, error, nativeType}] = await pick({
+        const [document] = await pick({
           mode: 'open',
           type: [types.pdf, types.images],
           requestLongTermAccess: true,
           transitionStyle: 'flipHorizontal',
         });
-        if (size && isFileSizeValid(size, 100)) {
+        if (document.size && isFileSizeValid(document.size)) {
           // console.log(`${nativeType} uploaded:`, name, uri);
+          let fileForm = prepareFormData({
+            uri: document.uri,
+            name: document.name,
+            type: document.type,
+          });
           if (type === section[1].id) {
+            const response = await callUploadIdentityApi(
+              dispatch,
+              DocumentType[1],
+              fileForm,
+              progress => {
+                setDocuments({
+                  ...documents,
+                  idProof: {
+                    ...documents.idProof,
+                    uploadProgress: progress / 100,
+                  },
+                });
+              },
+            );
             setDocuments({
               ...documents,
               idProof: {
-                url: uri,
-                name: name,
-                uploadStatus: false,
+                ...documents.idProof,
+                id: response?.id,
+                url: response?.fileUrl,
+                name: response?.fileName,
+                uploadStatus: true,
               },
             });
           } else {
+            const response = await callUploadIdentityApi(
+              dispatch,
+              DocumentType[2],
+              fileForm,
+              progress => {
+                setDocuments({
+                  ...documents,
+                  idProof: {
+                    ...documents.genderProof,
+                    uploadProgress: progress / 100,
+                  },
+                });
+              },
+            );
             setDocuments({
               ...documents,
               genderProof: {
-                url: uri,
-                name: name,
-                uploadStatus: false,
+                ...documents.genderProof,
+                id: response?.id,
+                url: response?.fileUrl,
+                name: response?.fileName,
+                uploadStatus: true,
               },
             });
           }
@@ -99,6 +164,8 @@ const UploadDocuments: React.FC = (props: any) => {
         label={section[0].uploadText}
         fileType={section[0].fileType}
         fileSize={section[0].fileSize}
+        uploadProgress={documents.image.uploadProgress}
+        uploadStatus={documents.image.uploadStatus}
         onPress={() => handleFileUpload(section[0].id)}
       />
       <UploadBox
@@ -106,6 +173,8 @@ const UploadDocuments: React.FC = (props: any) => {
         label={section[1].uploadText}
         fileType={section[1].fileType}
         fileSize={section[1].fileSize}
+        uploadProgress={documents.idProof.uploadProgress}
+        uploadStatus={documents.idProof.uploadStatus}
         onPress={() => handleFileUpload(section[1].id)}
       />
       <UploadBox
@@ -113,6 +182,8 @@ const UploadDocuments: React.FC = (props: any) => {
         label={section[2].uploadText}
         fileType={section[2].fileType}
         fileSize={section[2].fileSize}
+        uploadProgress={documents.genderProof.uploadProgress}
+        uploadStatus={documents.genderProof.uploadStatus}
         onPress={() => handleFileUpload(section[2].id)}
       />
     </SafeAreaView>
