@@ -18,7 +18,7 @@ import {
   signupResponse,
 } from './authSlice';
 import {
-  ApiResponse,
+ApiResponse,
   uploadDocumentResponse,
   ForgetPasswordRequest,
   ForgotPasswordResponse,
@@ -28,13 +28,12 @@ import {
   VerifyOtpRequest,
   LoginRequest,
   OtpResponse,
-  uploadDocumentResponse,
   UserDataResponse,
   VerifyOtpResponse,
 } from '../../../utils/ConstantTypes/authTypes';
 import {setStorageItem} from '../../../utils/Storage/storage';
 import {STORAGE_KEY} from '../../../utils/Storage/storageKeys';
-import {uploadIdentity} from '../api/DocumentApi';
+import {uploadIdentity} from '../api/DocumentApi'
 
 export const callSendOtpApi = async (phoneNumber: string, dispatch: any) => {
   try {
@@ -89,36 +88,8 @@ export const callLoginApi = async (credential: LoginRequest, dispatch: any) => {
   }
 };
 
-export const callUploadIdentityApi = async (
-  dispatch: any,
-  documentType: string,
-  formData: FormData,
-  onProgress: (progress: number) => void,
-) => {
-  try {
-    const response: ApiResponse<uploadDocumentResponse> = await uploadIdentity(
-      documentType,
-      formData,
-      (progress: number) => {
-        onProgress(progress);
-      },
-    );
-    dispatch(authenticationLoaded());
-    if (response.isSuccess) {
-      return response.data;
-    } else {
-      dispatch(authenticationError(response.errors[0]));
-    }
-  } catch (error) {
-    dispatch(authenticationLoaded());
-    throw error;
-  }
-};
 
-export const callSignupApi = async (
-  userSignupData: RegisterRequest,
-  dispatch: any,
-) => {
+export const callSignupApi = async (userSignupData: RegisterRequest, dispatch: any) => {
   try {
     dispatch(authenticationLoading());
     const response: SignupResponse = await register(userSignupData);
@@ -139,9 +110,7 @@ export const callForgotPasswordApi = async (
 ) => {
   try {
     dispatch(authenticationLoading());
-    const response: ForgotPasswordResponse = await forgotPassword(
-      forgetPasswordData,
-    );
+    const response: ForgotPasswordResponse = await forgotPassword(forgetPasswordData);
     if (response.isSuccess) {
       dispatch(forgotPasswordResponse(response.data));
     } else {
@@ -160,9 +129,7 @@ export const callResetPasswordApi = async (
 ) => {
   try {
     dispatch(authenticationLoading());
-    const response: ForgotPasswordResponse = await resetPassword(
-      resetPasswordData,
-    );
+    const response: ForgotPasswordResponse = await resetPassword(resetPasswordData);
     if (response.isSuccess) {
       dispatch(resetPasswordResponse(response.data));
     } else {
