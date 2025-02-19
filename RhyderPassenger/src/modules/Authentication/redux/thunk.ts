@@ -22,13 +22,14 @@ import {
   uploadDocumentResponse,
   ForgetPasswordRequest,
   ForgotPasswordResponse,
-  LoginRequest,
-  OtpResponse,
   RegisterRequest,
   ResetPasswordRequest,
   SignupResponse,
-  UserDataResponse,
   VerifyOtpRequest,
+  LoginRequest,
+  OtpResponse,
+  uploadDocumentResponse,
+  UserDataResponse,
   VerifyOtpResponse,
 } from '../../../utils/ConstantTypes/authTypes';
 import {setStorageItem} from '../../../utils/Storage/storage';
@@ -168,6 +169,34 @@ export const callResetPasswordApi = async (
       dispatch(authenticationError(response.errors[0]));
     }
     dispatch(authenticationLoaded());
+  } catch (error) {
+    dispatch(authenticationLoaded());
+    throw error;
+  }
+};
+
+
+// Document API 
+export const callUploadIdentityApi = async (
+  dispatch: any,
+  documentType: string,
+  formData: FormData,
+  onProgress: (progress: number) => void,
+) => {
+  try {
+    const response: ApiResponse<uploadDocumentResponse> = await uploadIdentity(
+      documentType,
+      formData,
+      (progress: number) => {
+        onProgress(progress);
+      },
+    );
+    dispatch(authenticationLoaded());
+    if (response.isSuccess) {
+      return response.data;
+    } else {
+      dispatch(authenticationError(response.errors[0]));
+    }
   } catch (error) {
     dispatch(authenticationLoaded());
     throw error;
