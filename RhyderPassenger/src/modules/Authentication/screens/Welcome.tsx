@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { AppButton, AppImage, ButtonType } from '../../../components';
+import { View, StyleSheet } from 'react-native';
+import { AppButton, AppImage, AppText, ButtonType } from '../../../components';
 import { appImage } from '../../../utils/Constants';
+import { AppString } from '../../../utils/AppString';
 
 const Welcome: React.FC = (props: any) => {
   return (
@@ -13,17 +14,14 @@ const Welcome: React.FC = (props: any) => {
       </View>
 
       <View style={styles.contentContainer}>
-        <Text style={styles.heading}>Let’s Ride With</Text>
-        <Text style={styles.brand}>RHYDER</Text>
-        <Text style={styles.description}>
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout.
-        </Text>
+        <AppText style={styles.heading}>{AppString.screens.auth.welcome.header1}</AppText>
+        <AppText style={styles.brand}>{AppString.screens.auth.welcome.header2}</AppText>
+        <AppText style={styles.description}>{AppString.screens.auth.welcome.subHedder}</AppText>
 
         <AppButton
-          buttonTitle="Sign Up"
+          buttonTitle={AppString.screens.auth.welcome.signupButton}
           onPress={() => {
-            props.navigation.navigate('signupStep1');
+            props.navigation.navigate(AppString.NavigationScreens.auth.SignupStep1);
           }}
           buttonType={ButtonType.PRIMARY}
           buttonTitleStyle={{ color: '#ffffff' }}
@@ -31,9 +29,9 @@ const Welcome: React.FC = (props: any) => {
         />
 
         <AppButton
-          buttonTitle="Login"
+          buttonTitle={AppString.screens.auth.welcome.loginButton}
           onPress={() => {
-            props.navigation.navigate('login');
+            props.navigation.navigate(AppString.NavigationScreens.auth.Login);
           }}
           buttonType={ButtonType.SECONDARY}
           buttonTitleStyle={{ color: '#C471ED' }}

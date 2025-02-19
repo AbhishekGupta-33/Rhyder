@@ -2,6 +2,13 @@ export const AppString = {
   NavigationScreens: {
     auth: {
       UploadDocuments: 'UploadDocuments',
+      Welcome: 'welcome',
+      Login: 'login',
+      SignupStep1: 'signupStep1',
+      SignupStep2: 'signupStep2',
+      ForgotPassword: 'forgotPassword',
+      SignupVerification: 'signupVerification',
+      CreatePassword: 'createPassword'
     },
   },
   screens: {
@@ -98,6 +105,33 @@ export const AppString = {
             id: 'genderIdentity',
           },
         ],
+      },
+      forgotPassword: {
+        header: 'Forgot Password',
+        subHeader:
+          'Change your password by entering your email or contact number',
+        resetButton: 'Send Reset Password Link',
+        emailOrPhoneNumberLabel: 'Email or Phone Number',
+        emailOrPhoneNumberPlaceholder: 'Enter email or phone number',
+        emailOrPhoneNumberError: 'Please enter email or phone number',
+      },
+      createPassword: {
+        header: 'Create Password',
+        passwordLabel: 'Password',
+        passwordPlaceholder: 'Enter password',
+        passwordError: 'Please enter password',
+        confirmPasswordLabel: 'Confirm Password',
+        confirmPasswordPlaceholder: 'Enter confirm password',
+        confirmPasswordError: 'Password not match',
+        resetButton: 'Reset Password',
+      },
+      welcome: {
+        header1: `Let's Ride With`,
+        header2: 'RHYDER',
+        subHedder:
+          'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+        signupButton: 'Sign Up',
+        loginButton: 'Login',
       },
     },
   },

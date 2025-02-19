@@ -33,3 +33,23 @@ export const otpSendResponseData = createSelector(
   selectAuthentication,
   Authentication => Authentication.otpSendSuccessMessage,
 );
+
+export const otpVerifyResponseData = createSelector(
+  selectAuthentication,
+  Authentication => Authentication.otpVerifySuccessMessage,
+);
+
+export const signUpResponseData = createSelector(
+  selectAuthentication,
+  Authentication => Authentication.signupSuccessMessage,
+);
+
+export const forgetPasswordResponseData = createSelector(
+  selectAuthentication,
+  Authentication => Authentication.forgetPasswordSuccessMessage,
+);
+
+export const resetPasswordResponseData = createSelector(
+  selectAuthentication,
+  Authentication => Authentication.resetPasswordSuccessMessage,
+);

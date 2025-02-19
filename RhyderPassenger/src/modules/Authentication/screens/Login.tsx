@@ -21,6 +21,7 @@ import {AppString} from '../../../utils/AppString';
 import {callLoginApi} from '../redux/thunk';
 import {useDispatch, useSelector} from 'react-redux';
 import {authenticationLogin} from '../redux/selector';
+import AuthenticationBottomView from '../components/AuthenticationBottomView';
 
 const Login: React.FC = (props: any) => {
   // State ------------------------------------------------
@@ -99,12 +100,17 @@ const Login: React.FC = (props: any) => {
         dispatch,
       );
     }
-  }, [userLoginDetail, userLoginDetail.userName, userLoginDetail.password, rememberMe]);
+  }, [
+    userLoginDetail,
+    userLoginDetail.userName,
+    userLoginDetail.password,
+    rememberMe,
+  ]);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <ShadowCard style={styles.card}>
+        <AuthenticationBottomView>
           <AppHeader
             headerTitle={AppString.screens.auth.login.header}
             onBackPress={() => props.navigation.goBack()}
@@ -171,6 +177,7 @@ const Login: React.FC = (props: any) => {
             buttonTitle={AppString.screens.auth.login.loginButton}
             onPress={handleLogin}
             buttonType={ButtonType.PRIMARY}
+            buttonTitleStyle={styles.buttonTitleStyle}
           />
 
           <AppText style={styles.footerText}>
@@ -179,13 +186,13 @@ const Login: React.FC = (props: any) => {
               style={styles.linkText}
               onPress={() =>
                 props.navigation.navigate(
-                  AppString.screens.auth.login.signupNavigation,
+                  AppString.NavigationScreens.auth.SignupStep1,
                 )
               }>
               {AppString.screens.auth.login.signup}
             </AppText>
           </AppText>
-        </ShadowCard>
+        </AuthenticationBottomView>
       </ScrollView>
     </SafeAreaView>
   );
@@ -194,7 +201,6 @@ const Login: React.FC = (props: any) => {
 const styles = StyleSheet.create({
   container: {flex: 1},
   scrollView: {flexGrow: 1, justifyContent: 'flex-end'},
-  card: {marginTop: 40, backgroundColor: 'white', padding: 20},
   googleButton: {flexDirection: 'row', justifyContent: 'center', padding: 12},
   googleText: {fontSize: 16, color: '#333'},
   dividerContainer: {
@@ -214,6 +220,9 @@ const styles = StyleSheet.create({
   forgotText: {fontSize: 14, color: '#007BFF'},
   footerText: {textAlign: 'center', marginTop: 10},
   linkText: {color: '#53a1fd'},
+  buttonTitleStyle: {
+    color: '#ffffff',
+  },
 });
 
 export default Login;

@@ -1,8 +1,9 @@
 import React from 'react';
-import {Image, Modal, StyleSheet, View} from 'react-native';
+import {Modal, StyleSheet, View} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import AppButton, {ButtonType} from './AppButton';
 import AppText from './AppText';
+import AppImage from './AppImage';
 
 // Enum for modal types
 export enum ModalType {
@@ -16,6 +17,9 @@ interface AppModalProps {
   cancelButtonTitle: string;
   okButtonTitle?: string;
   modalType?: ModalType;
+  imageURL?: string;
+  title: string;
+  subTitle?: string;
 }
 
 const AppModal: React.FC<AppModalProps> = ({
@@ -25,6 +29,9 @@ const AppModal: React.FC<AppModalProps> = ({
   cancelButtonTitle,
   okButtonTitle,
   modalType,
+  imageURL,
+  title,
+  subTitle,
 }) => {
   return (
     <Modal visible={visible} transparent animationType="slide">
@@ -32,47 +39,47 @@ const AppModal: React.FC<AppModalProps> = ({
         style={styles.absolute}
         blurType={'light'}
         blurAmount={1}
-        reducedTransparencyFallbackColor="red"/>
-        <View style={styles.modalContainerStyle}>
-          <View style={styles.innerViewStyle}>
-            <Image
-              source={{uri: 'https://imageglass.org/img/ribbon.webp'}}
-              resizeMode="contain"
-              style={styles.imageStyle}
-            />
-            <AppText size={20} bold color="#0cbaf3" style={styles.textStyle}>
-              {'Congratulations 🎉'}
-            </AppText>
-            {modalType === ModalType.PRIMARY ? (
-              <View style={styles.primaryButtonViewStyle}>
-                <AppButton
-                  buttonTitle={cancelButtonTitle}
-                  onPress={onCancelPress}
-                  buttonType={ButtonType.PRIMARY}
-                  buttonTitleStyle={{color: '#ffffff'}}
-                  buttonStyle={{marginVertical: 5, width: '45%'}}
-                />
-                {onOkPress && okButtonTitle && (
-                  <AppButton
-                    buttonTitle={okButtonTitle}
-                    buttonType={ButtonType.PRIMARY}
-                    onPress={onOkPress}
-                    buttonStyle={{marginVertical: 5, width: '45%'}}
-                    buttonTitleStyle={{color: '#ffffff'}}
-                  />
-                )}
-              </View>
-            ) : (
+        reducedTransparencyFallbackColor="red"
+      />
+      <View style={styles.modalContainerStyle}>
+        <View style={styles.innerViewStyle}>
+          <AppImage source={{uri: imageURL}} style={styles.imageStyle} />
+          <AppText size={20} bold color="#0cbaf3" style={styles.textStyle}>
+            {title}
+          </AppText>
+          <AppText size={18} color="gray" style={styles.textStyle}>
+            {subTitle}
+          </AppText>
+          {modalType === ModalType.PRIMARY ? (
+            <View style={styles.primaryButtonViewStyle}>
               <AppButton
                 buttonTitle={cancelButtonTitle}
-                buttonType={ButtonType.PRIMARY}
                 onPress={onCancelPress}
-                buttonStyle={{marginVertical: 5, width: '45%'}}
+                buttonType={ButtonType.PRIMARY}
                 buttonTitleStyle={{color: '#ffffff'}}
+                buttonStyle={{marginVertical: 5, width: '45%'}}
               />
-            )}
-          </View>
+              {onOkPress && okButtonTitle && (
+                <AppButton
+                  buttonTitle={okButtonTitle}
+                  buttonType={ButtonType.PRIMARY}
+                  onPress={onOkPress}
+                  buttonStyle={{marginVertical: 5, width: '45%'}}
+                  buttonTitleStyle={{color: '#ffffff'}}
+                />
+              )}
+            </View>
+          ) : (
+            <AppButton
+              buttonTitle={cancelButtonTitle}
+              buttonType={ButtonType.PRIMARY}
+              onPress={onCancelPress}
+              buttonStyle={{marginVertical: 5, width: '45%'}}
+              buttonTitleStyle={{color: '#ffffff'}}
+            />
+          )}
         </View>
+      </View>
     </Modal>
   );
 };
