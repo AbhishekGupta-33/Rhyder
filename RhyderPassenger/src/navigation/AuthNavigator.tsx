@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from '../modules/Authentication/screens/Login';
-import Home from '../modules/UserNavigation/screens/Home';
 import Welcome from '../modules/Authentication/screens/Welcome';
 import ForgotPassword from '../modules/Authentication/screens/ForgotPassword';
 import UploadDocuments from '../modules/Authentication/screens/UploadDocuments';
@@ -16,6 +15,7 @@ import {
 } from '../modules/Authentication/redux/selector';
 import {Alert} from 'react-native';
 import Loader from '../components/AppLoader';
+import CreatePassword from '../modules/Authentication/screens/CreatePassword';
 
 const Stack = createStackNavigator();
 
@@ -33,21 +33,21 @@ const AuthNavigator: React.FC = () => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="welcome">
-        <Stack.Screen name="welcome" component={Welcome} />
-        <Stack.Screen name="login" component={Login} />
-        <Stack.Screen name="signupStep1" component={SignupStep1} />
-        <Stack.Screen name="signupStep2" component={SignupStep2} />
-        <Stack.Screen name="forgotPassword" component={ForgotPassword} />
-        <Stack.Screen name="home" component={Home} />
+        initialRouteName={AppString.NavigationScreens.auth.Welcome}>
+        <Stack.Screen name={AppString.NavigationScreens.auth.Welcome} component={Welcome} />
+        <Stack.Screen name={AppString.NavigationScreens.auth.Login} component={Login} />
+        <Stack.Screen name={AppString.NavigationScreens.auth.SignupStep1} component={SignupStep1} />
+        <Stack.Screen name={AppString.NavigationScreens.auth.SignupStep2} component={SignupStep2} />
+        <Stack.Screen name={AppString.NavigationScreens.auth.ForgotPassword} component={ForgotPassword} />
         <Stack.Screen
           name={AppString.NavigationScreens.auth.UploadDocuments}
           component={UploadDocuments}
         />
         <Stack.Screen
-          name="signupVerification"
+          name={AppString.NavigationScreens.auth.SignupVerification}
           component={SignupVerification}
         />
+        <Stack.Screen name={AppString.NavigationScreens.auth.CreatePassword} component={CreatePassword} />
       </Stack.Navigator>
       <Loader loading={isAuthenticationLoading} />
     </>

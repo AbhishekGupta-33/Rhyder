@@ -8,12 +8,13 @@ export interface SendOtpRequest {
 // Verify OTP Request
 export interface VerifyOtpRequest {
   phoneNumber: string;
-  otp: string;
+  code: string;
 }
 
 // Register Request
 export interface RegisterRequest {
-  name: string;
+  firstName: string;
+  lastName:string;
   email: string;
   password: string;
   phoneNumber: string;
@@ -21,9 +22,9 @@ export interface RegisterRequest {
 }
 
 export enum RoleType {
-  Admin = 1,
-  Driver = 2,
-  Rider = 3,
+  Admin = "Admin",
+  Driver = "Driver",
+  Rider = "Rider",
 }
 
 // Login Request
@@ -74,13 +75,13 @@ export interface VerifyPasswordResetOtpRequest {
   otp: string;
 }
 
-// Reset Password Request
-export interface ResetPasswordRequest {
-  phoneNumber: string;
-  newPassword: string;
-  confirmPassword: string;
-  otp: string;
-}
+// // Reset Password Request
+// export interface ResetPasswordRequest {
+//   phoneNumber: string;
+//   newPassword: string;
+//   confirmPassword: string;
+//   otp: string;
+// }
 
 export type ApiResponse<T> = {
   isSuccess: boolean;
@@ -112,3 +113,26 @@ export type UserDataResponse = {
 
 // Example usage for OTP response
 export type VerifyOtpResponse = ApiResponse<string | null>;
+
+export type SignupResponse = {
+  isSuccess: boolean;
+  message: string;
+  data: string | null;
+  errors?: string[];
+};
+
+export type ForgotPasswordResponse = {
+  isSuccess: boolean;
+  message: string;
+  data: string | null;
+  errors: string[];
+};
+export type ForgetPasswordRequest ={
+  identifier: string;
+}
+
+export type ResetPasswordRequest = {
+  identifier: string;
+  resetToken: string;
+  newPassword: string;
+};

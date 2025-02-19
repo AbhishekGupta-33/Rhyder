@@ -10,7 +10,7 @@ export type signUpDataType = {
 
 export type AuthenticationState = {
   isAuthenticated: boolean;
-  userData: UserDataResponse| null,
+  userData: UserDataResponse | null;
   token: string | null;
   signUpData: signUpDataType;
   loading: boolean;
@@ -18,6 +18,9 @@ export type AuthenticationState = {
   error: Error | undefined | string;
   otpSendSuccessMessage: string;
   otpVerifySuccessMessage: string | null;
+  signupSuccessMessage: string | null;
+  forgetPasswordSuccessMessage: string | null;
+  resetPasswordSuccessMessage: string | null;
 };
 
 export type ReduxState = Record<string, any> & {

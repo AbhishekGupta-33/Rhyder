@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, ImageBackground, StyleSheet, Alert} from 'react-native';
+import { ImageBackground, StyleSheet, Alert} from 'react-native';
 import {
   AppButton,
   AppHeader,

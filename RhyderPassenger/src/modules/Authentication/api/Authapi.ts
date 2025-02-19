@@ -2,7 +2,7 @@
 
 import {ApiName} from '../../../api/apiName';
 import apiClient from '../../../api/axiosInstance';
-import { LoginRequest, RegisterRequest } from '../../../utils/ConstantTypes/authTypes';
+import { ForgetPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, VerifyOtpRequest } from '../../../utils/ConstantTypes/authTypes';
 
 // 1. Send OTP
 export const sendOtp = async (phoneNumber: string) => {
@@ -15,12 +15,9 @@ export const sendOtp = async (phoneNumber: string) => {
 };
 
 // 2. Verify OTP
-export const verifyOtp = async (phoneNumber: string, otp: string) => {
+export const verifyOtp = async (credential:VerifyOtpRequest) => {
   try {
-    const response = await apiClient.post(ApiName.auth.verifyOtp, {
-      phoneNumber,
-      otp,
-    });
+    const response = await apiClient.post(ApiName.auth.verifyOtp, credential);
     return response.data;
   } catch (error) {
     throw error;
@@ -82,9 +79,9 @@ export const refreshToken = async (refreshToken: string) => {
 };
 
 // 8. Forgot Password
-export const forgotPassword = async (email: string) => {
+export const forgotPassword = async (data: ForgetPasswordRequest) => {
   try {
-    const response = await apiClient.post(ApiName.auth.forgotPassword, {email});
+    const response = await apiClient.post(ApiName.auth.forgotPassword, data);
     return response.data;
   } catch (error) {
     throw error;
@@ -104,7 +101,7 @@ export const verifyPasswordResetOtp = async (otp: string) => {
 };
 
 // 10. Reset Password
-export const resetPassword = async (data: object) => {
+export const resetPassword = async (data: ResetPasswordRequest) => {
   try {
     const response = await apiClient.post(ApiName.auth.resetPassword, data);
     return response.data;

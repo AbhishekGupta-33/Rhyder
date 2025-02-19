@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { IconButton } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   AppButton,
   AppHeader,
@@ -12,7 +12,11 @@ import {
 } from '../../../components';
 import { AppString } from '../../../utils/AppString';
 import { hasData, hasValidateEmail } from '../../../utils/Validators';
-import { authenticationSignUp } from '../redux/selector';
+import { authenticationLoading, authenticationSignUp, signUpResponseData } from '../redux/selector';
+import { callSignupApi } from '../redux/thunk';
+import Loader from '../../../components/AppLoader';
+import { appImage } from '../../../utils/Constants';
+import { RoleType } from '../../../utils/ConstantTypes/authTypes';
 
 const SignupStep2: React.FC = (props: any) => {
   const [userDetails, setUserDetails] = useState({
@@ -32,16 +36,25 @@ const SignupStep2: React.FC = (props: any) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { phoneNumber } = useSelector(authenticationSignUp);
+  const signUpResponse = useSelector(signUpResponseData)
+  const isAuthenticationLoading = useSelector(authenticationLoading);
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (signUpResponse) {
+      setShowModal(true);
+    }
+  }, [signUpResponse])
 
   const handleInputChange = useCallback((field: string, value: string) => {
     let error = '';
-  
+    type ErrorKeys = "firstNameError" | "lastNameError" | "emailError" | "passwordError";
     if (!hasData(value)) {
-      error = AppString.screens.auth.signupStep2[`${field}Error`];
+      error = AppString.screens.auth.signupStep2[`${field}Error` as ErrorKeys];
     } else if (field === 'email' && !hasValidateEmail(value)) {
       error = AppString.screens.auth.signupStep2.emailError;
     }
-  
+
     setUserDetails(prev => ({
       ...prev,
       [field]: value,
@@ -69,18 +82,18 @@ const SignupStep2: React.FC = (props: any) => {
       setUserDetails(prev => ({ ...prev, errors }));
     } else {
       const userSignupData = {
-        firstName,
-        lastName,
-        phoneNumber,
-        email,
+        firstName:userDetails.firstName,
+        lastName:userDetails.lastName,
+        phoneNumber:phoneNumber,
+        email:userDetails.email,
         password,
+        role: RoleType.Rider
       };
-      console.log('userSignupData==', userSignupData);
-      setShowModal(true);
+      callSignupApi(userSignupData, dispatch)
     }
   }, [userDetails, phoneNumber, rememberMe, validateEmail]);
 
-  const InputField = useMemo(() => ({ label, placeholder, value, onChangeText, error, secureTextEntry, disabled }: any) => (
+  const InputField = useMemo(() => ({ label, placeholder, value, onChangeText, error, secureTextEntry, disabled, isLastField }: any) => (
     <AppTextInput
       label={label}
       placeholder={placeholder}
@@ -89,6 +102,7 @@ const SignupStep2: React.FC = (props: any) => {
       error={error}
       secureTextEntry={secureTextEntry}
       disabled={disabled}
+      isLastField={isLastField}
     />
   ), []);
 
@@ -108,14 +122,14 @@ const SignupStep2: React.FC = (props: any) => {
             label={AppString.screens.auth.signupStep2.firstNameLabel}
             placeholder={AppString.screens.auth.signupStep2.firstNamePlaceholder}
             value={userDetails.firstName}
-            onChangeText={(text) => handleInputChange('firstName', text)}
+            onChangeText={(text: string) => handleInputChange('firstName', text)}
             error={userDetails.errors.firstName}
           />
           <InputField
             label={AppString.screens.auth.signupStep2.lastNameLabel}
             placeholder={AppString.screens.auth.signupStep2.lastPlaceholder}
             value={userDetails.lastName}
-            onChangeText={(text) => handleInputChange('lastName', text)}
+            onChangeText={(text: string) => handleInputChange('lastName', text)}
             error={userDetails.errors.lastName}
           />
           <InputField
@@ -128,16 +142,17 @@ const SignupStep2: React.FC = (props: any) => {
             label={AppString.screens.auth.signupStep2.emailLabel}
             placeholder={AppString.screens.auth.signupStep2.emailPlaceholder}
             value={userDetails.email}
-            onChangeText={(text) => handleInputChange('email', text)}
+            onChangeText={(text: string) => handleInputChange('email', text)}
             error={userDetails.errors.email}
           />
           <InputField
             label={AppString.screens.auth.signupStep2.passwordLabel}
             placeholder={AppString.screens.auth.signupStep2.passwordPlaceholder}
             value={userDetails.password}
-            onChangeText={(text) => handleInputChange('password', text)}
+            onChangeText={(text: string) => handleInputChange('password', text)}
             error={userDetails.errors.password}
             secureTextEntry={!isPasswordVisible}
+            isLastField={true}
           />
 
           <View style={styles.rememberMe}>
@@ -160,10 +175,17 @@ const SignupStep2: React.FC = (props: any) => {
           buttonStyle={styles.buttonStyle}
         />
         <AppModal
+          imageURL={appImage.signupSuccessModal.imageUrl}
+          title={AppString.screens.auth.signupSuccessModal.title}
+          subTitle={AppString.screens.auth.signupSuccessModal.subTitle}
           visible={showModal}
-          onCancelPress={() => setShowModal(false)}
-          cancelButtonTitle="OK"
+          onCancelPress={() => {
+            setShowModal(false)
+            props.navigation.navigate(AppString.NavigationScreens.auth.Welcome)
+          }}
+          cancelButtonTitle={AppString.screens.auth.signupSuccessModal.okButton}
         />
+        <Loader loading={isAuthenticationLoading} />
       </ScrollView>
     </SafeAreaView>
   );
