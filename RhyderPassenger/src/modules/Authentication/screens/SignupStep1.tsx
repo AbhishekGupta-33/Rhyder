@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, ImageBackground, StyleSheet, Alert } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, ImageBackground, StyleSheet, Alert} from 'react-native';
 import {
   AppButton,
   AppHeader,
@@ -7,16 +7,19 @@ import {
   AppTextInput,
   ButtonType,
 } from '../../../components';
-import { appImage } from '../../../utils/Constants';
-import { useDispatch } from 'react-redux';
-import { authenticationSignupNumber } from '../redux/authSlice';
+import {appImage} from '../../../utils/Constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {authenticationSignupNumber} from '../redux/authSlice';
 import {
   hasData,
   hasValidPhoneNumber,
   removeSpaces,
 } from '../../../utils/Validators';
-import { AppString } from '../../../utils/AppString';
+import {AppString} from '../../../utils/AppString';
 import AuthenticationBottomView from '../components/AuthenticationBottomView';
+import {authenticationLoading, otpSendResponseData} from '../redux/selector';
+import {callSendOtpApi} from '../redux/thunk';
+import Loader from '../../../components/AppLoader';
 
 const SignupStep1: React.FC = (props: any) => {
   const dispatch = useDispatch();
@@ -24,21 +27,33 @@ const SignupStep1: React.FC = (props: any) => {
     phoneNumber: '',
     phoneNumberError: '',
   });
+  const otpSendResponse = useSelector(otpSendResponseData);
+  const isAuthenticationLoading = useSelector(authenticationLoading);
 
-  const handleSignupStep1 = () => {
+  useEffect(() => {
+    if (otpSendResponse) {
+      dispatch(authenticationSignupNumber(userSignupStep1Detail.phoneNumber));
+      Alert.alert(
+        '',
+        `${otpSendResponse}`,
+        [
+          {
+            text: 'OK',
+            onPress: () => props.navigation.navigate('signupVerification'),
+          },
+        ],
+      );
+    }
+  }, [otpSendResponse]);
+
+  const handleSignupStep1 = async () => {
     if (!hasData(userSignupStep1Detail.phoneNumber)) {
       setUserSignupStep1Detail(prev => ({
         ...prev,
         phoneNumberError: AppString.screens.auth.signupStep1.phoneNumberError,
       }));
     } else {
-      dispatch(authenticationSignupNumber(userSignupStep1Detail.phoneNumber));
-      Alert.alert(
-        'Success',
-        `OTP sent on phone number: ${userSignupStep1Detail.phoneNumber}`,
-      );
-      props.navigation.navigate('signupVerification');
-      // API Call Logic
+      callSendOtpApi(userSignupStep1Detail.phoneNumber, dispatch);
     }
   };
 
@@ -82,9 +97,7 @@ const SignupStep1: React.FC = (props: any) => {
 
         <AppButton
           buttonTitle={AppString.screens.auth.signupStep1.signupButton}
-          onPress={() => {
-            handleSignupStep1();
-          }}
+          onPress={handleSignupStep1}
           buttonType={ButtonType.PRIMARY}
           buttonTitleStyle={{ color: '#ffffff' }}
           buttonStyle={{ marginVertical: 5 }}

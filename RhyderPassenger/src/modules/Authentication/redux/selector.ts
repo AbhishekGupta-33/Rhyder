@@ -19,8 +19,17 @@ export const authenticationSignUp = createSelector(
   selectAuthentication,
   Authentication => Authentication.signUpData,
 );
+export const authenticationLogin = createSelector(
+  selectAuthentication,
+  Authentication => Authentication.userData,
+);
 
 export const authenticationData = createSelector(
   selectAuthentication,
   Authentication => Authentication.token,
+);
+
+export const otpSendResponseData = createSelector(
+  selectAuthentication,
+  Authentication => Authentication.otpSendSuccessMessage,
 );

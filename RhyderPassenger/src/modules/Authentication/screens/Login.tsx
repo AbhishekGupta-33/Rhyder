@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import {IconButton} from 'react-native-paper';
 import {
   AppButton,
   AppHeader,
@@ -15,63 +16,90 @@ import {
   ButtonType,
   ShadowCard,
 } from '../../../components';
-import {
-  hasData,
-  hasValidEmailOrPhoneNumber,
-  removeSpaces,
-} from '../../../utils/Validators';
-import { AppString } from '../../../utils/AppString';
+import {hasData, hasValidEmailOrPhoneNumber} from '../../../utils/Validators';
+import {AppString} from '../../../utils/AppString';
+import {callLoginApi} from '../redux/thunk';
+import {useDispatch, useSelector} from 'react-redux';
+import {authenticationLogin} from '../redux/selector';
 
 const Login: React.FC = (props: any) => {
-  const [userLoginDetail, setUserLoginDetail] = useState({
+  // State ------------------------------------------------
+  const initalUserLoginDetail = {
     userName: '',
-    userNameError: '',
     password: '',
-    passwordError: '',
-  });
-
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    errors: {
+      userName: '',
+      password: '',
+    },
+  };
+  const [userLoginDetail, setUserLoginDetail] = useState(initalUserLoginDetail);
   const [rememberMe, setRememberMe] = useState(false);
+  const dispatch = useDispatch();
+  const loginResponseData = useSelector(authenticationLogin);
 
-  const handleLogin = () => {
-    if (!hasData(userLoginDetail.userName)) {
-      setUserLoginDetail(prev => ({
-        ...prev,
-        userNameError: AppString.screens.auth.login.emailOrPhoneError,
-      }));
-    } else if (!hasData(userLoginDetail.password)) {
-      setUserLoginDetail(prev => ({
-        ...prev,
-        passwordError: AppString.screens.auth.login.passwordError,
-      }));
+  useEffect(() => {
+    if (loginResponseData !== null) {
+      Alert.alert('', `Login Success Fully`, [
+        {
+          text: 'OK',
+          onPress: () => {
+            setUserLoginDetail(initalUserLoginDetail);
+            props.navigation.navigate(
+              AppString.NavigationScreens.auth.UploadDocuments,
+            );
+          },
+        },
+      ]);
+    }
+  }, [loginResponseData]);
+
+  // Functionality ------------------------------------------------
+  const handleInputChange = useCallback((field: string, value: string) => {
+    let error = '';
+
+    if (!hasData(value)) {
+      error = (AppString.screens.auth.login as Record<string, string>)[
+        `${field}Error`
+      ];
+    } else if (field === 'userName' && !hasValidEmailOrPhoneNumber(value)) {
+      error = AppString.screens.auth.login.emailOrPhoneError;
+    }
+    console.log(error);
+
+    setUserLoginDetail(prev => ({
+      ...prev,
+      [field]: value,
+      errors: {
+        ...prev.errors,
+        [field]: error,
+      },
+    }));
+  }, []);
+
+  const handleLogin = useCallback(() => {
+    const {userName, password} = userLoginDetail;
+    const errors = {
+      userName: hasData(userName)
+        ? ''
+        : AppString.screens.auth.login.emailOrPhoneError,
+      password: hasData(password)
+        ? ''
+        : AppString.screens.auth.login.passwordError,
+    };
+
+    if (Object.values(errors).some(error => error !== '')) {
+      setUserLoginDetail(prev => ({...prev, errors}));
     } else {
       // API Call Logic
+      callLoginApi(
+        {
+          identifier: userName,
+          password: password,
+        },
+        dispatch,
+      );
     }
-  };
-
-  const fetchInfieldEmailOrPhoneNumberData = (input: string) => {
-    let userNameError = hasValidEmailOrPhoneNumber(input)
-      ? ''
-      : AppString.screens.auth.login.emailOrPhoneError;
-
-    setUserLoginDetail(prev => ({
-      ...prev,
-      userName: removeSpaces(input),
-      userNameError,
-    }));
-  };
-
-  const fetchInfieldPasswordData = (input: string) => {
-    let passwordError = hasData(input)
-      ? ''
-      : AppString.screens.auth.login.passwordError;
-
-    setUserLoginDetail(prev => ({
-      ...prev,
-      password: removeSpaces(input),
-      passwordError,
-    }));
-  };
+  }, [userLoginDetail, userLoginDetail.userName, userLoginDetail.password, rememberMe]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -99,18 +127,18 @@ const Login: React.FC = (props: any) => {
           <AppTextInput
             label={AppString.screens.auth.login.emailOrPhoneLabel}
             value={userLoginDetail.userName}
-            onChangeText={fetchInfieldEmailOrPhoneNumberData}
+            onChangeText={text => handleInputChange('userName', text)}
             placeholder={AppString.screens.auth.login.emailOrPhonePlaceholder}
-            error={userLoginDetail.userNameError}
+            error={userLoginDetail.errors.userName}
           />
 
           <AppTextInput
             label={AppString.screens.auth.login.passwordLabel}
             value={userLoginDetail.password}
-            onChangeText={fetchInfieldPasswordData}
+            onChangeText={text => handleInputChange('password', text)}
             placeholder={AppString.screens.auth.login.passwordPlaceholder}
-            secureTextEntry={!isPasswordVisible}
-            error={userLoginDetail.passwordError}
+            secureTextEntry={true}
+            error={userLoginDetail.errors.password}
           />
 
           <View style={styles.options}>
@@ -139,7 +167,6 @@ const Login: React.FC = (props: any) => {
               </AppText>
             </TouchableOpacity>
           </View>
-
           <AppButton
             buttonTitle={AppString.screens.auth.login.loginButton}
             onPress={handleLogin}
@@ -165,28 +192,28 @@ const Login: React.FC = (props: any) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  scrollView: { flexGrow: 1, justifyContent: 'flex-end' },
-  card: { marginTop: 40, backgroundColor: 'white', padding: 20 },
-  googleButton: { flexDirection: 'row', justifyContent: 'center', padding: 12 },
-  googleText: { fontSize: 16, color: '#333' },
+  container: {flex: 1},
+  scrollView: {flexGrow: 1, justifyContent: 'flex-end'},
+  card: {marginTop: 40, backgroundColor: 'white', padding: 20},
+  googleButton: {flexDirection: 'row', justifyContent: 'center', padding: 12},
+  googleText: {fontSize: 16, color: '#333'},
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 15,
   },
-  line: { flex: 1, height: 1, backgroundColor: '#E0E0E0' },
-  orText: { marginHorizontal: 10, fontSize: 14, color: '#888' },
+  line: {flex: 1, height: 1, backgroundColor: '#E0E0E0'},
+  orText: {marginHorizontal: 10, fontSize: 14, color: '#888'},
   options: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  rememberMe: { flexDirection: 'row', alignItems: 'center' },
-  rememberText: { fontSize: 14, color: '#333' },
-  forgotText: { fontSize: 14, color: '#007BFF' },
-  footerText: { textAlign: 'center', marginTop: 10 },
-  linkText: { color: '#53a1fd' },
+  rememberMe: {flexDirection: 'row', alignItems: 'center'},
+  rememberText: {fontSize: 14, color: '#333'},
+  forgotText: {fontSize: 14, color: '#007BFF'},
+  footerText: {textAlign: 'center', marginTop: 10},
+  linkText: {color: '#53a1fd'},
 });
 
 export default Login;

@@ -1,9 +1,9 @@
 import React from 'react';
-import {Text, TextStyle} from 'react-native';
+import {Text} from 'react-native';
 
 interface AppTextProps {
   children: React.ReactNode;
-  style?: TextStyle;
+  style?: any;
   numberOfLines?: number;
   ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
   [key: string]: any;

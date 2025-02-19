@@ -1,9 +1,11 @@
 import axios from "axios";
 import Config from "react-native-config";
+import { getStorageItem } from "../utils/Storage/storage";
+import { STORAGE_KEY } from "../utils/Storage/storageKeys";
 
 // Base URL Configuration
 export const apiClient = axios.create({
-  baseURL: Config.API_BASE_URL, // Replace with your actual API URL
+  baseURL: "https://rhyderapi.k-asoftech.com", // Replace with your actual API URL
   timeout: 10000, // Set request timeout (in ms)
   headers: {
     "Content-Type": "application/json",
@@ -13,7 +15,8 @@ export const apiClient = axios.create({
 // Request Interceptor (Attach token if available)
 apiClient.interceptors.request.use(
   async (config) => {
-    const token = "your-auth-token"; // Retrieve token from storage or Redux
+    
+    const token = getStorageItem(STORAGE_KEY.AUTH_TOKEN); // Retrieve token from storage or Redux
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

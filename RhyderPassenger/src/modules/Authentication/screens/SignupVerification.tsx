@@ -1,28 +1,50 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, TouchableOpacity, SafeAreaView} from 'react-native';
 import {AppButton, AppHeader, AppText, ButtonType} from '../../../components';
 import {ScrollView} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Surface} from 'react-native-paper';
 import {authenticationSignUp} from '../redux/selector';
 import {OtpInput} from 'react-native-otp-entry';
 import {hasData} from '../../../utils/Validators';
 import {AppString} from '../../../utils/AppString';
+import {callVerifyOtpApi} from '../redux/thunk';
 
 const SignupVerification: React.FC = (props: any) => {
   const [otpData, setOtpData] = useState({otp: '', otpError: ''});
   const {phoneNumber} = useSelector(authenticationSignUp);
+  const [timer, setTimer] = useState(30);
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (timer > 0) {
+      const interval = setInterval(() => {
+        setTimer(prev => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setIsResendDisabled(false);
+    }
+  }, [timer]);
 
   const handleVerify = () => {
-    if (!hasData(otpData.otp) || otpData.otp.length != 6) {
+    if (!hasData(otpData.otp) || otpData.otp.length !== 6) {
       setOtpData(prev => ({
         ...prev,
         otpError: AppString.screens.auth.signupVerification.otpError,
       }));
     } else {
-      //call API
+      // callVerifyOtpApi(phoneNumber,otpData.otp,dispatch)
       props.navigation.navigate('signupStep2');
     }
+  };
+
+  const handleResendOtp = () => {
+    console.log('Resending OTP...');
+
+    setTimer(30);
+    setIsResendDisabled(true);
   };
 
   return (
@@ -71,16 +93,22 @@ const SignupVerification: React.FC = (props: any) => {
           ) : null}
 
           <View style={styles.resendViewStyle}>
-            <AppText>00:30</AppText>
-            <TouchableOpacity>
-              <AppText style={styles.resendAppText}>
+            <AppText>{timer < 10 ? `00:0${timer}` : `00:${timer}`}</AppText>
+            <TouchableOpacity
+              onPress={handleResendOtp}
+              disabled={isResendDisabled}>
+              <AppText
+                style={[
+                  styles.resendAppText,
+                  isResendDisabled && styles.disabledText,
+                ]}>
                 {AppString.screens.auth.signupVerification.resendButton}
               </AppText>
             </TouchableOpacity>
           </View>
 
           <AppButton
-            buttonTitle="Verify"
+            buttonTitle={AppString.screens.auth.signupVerification.verifyButton}
             onPress={handleVerify}
             buttonType={ButtonType.PRIMARY}
             buttonTitleStyle={{color: '#ffffff'}}
@@ -150,12 +178,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
+    marginVertical: 10,
   },
   errorText: {
     color: 'red',
     fontSize: 14,
     marginTop: 5,
   },
+  disabledText: {
+    color: 'gray',
+  }
 });
 
 export default SignupVerification;

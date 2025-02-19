@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 export const hasValidateEmail = (email: string) => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return emailRegex.test(email);
@@ -23,3 +25,15 @@ export const hasData = (str: string) => {
 };
 
 export const removeSpaces = (input: string) => input.replace(/\s/g, '');
+
+
+export const prepareFormData = (file: any, fieldName = 'file') => {
+  const formData = new FormData();
+  formData.append(fieldName, {
+    uri: Platform.OS === 'android' ? file.uri : file.uri.replace('file://', ''),
+    name: file.fileName || 'upload.jpg',
+    type: file.type || 'image/jpeg',
+  });
+
+  return formData;
+};

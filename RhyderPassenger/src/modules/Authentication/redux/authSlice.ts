@@ -3,9 +3,11 @@ import {
   AuthenticationState,
   signUpDataType,
 } from '../../../utils/ConstantTypes/Redux';
+import { UserDataResponse } from '../../../utils/ConstantTypes/authTypes';
 
 export const initialState: AuthenticationState = {
   isAuthenticated: false,
+  userData: null,
   token: null,
   signUpData: {
     firstName: '',
@@ -17,19 +19,23 @@ export const initialState: AuthenticationState = {
   loading: false,
   loaded: false,
   error: undefined,
+  otpSendSuccessMessage: '',
+  otpVerifySuccessMessage: '',
 };
 
 export const authenticationSlice = createSlice({
   name: 'Authentication',
   initialState,
   reducers: {
-    userData: (state, action: PayloadAction<string>) => {
+    loginUserData: (state, action: PayloadAction<UserDataResponse>) => {
       state.isAuthenticated = true;
-      state.token = action.payload;
+      state.token = action.payload.token;
+      state.userData = action.payload;
     },
     clearUserData: state => {
       state.isAuthenticated = false;
       state.token = null;
+      state.userData = null;
     },
     setSignupDetails: (state, action: PayloadAction<signUpDataType>) => {
       state.signUpData = action.payload;
@@ -41,23 +47,33 @@ export const authenticationSlice = createSlice({
       (state.loading = true), (state.loaded = false), (state.error = undefined);
     },
     authenticationLoaded: state => {
-      (state.loading = false), (state.loaded = true), (state.error = undefined);
+      (state.loading = false), (state.loaded = true);
     },
-    authenticationError: (state, action: PayloadAction<Error>) => {
+    authenticationError: (state, action: PayloadAction<Error | string>) => {
       (state.loading = false),
         (state.loaded = true),
         (state.error = action.payload);
+    },
+    otpSendResponse: (state, action: PayloadAction<string>) => {
+      state.otpSendSuccessMessage = action.payload;
+    },
+    otpVerifyResponse: (state, action: PayloadAction<string | null>) => {
+      state.otpVerifySuccessMessage = action.payload;
     },
   },
 });
 
 export const {
-  userData,
+  loginUserData,
   clearUserData,
   setSignupDetails,
   authenticationLoading,
   authenticationLoaded,
   authenticationError,
-  authenticationSignupNumber
+  authenticationSignupNumber,
+
+  //Api handler
+  otpSendResponse,
+  otpVerifyResponse,
 } = authenticationSlice.actions;
 export const authenticationReducer = authenticationSlice.reducer;
