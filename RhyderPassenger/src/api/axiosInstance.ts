@@ -1,5 +1,7 @@
 import axios from "axios";
 import Config from "react-native-config";
+import { getStorageItem } from "../utils/Storage/storage";
+import { STORAGE_KEY } from "../utils/Storage/storageKeys";
 
 // Base URL Configuration
 export const apiClient = axios.create({
@@ -13,7 +15,8 @@ export const apiClient = axios.create({
 // Request Interceptor (Attach token if available)
 apiClient.interceptors.request.use(
   async (config) => {
-    const token = ""; // Retrieve token from storage or Redux
+    
+    const token = getStorageItem(STORAGE_KEY.AUTH_TOKEN); // Retrieve token from storage or Redux
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

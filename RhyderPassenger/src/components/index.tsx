@@ -5,9 +5,11 @@ import AppImage from './AppImage';
 import AppHeader from './AppHeader';
 import ShadowCard from './ShadowCard';
 import AppModal from './AppModal';
+import AppErrorText from './AppErrorText';
 
 export {
   AppText,
+  AppErrorText,
   AppButton,
   AppTextInput,
   ButtonType,

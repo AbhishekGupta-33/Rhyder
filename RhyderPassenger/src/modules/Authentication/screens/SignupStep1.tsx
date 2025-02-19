@@ -97,9 +97,7 @@ const SignupStep1: React.FC = (props: any) => {
 
         <AppButton
           buttonTitle={AppString.screens.auth.signupStep1.signupButton}
-          onPress={() => {
-            handleSignupStep1();
-          }}
+          onPress={handleSignupStep1}
           buttonType={ButtonType.PRIMARY}
           buttonTitleStyle={{color: '#ffffff'}}
           buttonStyle={{marginVertical: 5}}

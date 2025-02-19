@@ -2,6 +2,7 @@
 
 import {ApiName} from '../../../api/apiName';
 import apiClient from '../../../api/axiosInstance';
+import { LoginRequest, RegisterRequest } from '../../../utils/ConstantTypes/authTypes';
 
 // 1. Send OTP
 export const sendOtp = async (phoneNumber: string) => {
@@ -27,7 +28,7 @@ export const verifyOtp = async (phoneNumber: string, otp: string) => {
 };
 
 // 3. Register
-export const register = async (userData: object) => {
+export const register = async (userData: RegisterRequest) => {
   try {
     const response = await apiClient.post(ApiName.auth.register, userData);
     return response.data;
@@ -37,7 +38,7 @@ export const register = async (userData: object) => {
 };
 
 // 4. Login
-export const login = async (credentials: object) => {
+export const login = async (credentials: LoginRequest) => {
   try {
     const response = await apiClient.post(ApiName.auth.login, credentials);
     return response.data;

@@ -1,3 +1,5 @@
+import { UserDataResponse } from "./authTypes";
+
 export type signUpDataType = {
   firstName: string;
   lastName: string;
@@ -8,11 +10,12 @@ export type signUpDataType = {
 
 export type AuthenticationState = {
   isAuthenticated: boolean;
+  userData: UserDataResponse| null,
   token: string | null;
   signUpData: signUpDataType;
   loading: boolean;
   loaded: boolean;
-  error: Error | undefined;
+  error: Error | undefined | string;
   otpSendSuccessMessage: string;
   otpVerifySuccessMessage: string | null;
 };

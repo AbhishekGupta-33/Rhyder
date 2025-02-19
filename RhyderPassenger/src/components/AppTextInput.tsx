@@ -3,6 +3,7 @@ import {View, StyleSheet} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import AppText from './AppText';
 import {removeSpaces} from '../utils/Validators';
+import AppErrorText from './AppErrorText';
 
 interface AppTextInputProps {
   label: string;
@@ -61,7 +62,7 @@ const AppTextInput: React.FC<AppTextInputProps> = ({
         style={styles.input}
         {...rest}
       />
-      {error && <AppText style={styles.errorText}>{error}</AppText>}
+      <AppErrorText>{error}</AppErrorText>
     </View>
   );
 };
