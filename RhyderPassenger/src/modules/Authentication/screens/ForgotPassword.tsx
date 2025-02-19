@@ -1,111 +1,126 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, SafeAreaView, ScrollView, Alert} from 'react-native';
+import AuthenticationBottomView from '../components/AuthenticationBottomView';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import {IconButton} from 'react-native-paper';
-import LinearGradient from 'react-native-linear-gradient';
+  AppButton,
+  AppHeader,
+  AppText,
+  AppTextInput,
+  ButtonType,
+} from '../../../components';
+import {AppString} from '../../../utils/AppString';
+import {hasData, hasValidEmailOrPhoneNumber} from '../../../utils/Validators';
+import { callForgotPasswordApi } from '../redux/thunk';
+import { useDispatch, useSelector } from 'react-redux';
+import { forgetPasswordResponseData } from '../redux/selector';
+import { authenticationSignupNumber } from '../redux/authSlice';
 
-const ForgotPassword: React.FC = () => {
+const ForgotPassword: React.FC = (props: any) => {
+  const [forgotPasswordDetail, setForgotPasswordDetail] = useState({
+    emailOrPhoneNumber: '',
+    emailOrPhoneNumberError: '',
+  });
+  const dispatch = useDispatch();
+  const forgetPasswordResponse = useSelector(forgetPasswordResponseData)
+
+   useEffect(() => {
+      if (forgetPasswordResponse) {
+        dispatch(authenticationSignupNumber(forgotPasswordDetail.emailOrPhoneNumber));
+        Alert.alert(
+          '',
+          `${forgetPasswordResponse}`,
+          [
+            {
+              text: 'OK',
+              onPress: () => props.navigation.navigate(AppString.NavigationScreens.auth.SignupVerification,{ isFrom: 'ForgotPassword' }),
+            },
+          ],
+        );
+      }
+    }, [forgetPasswordResponse]);
+
+  const fetchInfieldEmailOrPhoneNumberData = (input: string) => {
+    let emailOrPhoneNumberError = hasValidEmailOrPhoneNumber(input)
+      ? ''
+      : AppString.screens.auth.forgotPassword.emailOrPhoneNumberError;
+
+    setForgotPasswordDetail(prev => ({
+      ...prev,
+      emailOrPhoneNumber: input,
+      emailOrPhoneNumberError,
+    }));
+  };
+
+  const handleForgot = () => {
+    if (!hasData(forgotPasswordDetail.emailOrPhoneNumber)) {
+      setForgotPasswordDetail(prev => ({
+        ...prev,
+        emailOrPhoneNumberError:
+          AppString.screens.auth.forgotPassword.emailOrPhoneNumberError,
+      }));
+    } else {
+      // API Call Logic
+      callForgotPasswordApi(
+        {identifier: forgotPasswordDetail.emailOrPhoneNumber},
+        dispatch,
+      );
+    }
+  };
+
   return (
-    <LinearGradient colors={['#7ED6DF', '#A29BFE']} style={styles.container}>
-      {/* Logo Section */}
-      <View style={styles.logoContainer}>
-        <Text style={styles.logo}>RHYDER</Text>
-        <Text style={styles.tagline}>
-          THE <Text style={styles.highlight}>ALT</Text>URNATIVE ROUTE
-        </Text>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <AuthenticationBottomView>
+          <AppHeader
+            headerTitle={AppString.screens.auth.forgotPassword.header}
+            onBackPress={() => {
+              props.navigation.goBack();
+            }}
+          />
+          <AppText style={styles.subheaderStyle}>
+            {AppString.screens.auth.forgotPassword.subHeader}
+          </AppText>
 
-      {/* Forgot Password Card */}
-      <View style={styles.card}>
-        <IconButton icon="arrow-left" size={24} onPress={() => {}} />
+          <AppTextInput
+            label={
+              AppString.screens.auth.forgotPassword.emailOrPhoneNumberLabel
+            }
+            value={forgotPasswordDetail.emailOrPhoneNumber}
+            onChangeText={fetchInfieldEmailOrPhoneNumberData}
+            placeholder={
+              AppString.screens.auth.forgotPassword
+                .emailOrPhoneNumberPlaceholder
+            }
+            error={forgotPasswordDetail.emailOrPhoneNumberError}
+            isLastField={true}
+          />
 
-        <Text style={styles.title}>Forgot Password</Text>
-        <Text style={styles.subtitle}>
-          Change your password by entering your email or contact number
-        </Text>
-
-        <Text style={styles.label}>Email or Phone Number*</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Email or Phone Number"
-        />
-
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Send Reset Password Link</Text>
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
+          <AppButton
+            buttonTitle={AppString.screens.auth.forgotPassword.resetButton}
+            onPress={handleForgot}
+            buttonType={ButtonType.PRIMARY}
+            buttonTitleStyle={styles.buttonTitleStyle}
+          />
+        </AuthenticationBottomView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+  },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  logoContainer: {
-    alignItems: 'center',
-    marginBottom: 30,
+  buttonTitleStyle: {
+    color: '#ffffff',
   },
-  logo: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: '#FF3CAC',
-  },
-  tagline: {
-    fontSize: 14,
-    color: '#000',
-  },
-  highlight: {
-    color: '#FF3CAC',
-  },
-  card: {
-    width: '100%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 20,
-    elevation: 5,
-    alignSelf: 'flex-end',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  subheaderStyle: {
     marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 20,
-    color: '#666',
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: '#FF3CAC',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: 'gray',
   },
 });
 

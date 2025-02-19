@@ -1,14 +1,24 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, TouchableOpacity, SafeAreaView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  Alert,
+} from 'react-native';
 import {AppButton, AppHeader, AppText, ButtonType} from '../../../components';
 import {ScrollView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Surface} from 'react-native-paper';
-import {authenticationSignUp} from '../redux/selector';
+import {
+  authenticationSignUp,
+  otpSendResponseData,
+  otpVerifyResponseData,
+} from '../redux/selector';
 import {OtpInput} from 'react-native-otp-entry';
 import {hasData} from '../../../utils/Validators';
 import {AppString} from '../../../utils/AppString';
-import {callVerifyOtpApi} from '../redux/thunk';
+import {callSendOtpApi, callVerifyOtpApi} from '../redux/thunk';
 
 const SignupVerification: React.FC = (props: any) => {
   const [otpData, setOtpData] = useState({otp: '', otpError: ''});
@@ -16,6 +26,10 @@ const SignupVerification: React.FC = (props: any) => {
   const [timer, setTimer] = useState(30);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const dispatch = useDispatch();
+  const otpVerifyResponse = useSelector(otpVerifyResponseData);
+  const otpSendResponse = useSelector(otpSendResponseData);
+  const [hasShownAlert, setHasShownAlert] = useState(false);
+  const isFrom = props?.route?.params?.isFrom;
 
   useEffect(() => {
     if (timer > 0) {
@@ -28,23 +42,49 @@ const SignupVerification: React.FC = (props: any) => {
     }
   }, [timer]);
 
+  useEffect(() => {
+    if (otpVerifyResponse) {
+      Alert.alert('', `${otpVerifyResponse}`, [
+        {
+          text: 'OK',
+          onPress: () =>
+            props.navigation.navigate(
+              isFrom
+                ? AppString.NavigationScreens.auth.CreatePassword
+                : AppString.NavigationScreens.auth.SignupStep2,
+            ),
+        },
+      ]);
+    }
+  }, [otpVerifyResponse]);
+
+  useEffect(() => {
+    if (otpSendResponse && hasShownAlert) {
+      Alert.alert('', `${otpSendResponse}`, [
+        {
+          text: 'OK',
+          onPress: () => setHasShownAlert(false), // Prevent duplicate alerts
+        },
+      ]);
+    }
+  }, [otpSendResponse]);
+
   const handleVerify = () => {
-    if (!hasData(otpData.otp) || otpData.otp.length !== 6) {
+    if (!hasData(otpData.otp) || otpData.otp.length !== 4) {
       setOtpData(prev => ({
         ...prev,
         otpError: AppString.screens.auth.signupVerification.otpError,
       }));
     } else {
-      // callVerifyOtpApi(phoneNumber,otpData.otp,dispatch)
-      props.navigation.navigate('signupStep2');
+      callVerifyOtpApi({phoneNumber: phoneNumber, code: otpData.otp}, dispatch);
     }
   };
 
   const handleResendOtp = () => {
-    console.log('Resending OTP...');
-
+    callSendOtpApi(phoneNumber, dispatch);
     setTimer(30);
     setIsResendDisabled(true);
+    setHasShownAlert(true);
   };
 
   return (
@@ -70,7 +110,7 @@ const SignupVerification: React.FC = (props: any) => {
           </AppText>
 
           <OtpInput
-            numberOfDigits={6}
+            numberOfDigits={4}
             focusColor="pink"
             autoFocus={false}
             hideStick={true}
@@ -187,7 +227,7 @@ const styles = StyleSheet.create({
   },
   disabledText: {
     color: 'gray',
-  }
+  },
 });
 
 export default SignupVerification;

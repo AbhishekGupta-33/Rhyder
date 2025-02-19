@@ -21,6 +21,9 @@ export const initialState: AuthenticationState = {
   error: undefined,
   otpSendSuccessMessage: '',
   otpVerifySuccessMessage: '',
+  signupSuccessMessage:'',
+  forgetPasswordSuccessMessage:'',
+  resetPasswordSuccessMessage:''
 };
 
 export const authenticationSlice = createSlice({
@@ -60,6 +63,15 @@ export const authenticationSlice = createSlice({
     otpVerifyResponse: (state, action: PayloadAction<string | null>) => {
       state.otpVerifySuccessMessage = action.payload;
     },
+    signupResponse: (state, action: PayloadAction<string | null>) => {
+      state.signupSuccessMessage = action.payload;
+    },
+    forgotPasswordResponse:(state, action: PayloadAction<string | null>) => {
+      state.forgetPasswordSuccessMessage = action.payload;
+    },
+    resetPasswordResponse:(state, action: PayloadAction<string | null>) => {
+      state.resetPasswordSuccessMessage = action.payload;
+    },
   },
 });
 
@@ -75,5 +87,8 @@ export const {
   //Api handler
   otpSendResponse,
   otpVerifyResponse,
+  signupResponse,
+  forgotPasswordResponse,
+  resetPasswordResponse
 } = authenticationSlice.actions;
 export const authenticationReducer = authenticationSlice.reducer;

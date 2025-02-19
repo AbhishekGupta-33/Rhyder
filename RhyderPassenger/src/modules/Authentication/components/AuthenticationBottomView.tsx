@@ -1,9 +1,9 @@
-import { StyleSheet, ViewStyle } from "react-native";
+import { StyleSheet } from "react-native";
 import { ShadowCard } from "../../../components";
 
 interface AppTextProps {
   children: React.ReactNode;
-  bottomViewStyle: any
+  bottomViewStyle?: any
 }
 
 const AuthenticationBottomView: React.FC<AppTextProps> = ({ children, bottomViewStyle }) => {
@@ -15,6 +15,12 @@ const AuthenticationBottomView: React.FC<AppTextProps> = ({ children, bottomView
 }
 
 const styles = StyleSheet.create({
-  card: { marginTop: 40, backgroundColor: 'white', padding: 20 }
+  card: {
+    marginTop: 40,
+    backgroundColor: 'white',
+    padding: 20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  }
 })
 export default AuthenticationBottomView;
