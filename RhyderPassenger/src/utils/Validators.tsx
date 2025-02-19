@@ -25,15 +25,3 @@ export const hasData = (str: string) => {
 };
 
 export const removeSpaces = (input: string) => input.replace(/\s/g, '');
-
-
-export const prepareFormData = (file: any, fieldName = 'file') => {
-  const formData = new FormData();
-  formData.append(fieldName, {
-    uri: Platform.OS === 'android' ? file.uri : file.uri.replace('file://', ''),
-    name: file.fileName || 'upload.jpg',
-    type: file.type || 'image/jpeg',
-  });
-
-  return formData;
-};

@@ -69,7 +69,7 @@ const AppTextInput: React.FC<AppTextInputProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
+    marginBottom: 5,
   },
   label: {
     fontSize: 14,

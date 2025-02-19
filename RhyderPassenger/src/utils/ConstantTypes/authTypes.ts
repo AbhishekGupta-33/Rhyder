@@ -22,9 +22,15 @@ export interface RegisterRequest {
 }
 
 export enum RoleType {
-  Admin = "Admin",
-  Driver = "Driver",
-  Rider = "Rider",
+  'Admin' = 1,
+  'Driver' = 2,
+  'Rider' = 3,
+}
+
+export enum DocumentType {
+  'UserImage',
+  'IdentityProof',
+  'GenderIdentityProof',
 }
 
 // Login Request
@@ -109,6 +115,15 @@ export type UserDataResponse = {
   name: string;
   token: string;
   refreshToken: string;
+};
+
+export type uploadDocumentResponse = {
+  id: number;
+  type: number;
+  fileUrl: string;
+  status: number;
+  uploadDate: string;
+  fileName: string;
 };
 
 // Example usage for OTP response

@@ -18,20 +18,22 @@ import {
   signupResponse,
 } from './authSlice';
 import {
-  ApiResponse,
+ApiResponse,
+  uploadDocumentResponse,
   ForgetPasswordRequest,
   ForgotPasswordResponse,
-  LoginRequest,
-  OtpResponse,
   RegisterRequest,
   ResetPasswordRequest,
   SignupResponse,
-  UserDataResponse,
   VerifyOtpRequest,
+  LoginRequest,
+  OtpResponse,
+  UserDataResponse,
   VerifyOtpResponse,
 } from '../../../utils/ConstantTypes/authTypes';
 import {setStorageItem} from '../../../utils/Storage/storage';
 import {STORAGE_KEY} from '../../../utils/Storage/storageKeys';
+import {uploadIdentity} from '../api/DocumentApi'
 
 export const callSendOtpApi = async (phoneNumber: string, dispatch: any) => {
   try {
@@ -49,7 +51,7 @@ export const callSendOtpApi = async (phoneNumber: string, dispatch: any) => {
 };
 
 export const callVerifyOtpApi = async (
-  credential:VerifyOtpRequest,
+  credential: VerifyOtpRequest,
   dispatch: any,
 ) => {
   try {
@@ -85,6 +87,7 @@ export const callLoginApi = async (credential: LoginRequest, dispatch: any) => {
     throw error;
   }
 };
+
 
 export const callSignupApi = async (userSignupData: RegisterRequest, dispatch: any) => {
   try {
@@ -133,6 +136,34 @@ export const callResetPasswordApi = async (
       dispatch(authenticationError(response.errors[0]));
     }
     dispatch(authenticationLoaded());
+  } catch (error) {
+    dispatch(authenticationLoaded());
+    throw error;
+  }
+};
+
+
+// Document API 
+export const callUploadIdentityApi = async (
+  dispatch: any,
+  documentType: string,
+  formData: FormData,
+  onProgress: (progress: number) => void,
+) => {
+  try {
+    const response: ApiResponse<uploadDocumentResponse> = await uploadIdentity(
+      documentType,
+      formData,
+      (progress: number) => {
+        onProgress(progress);
+      },
+    );
+    dispatch(authenticationLoaded());
+    if (response.isSuccess) {
+      return response.data;
+    } else {
+      dispatch(authenticationError(response.errors[0]));
+    }
   } catch (error) {
     dispatch(authenticationLoaded());
     throw error;
