@@ -17,12 +17,18 @@ export interface RegisterRequest {
   email: string;
   password: string;
   phoneNumber: string;
-  role?: string;
+  role: RoleType;
+}
+
+export enum RoleType {
+  Admin = 1,
+  Driver = 2,
+  Rider = 3,
 }
 
 // Login Request
 export interface LoginRequest {
-  email: string;
+  identifier: string;
   password: string;
 }
 
@@ -90,6 +96,17 @@ export type VerifyApiResponse<T> = {
   message: string;
   data: T;
   errors: string[];
+};
+
+export type UserDataResponse = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  name: string;
+  token: string;
+  refreshToken: string;
 };
 
 // Example usage for OTP response

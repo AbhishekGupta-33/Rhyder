@@ -19,6 +19,10 @@ export const authenticationSignUp = createSelector(
   selectAuthentication,
   Authentication => Authentication.signUpData,
 );
+export const authenticationLogin = createSelector(
+  selectAuthentication,
+  Authentication => Authentication.userData,
+);
 
 export const authenticationData = createSelector(
   selectAuthentication,
