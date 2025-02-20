@@ -147,7 +147,7 @@ const UploadDocuments: React.FC = (props: any) => {
               progress => {
                 setDocuments({
                   ...documents,
-                  idProof: {
+                  genderProof: {
                     ...documents.genderProof,
                     uploadProgress: progress / 100,
                   },
