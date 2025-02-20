@@ -87,7 +87,7 @@ const SignupStep2: React.FC = (props: any) => {
         phoneNumber:phoneNumber,
         email:userDetails.email,
         password,
-        role: RoleType.Rider
+        role: "Rider"
       };
       callSignupApi(userSignupData, dispatch)
     }

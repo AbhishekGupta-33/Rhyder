@@ -22,6 +22,7 @@ import {callLoginApi} from '../redux/thunk';
 import {useDispatch, useSelector} from 'react-redux';
 import {authenticationLogin} from '../redux/selector';
 import AuthenticationBottomView from '../components/AuthenticationBottomView';
+import { storage } from '../../../utils/Storage/storage';
 
 const Login: React.FC = (props: any) => {
   // State ------------------------------------------------
@@ -99,6 +100,7 @@ const Login: React.FC = (props: any) => {
         },
         dispatch,
       );
+      storage.set('user.name', 'Nirala')
     }
   }, [
     userLoginDetail,

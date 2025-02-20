@@ -87,7 +87,6 @@ const CreatePassword: React.FC = (props: any) => {
     callResetPasswordApi(
       {
         identifier: phoneNumber,
-        resetToken: '1234',
         newPassword: createPasswordDetail.password,
       },
       dispatch,
