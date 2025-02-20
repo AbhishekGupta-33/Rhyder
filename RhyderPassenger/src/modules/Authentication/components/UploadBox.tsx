@@ -38,32 +38,32 @@ const UploadBox: React.FC<UploadBoxProps> = ({
     if (!uploadStatus) return;
     return (
       <View>
-        <IconButton icon={'delete'} size={18} onPress={onDeletePress} />
-        <IconButton icon={'eye'} size={18} onPress={onViewPress} />
+        <IconButton animated icon={'delete'} size={18} onPress={onDeletePress} />
+        <IconButton animated icon={'eye'} size={18} onPress={onViewPress} />
       </View>
     );
   };
   return (
     <>
       <AppText style={styles.label}>{title}</AppText>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        style={styles.container}
-        onPress={onPress}>
+      <View style={styles.container}>
         <View style={styles.rowContainer}>
-          <View style={styles.InnerContainer}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.InnerContainer}
+            onPress={onPress}>
             <Ionicons name="cloud-upload-outline" size={30} color="gray" />
             <View style={styles.innerRowView}>
               <AppText style={styles.text}>{label}</AppText>
               <AppText
                 style={styles.subText}>{`${fileType} (${fileSize})`}</AppText>
             </View>
-          </View>
+          </TouchableOpacity>
           <AfterDocUpdateView />
         </View>
 
         <LoaderView />
-      </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   InnerContainer: {
     flexDirection: 'row',
     padding: 20,
-    paddingVertical: 30,
+    // paddingVertical: 30,
     width: '80%',
   },
   innerRowView: {

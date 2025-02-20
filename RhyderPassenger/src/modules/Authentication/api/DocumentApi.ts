@@ -108,7 +108,7 @@ export const getUploadedDocuments = async () => {
  * Delete an uploaded image by document ID
  * @param documentId - ID of the document to delete
  */
-export const deleteImage = async (documentId: string) => {
+export const deleteDocument = async (documentId: number) => {
   try {
     const response = await apiClient.delete(
       ApiName.documents.deleteImage(documentId),

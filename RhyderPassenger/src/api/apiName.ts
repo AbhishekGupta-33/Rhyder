@@ -18,6 +18,6 @@ export const ApiName = {
     getUserImage: '/api/documents/user-image',
     getRequiredDocuments: '/api/documents/required',
     getUploadedDocuments: '/api/documents/uploaded',
-    deleteImage: (documentId: string) => `/api/documents/image/${documentId}`,
+    deleteImage: (documentId: number) => `/api/documents/image/${documentId}`,
   },
 };

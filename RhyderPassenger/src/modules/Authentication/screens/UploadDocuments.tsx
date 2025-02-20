@@ -12,7 +12,7 @@ import {
 import {useCameraPermission} from '../../../hooks/useCameraPermission';
 import {pick, types} from '@react-native-documents/picker';
 import {log} from '../../../utils/Logger';
-import {callUploadIdentityApi} from '../redux/thunk';
+import {callDeleteDocumentApi, callUploadIdentityApi} from '../redux/thunk';
 import {useDispatch} from 'react-redux';
 import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
 
@@ -30,21 +30,21 @@ interface documentType {
 }
 const initialDocument = {
   image: {
-    id: '',
+    id: 0,
     url: '',
     name: '',
     uploadStatus: false,
     uploadProgress: 0,
   },
   idProof: {
-    id: '',
+    id: 0,
     url: '',
     name: '',
     uploadStatus: false,
     uploadProgress: 0,
   },
   genderProof: {
-    id: '',
+    id: 0,
     url: '',
     name: '',
     uploadStatus: false,
@@ -65,6 +65,35 @@ const UploadDocuments: React.FC = (props: any) => {
         const image = await openCamera();
         if (image && isFileSizeValid(image.size)) {
           console.log('Photo uploaded:', image.path);
+          let fileForm = prepareFormData({
+            uri: image.path,
+            name: image.name,
+            type: image.type,
+          });
+          const response = await callUploadIdentityApi(
+            dispatch,
+            DocumentType[1],
+            fileForm,
+            progress => {
+              setDocuments({
+                ...documents,
+                image: {
+                  ...documents.image,
+                  uploadProgress: progress / 100,
+                },
+              });
+            },
+          );
+          setDocuments({
+            ...documents,
+            image: {
+              ...documents.image,
+              id: response?.id,
+              url: response?.fileUrl,
+              name: response?.fileName,
+              uploadStatus: true,
+            },
+          });
         } else {
           Alert.alert(
             'Invalid File',
@@ -148,6 +177,29 @@ const UploadDocuments: React.FC = (props: any) => {
     }
   };
 
+  const handleDeletePress = async (
+    documentDetail: eachDocumentType,
+    docType: string,
+  ) => {
+    console.log('documents------',documents)
+    console.log('documentDetail------',documentDetail)
+    try {
+      const response = await callDeleteDocumentApi(dispatch, documentDetail.id);
+      let key =
+        docType === DocumentType[0]
+          ? 'image'
+          : docType === DocumentType[1]
+          ? 'idProof'
+          : 'genderProof';
+      if (response) {
+        setDocuments({
+          ...documents,
+          [key]: initialDocument.image,
+        });
+      }
+    } catch (error) {}
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <AppHeader
@@ -167,6 +219,9 @@ const UploadDocuments: React.FC = (props: any) => {
         uploadProgress={documents.image.uploadProgress}
         uploadStatus={documents.image.uploadStatus}
         onPress={() => handleFileUpload(section[0].id)}
+        onDeletePress={() =>
+          handleDeletePress(documents.image, DocumentType[0])
+        }
       />
       <UploadBox
         title={section[1].label}
@@ -176,6 +231,9 @@ const UploadDocuments: React.FC = (props: any) => {
         uploadProgress={documents.idProof.uploadProgress}
         uploadStatus={documents.idProof.uploadStatus}
         onPress={() => handleFileUpload(section[1].id)}
+        onDeletePress={() =>
+          handleDeletePress(documents.idProof, DocumentType[1])
+        }
       />
       <UploadBox
         title={section[2].label}
@@ -185,6 +243,9 @@ const UploadDocuments: React.FC = (props: any) => {
         uploadProgress={documents.genderProof.uploadProgress}
         uploadStatus={documents.genderProof.uploadStatus}
         onPress={() => handleFileUpload(section[2].id)}
+        onDeletePress={() =>
+          handleDeletePress(documents.genderProof, DocumentType[2])
+        }
       />
     </SafeAreaView>
   );
