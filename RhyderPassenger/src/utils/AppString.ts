@@ -105,6 +105,7 @@ export const AppString = {
             id: 'genderIdentity',
           },
         ],
+        docDeleteSuccess: 'Document delete successfully.'
       },
       forgotPassword: {
         header: 'Forgot Password',

@@ -99,6 +99,8 @@ export type ApiResponse<T> = {
 // Example usage for your specific response:
 export type OtpResponse = ApiResponse<string>;
 
+export type documentDeleteResponse = ApiResponse<string>;
+
 export type VerifyApiResponse<T> = {
   isSuccess: boolean;
   message: string;

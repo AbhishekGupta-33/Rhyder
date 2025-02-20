@@ -30,10 +30,13 @@ ApiResponse,
   OtpResponse,
   UserDataResponse,
   VerifyOtpResponse,
+  documentDeleteResponse,
 } from '../../../utils/ConstantTypes/authTypes';
 import {setStorageItem} from '../../../utils/Storage/storage';
 import {STORAGE_KEY} from '../../../utils/Storage/storageKeys';
-import {uploadIdentity} from '../api/DocumentApi'
+import {deleteDocument, uploadIdentity} from '../api/DocumentApi';
+import {Alert} from 'react-native';
+import {AppString} from '../../../utils/AppString';
 
 export const callSendOtpApi = async (phoneNumber: string, dispatch: any) => {
   try {
@@ -88,8 +91,10 @@ export const callLoginApi = async (credential: LoginRequest, dispatch: any) => {
   }
 };
 
-
-export const callSignupApi = async (userSignupData: RegisterRequest, dispatch: any) => {
+export const callSignupApi = async (
+  userSignupData: RegisterRequest,
+  dispatch: any,
+) => {
   try {
     dispatch(authenticationLoading());
     const response: SignupResponse = await register(userSignupData);
@@ -142,8 +147,7 @@ export const callResetPasswordApi = async (
   }
 };
 
-
-// Document API 
+// Document API
 export const callUploadIdentityApi = async (
   dispatch: any,
   documentType: string,
@@ -160,6 +164,27 @@ export const callUploadIdentityApi = async (
     );
     dispatch(authenticationLoaded());
     if (response.isSuccess) {
+      return response.data;
+    } else {
+      dispatch(authenticationError(response.errors[0]));
+    }
+  } catch (error) {
+    dispatch(authenticationLoaded());
+    throw error;
+  }
+};
+
+export const callDeleteDocumentApi = async (
+  dispatch: any,
+  documentID: number,
+) => {
+  try {
+    const response: ApiResponse<documentDeleteResponse> = await deleteDocument(
+      documentID,
+    );
+    dispatch(authenticationLoaded());
+    if (response.isSuccess) {
+      Alert.alert('', AppString.screens.auth.uploadDocuments.docDeleteSuccess);
       return response.data;
     } else {
       dispatch(authenticationError(response.errors[0]));
