@@ -1,6 +1,7 @@
 import {
   forgotPassword,
   login,
+  logout,
   register,
   resetPassword,
   sendOtp,
@@ -34,7 +35,7 @@ ApiResponse,
 } from '../../../utils/ConstantTypes/authTypes';
 import {setStorageItem} from '../../../utils/Storage/storage';
 import {STORAGE_KEY} from '../../../utils/Storage/storageKeys';
-import {deleteDocument, uploadIdentity} from '../api/DocumentApi';
+import {deleteDocument, getUploadedDocuments, uploadIdentity} from '../api/DocumentApi';
 import {Alert} from 'react-native';
 import {AppString} from '../../../utils/AppString';
 
@@ -180,12 +181,53 @@ export const callDeleteDocumentApi = async (
   documentID: number,
 ) => {
   try {
+    dispatch(authenticationLoading());
     const response: ApiResponse<documentDeleteResponse> = await deleteDocument(
       documentID,
     );
     dispatch(authenticationLoaded());
     if (response.isSuccess) {
       Alert.alert('', AppString.screens.auth.uploadDocuments.docDeleteSuccess);
+      return response.data;
+    } else {
+      dispatch(authenticationError(response.errors[0]));
+    }
+  } catch (error) {
+    dispatch(authenticationLoaded());
+    throw error;
+  }
+};
+
+// get uploaded Documents API
+export const callGetUploadedDocumentsApi = async (
+  dispatch: any,
+) => {
+  try {
+    dispatch(authenticationLoading());
+    const response: ApiResponse<uploadDocumentResponse> = await getUploadedDocuments();
+    dispatch(authenticationLoaded());
+    if (response.isSuccess) {
+      return response.data;
+    } else {
+      dispatch(authenticationError(response.errors[0]));
+    }
+  } catch (error) {
+    dispatch(authenticationLoaded());
+    throw error;
+  }
+};
+
+// get uploaded Documents API
+export const callLogoutApi = async (
+  dispatch: any,
+) => {
+  try {
+    dispatch(authenticationLoading());
+    const response = await logout();
+    console.log("response====",response);
+    
+    dispatch(authenticationLoaded());
+    if (response.isSuccess) {
       return response.data;
     } else {
       dispatch(authenticationError(response.errors[0]));

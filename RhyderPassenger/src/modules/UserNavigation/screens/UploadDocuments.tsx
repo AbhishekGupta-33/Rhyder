@@ -1,5 +1,5 @@
 // screens/UploadDocuments.tsx
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -20,11 +20,17 @@ import {
 import {useCameraPermission} from '../../../hooks/useCameraPermission';
 import {pick, types} from '@react-native-documents/picker';
 import {log} from '../../../utils/Logger';
-import {callDeleteDocumentApi, callUploadIdentityApi} from '../../Authentication/redux/thunk';
+import {
+  callDeleteDocumentApi,
+  callGetUploadedDocumentsApi,
+  callLogoutApi,
+  callUploadIdentityApi,
+} from '../redux/thunk';
 import {useDispatch} from 'react-redux';
 import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
 import {WebView} from 'react-native-webview';
 import Config from 'react-native-config';
+import {getUploadedDocuments} from '../api/DocumentApi';
 
 type eachDocumentType = {
   id: number | undefined;
@@ -70,6 +76,48 @@ const UploadDocuments: React.FC = (props: any) => {
   const [viewModal, setViewModal] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<string>('');
 
+  useEffect(() => {
+    handleUploadedDocuments();
+  }, []);
+
+  //Handle uploaded documents
+  const handleUploadedDocuments = async () => {
+    const getUploadedDocs = await callGetUploadedDocumentsApi(dispatch);
+    updateDocuments(getUploadedDocs);
+  };
+
+  const updateDocuments = (data: any[]) => {
+    let updatedDocuments = {...initialDocument};
+    for (let i = 0; i < data.length; i++) {
+      if (DocumentType[0] === DocumentType[data[i].type]) {
+        updatedDocuments.image = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      } else if (DocumentType[1] === DocumentType[data[i].type]) {
+        updatedDocuments.idProof = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      } else if (DocumentType[2] === DocumentType[data[i].type]) {
+        updatedDocuments.genderProof = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      }
+    }
+    setDocuments(updatedDocuments);
+  };
+
   // Handle File Upload
   const handleFileUpload = async (type: string) => {
     try {
@@ -107,7 +155,7 @@ const UploadDocuments: React.FC = (props: any) => {
               });
             },
           );
-          if(response){
+          if (response) {
             setDocuments({
               ...documents,
               image: {
@@ -118,7 +166,7 @@ const UploadDocuments: React.FC = (props: any) => {
                 uploadStatus: true,
               },
             });
-          }else{
+          } else {
             setDocuments({
               ...documents,
               image: {
@@ -127,7 +175,6 @@ const UploadDocuments: React.FC = (props: any) => {
               },
             });
           }
-         
         } else {
           Alert.alert(
             'Invalid File',
@@ -163,7 +210,6 @@ const UploadDocuments: React.FC = (props: any) => {
                 });
               },
             );
-            console.log('response===333', response);
             if (response) {
               setDocuments({
                 ...documents,
@@ -175,7 +221,7 @@ const UploadDocuments: React.FC = (props: any) => {
                   uploadStatus: true,
                 },
               });
-            }else{
+            } else {
               setDocuments({
                 ...documents,
                 idProof: {
@@ -199,7 +245,6 @@ const UploadDocuments: React.FC = (props: any) => {
                 });
               },
             );
-            console.log('response===444', response);
             if (response) {
               setDocuments({
                 ...documents,
@@ -211,7 +256,7 @@ const UploadDocuments: React.FC = (props: any) => {
                   uploadStatus: true,
                 },
               });
-            }else{
+            } else {
               setDocuments({
                 ...documents,
                 genderProof: {
@@ -237,8 +282,6 @@ const UploadDocuments: React.FC = (props: any) => {
     documentDetail: eachDocumentType,
     docType: string,
   ) => {
-    console.log('documents------', documents);
-    console.log('documentDetail------', documentDetail);
     try {
       const response = await callDeleteDocumentApi(dispatch, documentDetail.id);
       let key =
@@ -258,14 +301,13 @@ const UploadDocuments: React.FC = (props: any) => {
 
   const handleViewPress = (docUrl: string) => {
     if (docUrl) {
-      const finalURL = `${Config.API_BASE_URL}${docUrl}`;
+      const finalURL = `${'https://rhyderapi.k-asoftech.com'}${docUrl}`;
       setSelectedDocument(finalURL);
       setViewModal(true);
     } else {
       Alert.alert('Error', 'No document available to view.');
     }
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <AppHeader
@@ -320,6 +362,13 @@ const UploadDocuments: React.FC = (props: any) => {
         }}
       />
       <AppButton
+        disabled={
+          !(
+            documents.genderProof.url &&
+            documents.image.url &&
+            documents.idProof.url
+          )
+        }
         buttonTitle={AppString.screens.auth.uploadDocuments.nextButton}
         onPress={() => {
           if (
@@ -335,8 +384,17 @@ const UploadDocuments: React.FC = (props: any) => {
         buttonType={ButtonType.PRIMARY}
         buttonTitleStyle={styles.buttonTitleStyle}
       />
+      <AppButton
+        buttonTitle={AppString.screens.auth.uploadDocuments.logout}
+        onPress={() => {
+          callLogoutApi(dispatch);
+        }}
+        buttonType={ButtonType.PRIMARY}
+        buttonTitleStyle={styles.buttonTitleStyle}
+        buttonStyle={styles.buttonStyle}
+      />
       {/* View Document Modal */}
-      <Modal visible={viewModal} transparent={true} animationType='fade'>
+      <Modal visible={viewModal} transparent={true} animationType="fade">
         <View style={styles.modalContainer}>
           <TouchableOpacity
             style={styles.closeButton}
@@ -401,6 +459,9 @@ const styles = StyleSheet.create({
   closeText: {color: 'black', fontSize: 16, fontWeight: 'bold'},
   webView: {width: '90%', height: '80%'},
   imagePreview: {width: '90%', height: '80%'},
+  buttonStyle: {
+    marginTop: 20,
+  },
 });
 
 export default UploadDocuments;
