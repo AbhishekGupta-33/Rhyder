@@ -10,6 +10,9 @@ export const AppString = {
       SignupVerification: 'signupVerification',
       CreatePassword: 'createPassword'
     },
+    user:{
+      Home:'home'
+    } 
   },
   screens: {
     auth: {
@@ -82,6 +85,7 @@ export const AppString = {
       uploadDocuments: {
         title: 'Upload Documents',
         subtitle: 'Upload documents for the vehicle',
+        nextButton: 'NEXT',
         sections: [
           {
             label: 'Photo*',

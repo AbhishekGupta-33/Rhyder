@@ -18,7 +18,7 @@ export interface RegisterRequest {
   email: string;
   password: string;
   phoneNumber: string;
-  role: RoleType;
+  role: RoleType | string;
 }
 
 export enum RoleType {
@@ -35,7 +35,6 @@ export enum DocumentType {
 
 // Login Request
 export interface LoginRequest {
-  email: string;
   identifier: string;
   password: string;
 }
@@ -135,7 +134,7 @@ export type SignupResponse = {
   isSuccess: boolean;
   message: string;
   data: string | null;
-  errors?: string[];
+  errors: string[];
 };
 
 export type ForgotPasswordResponse = {
@@ -150,6 +149,5 @@ export type ForgetPasswordRequest ={
 
 export type ResetPasswordRequest = {
   identifier: string;
-  resetToken: string;
   newPassword: string;
 };

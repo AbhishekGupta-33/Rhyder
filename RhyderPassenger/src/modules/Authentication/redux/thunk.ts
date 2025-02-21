@@ -101,7 +101,7 @@ export const callSignupApi = async (
     if (response.isSuccess) {
       dispatch(signupResponse(response.data));
     } else {
-      console.log('response :', response);
+      dispatch(authenticationError(response.errors[0]));
     }
     dispatch(authenticationLoaded());
   } catch (error) {

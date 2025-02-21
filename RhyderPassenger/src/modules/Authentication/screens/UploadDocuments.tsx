@@ -1,9 +1,17 @@
 // screens/UploadDocuments.tsx
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  Modal,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import UploadBox from '../components/UploadBox';
 import {AppString} from '../../../utils/AppString';
-import {AppHeader, AppText} from '../../../components';
+import {AppButton, AppHeader, AppText, ButtonType} from '../../../components';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   isFileSizeValid,
@@ -15,6 +23,7 @@ import {log} from '../../../utils/Logger';
 import {callDeleteDocumentApi, callUploadIdentityApi} from '../redux/thunk';
 import {useDispatch} from 'react-redux';
 import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
+import {WebView} from 'react-native-webview';
 
 type eachDocumentType = {
   id: number | undefined;
@@ -57,6 +66,8 @@ const UploadDocuments: React.FC = (props: any) => {
   const {openCamera} = useCameraPermission();
   const dispatch = useDispatch();
   const [documents, setDocuments] = useState<documentType>(initialDocument);
+  const [viewModal, setViewModal] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<string>('');
 
   // Handle File Upload
   const handleFileUpload = async (type: string) => {
@@ -129,6 +140,8 @@ const UploadDocuments: React.FC = (props: any) => {
                 });
               },
             );
+            console.log('response===333', response);
+
             setDocuments({
               ...documents,
               idProof: {
@@ -154,6 +167,7 @@ const UploadDocuments: React.FC = (props: any) => {
                 });
               },
             );
+            console.log('response===444', response);
             setDocuments({
               ...documents,
               genderProof: {
@@ -181,8 +195,8 @@ const UploadDocuments: React.FC = (props: any) => {
     documentDetail: eachDocumentType,
     docType: string,
   ) => {
-    console.log('documents------',documents)
-    console.log('documentDetail------',documentDetail)
+    console.log('documents------', documents);
+    console.log('documentDetail------', documentDetail);
     try {
       const response = await callDeleteDocumentApi(dispatch, documentDetail.id);
       let key =
@@ -198,6 +212,15 @@ const UploadDocuments: React.FC = (props: any) => {
         });
       }
     } catch (error) {}
+  };
+
+  const handleViewPress = (docUrl: string) => {
+    if (docUrl) {
+      setSelectedDocument(docUrl);
+      setViewModal(true);
+    } else {
+      Alert.alert('Error', 'No document available to view.');
+    }
   };
 
   return (
@@ -222,6 +245,9 @@ const UploadDocuments: React.FC = (props: any) => {
         onDeletePress={() =>
           handleDeletePress(documents.image, DocumentType[0])
         }
+        onViewPress={() => {
+          handleViewPress(documents.image.url);
+        }}
       />
       <UploadBox
         title={section[1].label}
@@ -234,6 +260,9 @@ const UploadDocuments: React.FC = (props: any) => {
         onDeletePress={() =>
           handleDeletePress(documents.idProof, DocumentType[1])
         }
+        onViewPress={() => {
+          handleViewPress(documents.idProof.url);
+        }}
       />
       <UploadBox
         title={section[2].label}
@@ -246,7 +275,40 @@ const UploadDocuments: React.FC = (props: any) => {
         onDeletePress={() =>
           handleDeletePress(documents.genderProof, DocumentType[2])
         }
+        onViewPress={() => {
+          handleViewPress(documents.genderProof.url);
+        }}
       />
+      <AppButton
+        buttonTitle={AppString.screens.auth.uploadDocuments.nextButton}
+        onPress={() => {
+          props.navigation.navigate('user', {
+            screen: AppString.NavigationScreens.user.Home,
+          });
+        }}
+        buttonType={ButtonType.PRIMARY}
+        buttonTitleStyle={styles.buttonTitleStyle}
+      />
+      {/* View Document Modal */}
+      <Modal visible={viewModal} transparent={true} animationType="slide">
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setViewModal(false)}>
+            <AppText style={styles.closeText}>Close</AppText>
+          </TouchableOpacity>
+
+          {selectedDocument?.endsWith('.pdf') ? (
+            <WebView source={{uri: selectedDocument}} style={styles.webView} />
+          ) : (
+            <Image
+              source={{uri: selectedDocument}}
+              style={styles.imagePreview}
+              resizeMode="contain"
+            />
+          )}
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -273,6 +335,26 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginTop: 15,
   },
+  buttonTitleStyle: {
+    color: '#ffffff',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 20,
+  },
+  closeText: {color: 'black', fontSize: 16, fontWeight: 'bold'},
+  webView: {width: '90%', height: '80%'},
+  imagePreview: {width: '90%', height: '80%'},
 });
 
 export default UploadDocuments;
