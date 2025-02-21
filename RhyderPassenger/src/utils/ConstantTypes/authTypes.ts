@@ -22,9 +22,9 @@ export interface RegisterRequest {
 }
 
 export enum RoleType {
-  'Admin' = 1,
-  'Driver' = 2,
-  'Rider' = 3,
+  'Admin' ,
+  'Driver',
+  'Rider',
 }
 
 export enum DocumentType {
@@ -116,6 +116,7 @@ export type UserDataResponse = {
   name: string;
   token: string;
   refreshToken: string;
+  docIssue?: boolean;
 };
 
 export type uploadDocumentResponse = {

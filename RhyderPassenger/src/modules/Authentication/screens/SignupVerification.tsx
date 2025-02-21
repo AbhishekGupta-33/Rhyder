@@ -19,6 +19,7 @@ import {OtpInput} from 'react-native-otp-entry';
 import {hasData} from '../../../utils/Validators';
 import {AppString} from '../../../utils/AppString';
 import {callSendOtpApi, callVerifyOtpApi} from '../redux/thunk';
+import {otpVerifyResponse} from '../redux/authSlice';
 
 const SignupVerification: React.FC = (props: any) => {
   const [otpData, setOtpData] = useState({otp: '', otpError: ''});
@@ -26,7 +27,7 @@ const SignupVerification: React.FC = (props: any) => {
   const [timer, setTimer] = useState(30);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const dispatch = useDispatch();
-  const otpVerifyResponse = useSelector(otpVerifyResponseData);
+  const otpVerifySuccessResponse = useSelector(otpVerifyResponseData);
   const otpSendResponse = useSelector(otpSendResponseData);
   const [hasShownAlert, setHasShownAlert] = useState(false);
   const isFrom = props?.route?.params?.isFrom;
@@ -43,31 +44,27 @@ const SignupVerification: React.FC = (props: any) => {
   }, [timer]);
 
   useEffect(() => {
-    if (otpVerifyResponse) {
-      Alert.alert('', `${otpVerifyResponse}`, [
+    if (otpVerifySuccessResponse || hasShownAlert) {
+      Alert.alert('', `${otpVerifySuccessResponse}`, [
         {
           text: 'OK',
-          onPress: () =>
-            props.navigation.navigate(
-              isFrom
-                ? AppString.NavigationScreens.auth.CreatePassword
-                : AppString.NavigationScreens.auth.SignupStep2,
-            ),
+          onPress: () => {
+            if(hasShownAlert){
+              setHasShownAlert(false)
+            }else{
+              props.navigation.navigate(
+                isFrom
+                  ? AppString.NavigationScreens.auth.CreatePassword
+                  : AppString.NavigationScreens.auth.SignupStep2,
+              );
+            }
+           
+            dispatch(otpVerifyResponse(''));
+          },
         },
       ]);
     }
-  }, [otpVerifyResponse]);
-
-  useEffect(() => {
-    if (otpSendResponse && hasShownAlert) {
-      Alert.alert('', `${otpSendResponse}`, [
-        {
-          text: 'OK',
-          onPress: () => setHasShownAlert(false), // Prevent duplicate alerts
-        },
-      ]);
-    }
-  }, [otpSendResponse]);
+  }, [otpVerifySuccessResponse, hasShownAlert]);
 
   const handleVerify = () => {
     if (!hasData(otpData.otp) || otpData.otp.length !== 4) {
@@ -114,7 +111,7 @@ const SignupVerification: React.FC = (props: any) => {
             focusColor="pink"
             autoFocus={false}
             hideStick={true}
-            placeholder="******"
+            placeholder="****"
             blurOnFilled={true}
             disabled={false}
             type="numeric"

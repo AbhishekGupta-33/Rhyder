@@ -17,6 +17,7 @@ import { callSignupApi } from '../redux/thunk';
 import Loader from '../../../components/AppLoader';
 import { appImage } from '../../../utils/Constants';
 import { RoleType } from '../../../utils/ConstantTypes/authTypes';
+import { signupResponse } from '../redux/authSlice';
 
 const SignupStep2: React.FC = (props: any) => {
   const [userDetails, setUserDetails] = useState({
@@ -36,15 +37,15 @@ const SignupStep2: React.FC = (props: any) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { phoneNumber } = useSelector(authenticationSignUp);
-  const signUpResponse = useSelector(signUpResponseData)
+  const signUpSuccessResponse = useSelector(signUpResponseData)
   const isAuthenticationLoading = useSelector(authenticationLoading);
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (signUpResponse) {
+    if (signUpSuccessResponse) {
       setShowModal(true);
     }
-  }, [signUpResponse])
+  }, [signUpSuccessResponse])
 
   const handleInputChange = useCallback((field: string, value: string) => {
     let error = '';
@@ -87,7 +88,7 @@ const SignupStep2: React.FC = (props: any) => {
         phoneNumber:phoneNumber,
         email:userDetails.email,
         password,
-        role: "Rider"
+        role: RoleType[2]
       };
       callSignupApi(userSignupData, dispatch)
     }
@@ -181,6 +182,7 @@ const SignupStep2: React.FC = (props: any) => {
           visible={showModal}
           onCancelPress={() => {
             setShowModal(false)
+            dispatch(signupResponse(''));
             props.navigation.navigate(AppString.NavigationScreens.auth.Welcome)
           }}
           cancelButtonTitle={AppString.screens.auth.signupSuccessModal.okButton}

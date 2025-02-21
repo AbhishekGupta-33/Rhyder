@@ -9,7 +9,7 @@ import {
 } from '../../../components';
 import {appImage} from '../../../utils/Constants';
 import {useDispatch, useSelector} from 'react-redux';
-import {authenticationSignupNumber} from '../redux/authSlice';
+import {authenticationSignupNumber, otpSendResponse} from '../redux/authSlice';
 import {
   hasData,
   hasValidPhoneNumber,
@@ -20,6 +20,7 @@ import AuthenticationBottomView from '../components/AuthenticationBottomView';
 import {authenticationLoading, otpSendResponseData} from '../redux/selector';
 import {callSendOtpApi} from '../redux/thunk';
 import Loader from '../../../components/AppLoader';
+import { TextInput } from 'react-native-paper';
 
 const SignupStep1: React.FC = (props: any) => {
   const dispatch = useDispatch();
@@ -27,24 +28,27 @@ const SignupStep1: React.FC = (props: any) => {
     phoneNumber: '',
     phoneNumberError: '',
   });
-  const otpSendResponse = useSelector(otpSendResponseData);
+  const otpSendSuccessResponse = useSelector(otpSendResponseData);
   const isAuthenticationLoading = useSelector(authenticationLoading);
 
   useEffect(() => {
-    if (otpSendResponse) {
+    if (otpSendSuccessResponse) {
       dispatch(authenticationSignupNumber(userSignupStep1Detail.phoneNumber));
       Alert.alert(
         '',
-        `${otpSendResponse}`,
+        `${otpSendSuccessResponse}`,
         [
           {
             text: 'OK',
-            onPress: () => props.navigation.navigate('signupVerification'),
+            onPress: () =>{ 
+              props.navigation.navigate('signupVerification')
+              dispatch(otpSendResponse(''));
+            },
           },
         ],
       );
     }
-  }, [otpSendResponse]);
+  }, [otpSendSuccessResponse]);
 
   const handleSignupStep1 = async () => {
     if (!hasData(userSignupStep1Detail.phoneNumber)) {
@@ -92,6 +96,12 @@ const SignupStep1: React.FC = (props: any) => {
           value={userSignupStep1Detail.phoneNumber}
           onChangeText={fetchInputfieldPhoneNumberData}
           error={userSignupStep1Detail.phoneNumberError}
+          isLastField={true}
+          leftIcon={
+            <TextInput.Icon
+              icon={'numeric-positive-1'}
+            />
+          }
           // required={true}
         />
 
@@ -114,7 +124,6 @@ const SignupStep1: React.FC = (props: any) => {
           </AppText>
         </AppText>
       </AuthenticationBottomView>
-      <Loader loading={isAuthenticationLoading} />
     </ImageBackground>
   );
 };

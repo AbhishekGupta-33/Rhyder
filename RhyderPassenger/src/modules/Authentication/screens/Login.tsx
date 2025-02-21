@@ -22,7 +22,13 @@ import {callLoginApi} from '../redux/thunk';
 import {useDispatch, useSelector} from 'react-redux';
 import {authenticationLogin} from '../redux/selector';
 import AuthenticationBottomView from '../components/AuthenticationBottomView';
-import { storage } from '../../../utils/Storage/storage';
+import {
+  getStorageItem,
+  setStorageItem,
+  storage,
+} from '../../../utils/Storage/storage';
+import {STORAGE_KEY} from '../../../utils/Storage/storageKeys';
+import { loginUserData } from '../redux/authSlice';
 
 const Login: React.FC = (props: any) => {
   // State ------------------------------------------------
@@ -37,23 +43,37 @@ const Login: React.FC = (props: any) => {
   const [userLoginDetail, setUserLoginDetail] = useState(initalUserLoginDetail);
   const [rememberMe, setRememberMe] = useState(false);
   const dispatch = useDispatch();
-  const loginResponseData = useSelector(authenticationLogin);
+  const loginSuccessResponseData = useSelector(authenticationLogin);
 
   useEffect(() => {
-    if (loginResponseData !== null) {
+    const userName = getStorageItem(STORAGE_KEY.USER_IDENTIFIER);
+    if (userName) {
+      setUserLoginDetail({
+        ...initalUserLoginDetail,
+        userName: userName,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loginSuccessResponseData !== null && userLoginDetail.password) {
       Alert.alert('', `Login Success Fully`, [
         {
           text: 'OK',
           onPress: () => {
             setUserLoginDetail(initalUserLoginDetail);
-            props.navigation.navigate(
-              AppString.NavigationScreens.auth.UploadDocuments,
-            );
+            if (loginSuccessResponseData.docIssue) {
+              props.navigation.replace(AppString.NavigationScreens.stackNavigator.User);
+            } else {
+              props.navigation.navigate(
+                AppString.NavigationScreens.auth.UploadDocuments,
+              );
+            }
           },
         },
       ]);
     }
-  }, [loginResponseData]);
+  }, [loginSuccessResponseData]);
 
   // Functionality ------------------------------------------------
   const handleInputChange = useCallback((field: string, value: string) => {
@@ -93,6 +113,8 @@ const Login: React.FC = (props: any) => {
       setUserLoginDetail(prev => ({...prev, errors}));
     } else {
       // API Call Logic
+      if (rememberMe)
+        setStorageItem(STORAGE_KEY.USER_IDENTIFIER, `${userName}`);
       callLoginApi(
         {
           identifier: userName,
@@ -100,7 +122,6 @@ const Login: React.FC = (props: any) => {
         },
         dispatch,
       );
-      storage.set('user.name', 'Nirala')
     }
   }, [
     userLoginDetail,

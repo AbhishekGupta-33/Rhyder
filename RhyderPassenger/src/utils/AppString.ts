@@ -1,5 +1,9 @@
 export const AppString = {
   NavigationScreens: {
+    stackNavigator: {
+      User: 'user',
+      Auth: 'auth'
+    },
     auth: {
       UploadDocuments: 'UploadDocuments',
       Welcome: 'welcome',
