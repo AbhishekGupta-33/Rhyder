@@ -1,12 +1,13 @@
 import axios from 'axios';
 import Config from 'react-native-config';
-import {getStorageItem} from '../utils/Storage/storage';
-import {STORAGE_KEY} from '../utils/Storage/storageKeys';
+import { getStorageItem } from '../utils/Storage/storage';
+import { STORAGE_KEY } from '../utils/Storage/storageKeys';
+import { getRefreshToken } from '../modules/Authentication/api/Authapi';
 
 // Base URL Configuration
 export const apiClient = axios.create({
-  baseURL: 'https://rhyderapi.k-asoftech.com', // Replace with your actual API URL
-  timeout: 10000, // Set request timeout (in ms)
+  baseURL: 'https://rhyderapi.k-asoftech.com',
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -19,17 +20,20 @@ let refreshSubscribers: ((token: string) => void)[] = [];
 // Request Interceptor (Attach token conditionally)
 apiClient.interceptors.request.use(
   async config => {
-    // Check if the URL contains "/api/auth/"
-    if (config.url?.includes('/api/auth/')) {
-      return config; // Skip token attachment for authentication endpoints
-    }
+    try {
+      if (config.url?.includes('/api/auth/')) {
+        return config;
+      }
 
-    // Attach token for other requests
-    const token = await getStorageItem(STORAGE_KEY.AUTH_TOKEN);
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      const token = await getStorageItem(STORAGE_KEY.AUTH_TOKEN);
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    } catch (error) {
+      console.error('Request interceptor error:', error);
+      return Promise.reject(error);
     }
-    return config;
   },
   error => Promise.reject(error),
 );
@@ -39,11 +43,8 @@ apiClient.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
+    if (!originalRequest) return Promise.reject(error);
 
-    const refreshToken = await getStorageItem(STORAGE_KEY.REFRESH_TOKEN);
-    if (!refreshToken) throw new Error('No refresh token available');
-
-    // If error is 401 or 403 and request has not been retried
     if (
       (error.response?.status === 401 || error.response?.status === 403) &&
       !originalRequest._retry
@@ -60,23 +61,28 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const newToken = await refreshToken(refreshToken);
+      try {
+        const refreshToken = await getStorageItem(STORAGE_KEY.REFRESH_TOKEN);
+        if (!refreshToken) throw new Error('No refresh token available');
 
-      if (newToken) {
+        const newToken = await getRefreshToken(refreshToken);
+        if (!newToken) throw new Error('Failed to refresh token');
+
         apiClient.defaults.headers.Authorization = `Bearer ${newToken}`;
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
         refreshSubscribers.forEach(callback => callback(newToken));
         refreshSubscribers = [];
-        isRefreshing = false;
 
-        return apiClient(originalRequest); // Retry the failed request with new token
-      } else {
+        return apiClient(originalRequest);
+      } catch (error) {
+        console.error('Token refresh failed:', error);
+      } finally {
         isRefreshing = false;
       }
     }
 
-    console.error('API Error:', error.response?.data || error.message);
+    console.error('API Error:', error.response?.data || error.message || 'Unknown error');
     return Promise.reject(error);
   },
 );

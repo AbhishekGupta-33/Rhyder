@@ -67,7 +67,7 @@ export const getProfile = async (token: string) => {
 };
 
 // 7. Refresh Token
-export const refreshToken = async (refreshToken: string) => {
+export const getRefreshToken = async (refreshToken: string) => {
   try {
     const response = await apiClient.post(ApiName.auth.refreshToken, {
       refreshToken,

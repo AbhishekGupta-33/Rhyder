@@ -24,6 +24,7 @@ import {callDeleteDocumentApi, callUploadIdentityApi} from '../redux/thunk';
 import {useDispatch} from 'react-redux';
 import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
 import {WebView} from 'react-native-webview';
+import Config from 'react-native-config';
 
 type eachDocumentType = {
   id: number | undefined;
@@ -73,17 +74,28 @@ const UploadDocuments: React.FC = (props: any) => {
   const handleFileUpload = async (type: string) => {
     try {
       if (type === 'photo') {
-        const image = await openCamera();
-        if (image && isFileSizeValid(image.size)) {
-          console.log('Photo uploaded:', image.path);
+        // const image = await openCamera();
+        const [image] = await pick({
+          mode: 'open',
+          type: [types.images],
+          requestLongTermAccess: true,
+          transitionStyle: 'flipHorizontal',
+        });
+        if (image?.size && isFileSizeValid(image.size, 100)) {
+          // console.log('Photo uploaded:', image.path);
+          // let fileForm = prepareFormData({
+          //   uri: image.path,
+          //   name: image.name,
+          //   type: image.type,
+          // });
           let fileForm = prepareFormData({
-            uri: image.path,
+            uri: image.uri,
             name: image.name,
             type: image.type,
           });
           const response = await callUploadIdentityApi(
             dispatch,
-            DocumentType[1],
+            DocumentType[0],
             fileForm,
             progress => {
               setDocuments({
@@ -95,16 +107,27 @@ const UploadDocuments: React.FC = (props: any) => {
               });
             },
           );
-          setDocuments({
-            ...documents,
-            image: {
-              ...documents.image,
-              id: response?.id,
-              url: response?.fileUrl,
-              name: response?.fileName,
-              uploadStatus: true,
-            },
-          });
+          if(response){
+            setDocuments({
+              ...documents,
+              image: {
+                ...documents.image,
+                id: response?.id,
+                url: response?.fileUrl,
+                name: response?.fileName,
+                uploadStatus: true,
+              },
+            });
+          }else{
+            setDocuments({
+              ...documents,
+              image: {
+                ...documents.image,
+                uploadProgress: 0,
+              },
+            });
+          }
+         
         } else {
           Alert.alert(
             'Invalid File',
@@ -114,11 +137,11 @@ const UploadDocuments: React.FC = (props: any) => {
       } else {
         const [document] = await pick({
           mode: 'open',
-          type: [types.pdf, types.images],
+          type: [types.images],
           requestLongTermAccess: true,
           transitionStyle: 'flipHorizontal',
         });
-        if (document.size && isFileSizeValid(document.size)) {
+        if (document.size && isFileSizeValid(document.size, 100)) {
           // console.log(`${nativeType} uploaded:`, name, uri);
           let fileForm = prepareFormData({
             uri: document.uri,
@@ -141,17 +164,26 @@ const UploadDocuments: React.FC = (props: any) => {
               },
             );
             console.log('response===333', response);
-
-            setDocuments({
-              ...documents,
-              idProof: {
-                ...documents.idProof,
-                id: response?.id,
-                url: response?.fileUrl,
-                name: response?.fileName,
-                uploadStatus: true,
-              },
-            });
+            if (response) {
+              setDocuments({
+                ...documents,
+                idProof: {
+                  ...documents.idProof,
+                  id: response?.id,
+                  url: response?.fileUrl,
+                  name: response?.fileName,
+                  uploadStatus: true,
+                },
+              });
+            }else{
+              setDocuments({
+                ...documents,
+                idProof: {
+                  ...documents.idProof,
+                  uploadProgress: 0,
+                },
+              });
+            }
           } else {
             const response = await callUploadIdentityApi(
               dispatch,
@@ -168,16 +200,26 @@ const UploadDocuments: React.FC = (props: any) => {
               },
             );
             console.log('response===444', response);
-            setDocuments({
-              ...documents,
-              genderProof: {
-                ...documents.genderProof,
-                id: response?.id,
-                url: response?.fileUrl,
-                name: response?.fileName,
-                uploadStatus: true,
-              },
-            });
+            if (response) {
+              setDocuments({
+                ...documents,
+                genderProof: {
+                  ...documents.genderProof,
+                  id: response?.id,
+                  url: response?.fileUrl,
+                  name: response?.fileName,
+                  uploadStatus: true,
+                },
+              });
+            }else{
+              setDocuments({
+                ...documents,
+                genderProof: {
+                  ...documents.genderProof,
+                  uploadProgress: 0,
+                },
+              });
+            }
           }
         } else {
           Alert.alert(
@@ -216,7 +258,8 @@ const UploadDocuments: React.FC = (props: any) => {
 
   const handleViewPress = (docUrl: string) => {
     if (docUrl) {
-      setSelectedDocument(docUrl);
+      const finalURL = `${Config.API_BASE_URL}${docUrl}`;
+      setSelectedDocument(finalURL);
       setViewModal(true);
     } else {
       Alert.alert('Error', 'No document available to view.');
@@ -282,15 +325,21 @@ const UploadDocuments: React.FC = (props: any) => {
       <AppButton
         buttonTitle={AppString.screens.auth.uploadDocuments.nextButton}
         onPress={() => {
-          props.navigation.navigate('user', {
-            screen: AppString.NavigationScreens.user.Home,
-          });
+          if (
+            documents.genderProof.url &&
+            documents.image.url &&
+            documents.idProof.url
+          ) {
+            props.navigation.replace('user', {
+              screen: AppString.NavigationScreens.user.Home,
+            });
+          }
         }}
         buttonType={ButtonType.PRIMARY}
         buttonTitleStyle={styles.buttonTitleStyle}
       />
       {/* View Document Modal */}
-      <Modal visible={viewModal} transparent={true} animationType="slide">
+      <Modal visible={viewModal} transparent={true} animationType='fade'>
         <View style={styles.modalContainer}>
           <TouchableOpacity
             style={styles.closeButton}

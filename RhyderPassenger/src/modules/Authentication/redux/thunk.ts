@@ -45,6 +45,7 @@ export const callSendOtpApi = async (phoneNumber: string, dispatch: any) => {
     if (response.isSuccess) {
       dispatch(otpSendResponse(response.data));
     } else {
+      dispatch(authenticationError(response.errors[0]));
     }
     dispatch(authenticationLoaded());
   } catch (error) {

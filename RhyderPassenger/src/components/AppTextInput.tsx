@@ -17,6 +17,7 @@ interface AppTextInputProps {
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   isLastField?: boolean;
   [key: string]: any;
+  leftIcon: any
 }
 
 const AppTextInput: React.FC<AppTextInputProps> = ({
@@ -30,6 +31,7 @@ const AppTextInput: React.FC<AppTextInputProps> = ({
   keyboardType = 'default',
   autoCapitalize = 'none',
   isLastField = false,
+  leftIcon,
   ...rest
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -50,6 +52,7 @@ const AppTextInput: React.FC<AppTextInputProps> = ({
         returnKeyType={isLastField ? 'done' : 'next'}
         outlineColor={error ? 'red' : '#E0E0E0'}
         activeOutlineColor={error ? 'red' : '#6200EE'}
+        left={leftIcon}
         right={
           secureTextEntry ? (
             <TextInput.Icon
