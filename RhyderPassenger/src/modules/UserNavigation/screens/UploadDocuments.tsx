@@ -387,6 +387,15 @@ const UploadDocuments: React.FC = (props: any) => {
         buttonTitleStyle={styles.buttonTitleStyle}
         buttonStyle={styles.buttonStyle}
       />
+      <AppButton
+        buttonTitle={AppString.screens.auth.uploadDocuments.logout}
+        onPress={() => {
+          callLogoutApi(dispatch);
+        }}
+        buttonType={ButtonType.PRIMARY}
+        buttonTitleStyle={styles.buttonTitleStyle}
+        buttonStyle={styles.buttonStyle}
+      />
       {/* View Document Modal */}
       <Modal visible={viewModal} transparent={true} animationType="fade">
         <View style={styles.modalContainer}>
