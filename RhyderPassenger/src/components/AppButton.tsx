@@ -138,19 +138,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderColor: '#b0b0b0',
   },
-  disabledButtonStyle: {
-    opacity: 0.6,
-  },
-  disabledButtonText: {
-    color: '#808080',
-  },
-  disabledButtonWrapper: {
-    opacity: 0.6,
-  },
-  disabledSecondaryButtonStyle: {
-    backgroundColor: '#f0f0f0',
-    borderColor: '#b0b0b0',
-  },
 });
 
 export default AppButton;

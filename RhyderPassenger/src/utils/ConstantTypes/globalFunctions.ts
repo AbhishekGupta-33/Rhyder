@@ -1,4 +1,6 @@
-import { Platform } from "react-native";
+import {Platform} from 'react-native';
+import {removeStorageItem} from '../Storage/storage';
+import {STORAGE_KEY} from '../Storage/storageKeys';
 
 // Validate file size
 export const isFileSizeValid = (
@@ -21,3 +23,8 @@ export const prepareFormData = (file: any, fieldName = 'file') => {
   return formData;
 };
 
+export const clearUserAllData = () => {
+  removeStorageItem(STORAGE_KEY.AUTH_TOKEN);
+  removeStorageItem(STORAGE_KEY.REFRESH_TOKEN);
+  removeStorageItem(STORAGE_KEY.USER_DETAIL);
+};

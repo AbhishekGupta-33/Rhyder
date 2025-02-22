@@ -3,13 +3,17 @@ import React from 'react';
 import AppRoutes from './navigation/AppRoutes';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
+import {navigationRef} from './utils/NavigationService';
+import {AppProvider} from './context/AppContext';
 
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <AppRoutes />
-      </NavigationContainer>
+      <AppProvider>
+        <NavigationContainer ref={navigationRef}>
+          <AppRoutes />
+        </NavigationContainer>
+      </AppProvider>
     </Provider>
   );
 };
