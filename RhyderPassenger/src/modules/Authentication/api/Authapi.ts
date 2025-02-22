@@ -62,18 +62,6 @@ export const logout = async (refreshToken: string) => {
   }
 };
 
-// 6. Get Profile
-export const getProfile = async (token: string) => {
-  try {
-    const response = await apiClient.get(ApiName.auth.getProfile, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 // 7. Refresh Token
 export const getRefreshToken = async (refreshToken: string) => {
   try {

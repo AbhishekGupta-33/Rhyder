@@ -35,7 +35,6 @@ const Welcome: React.FC = (props: any) => {
           }}
           buttonType={ButtonType.SECONDARY}
           buttonTitleStyle={{ color: '#C471ED' }}
-          buttonStyle={{ borderColor: '#C471ED', borderWidth: 2 }}
         />
       </View>
     </View>
