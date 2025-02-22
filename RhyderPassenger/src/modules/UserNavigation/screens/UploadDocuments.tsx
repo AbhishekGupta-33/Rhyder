@@ -19,18 +19,15 @@ import {
 } from '../../../utils/ConstantTypes/globalFunctions';
 import {useCameraPermission} from '../../../hooks/useCameraPermission';
 import {pick, types} from '@react-native-documents/picker';
-import {log} from '../../../utils/Logger';
+import {useDispatch} from 'react-redux';
+import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
+import {WebView} from 'react-native-webview';
 import {
   callDeleteDocumentApi,
   callGetUploadedDocumentsApi,
   callLogoutApi,
   callUploadIdentityApi,
-} from '../redux/thunk';
-import {useDispatch} from 'react-redux';
-import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
-import {WebView} from 'react-native-webview';
-import Config from 'react-native-config';
-import {getUploadedDocuments} from '../api/DocumentApi';
+} from '../../Authentication/redux/thunk';
 
 type eachDocumentType = {
   id: number | undefined;
@@ -310,9 +307,7 @@ const UploadDocuments: React.FC = (props: any) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <AppHeader
-        headerTitle={AppString.screens.auth.uploadDocuments.title}
-      />
+      <AppHeader headerTitle={AppString.screens.auth.uploadDocuments.title} />
       <AppText style={styles.subtitle}>
         {AppString.screens.auth.uploadDocuments.subtitle}
       </AppText>
@@ -382,7 +377,6 @@ const UploadDocuments: React.FC = (props: any) => {
           }
         }}
         buttonType={ButtonType.PRIMARY}
-        buttonTitleStyle={styles.buttonTitleStyle}
       />
       <AppButton
         buttonTitle={AppString.screens.auth.uploadDocuments.logout}

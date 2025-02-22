@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
   TextStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import AppText from './AppText';
 
 // Enum for button types
 export const ButtonType = {
@@ -44,14 +44,14 @@ const AppButton: React.FC<AppButtonProps> = ({
         disabled ? ['#d3d3d3', '#a9a9a9'] : ['#d566fc', '#ec61cd', '#fd5ea9']
       }
       style={[styles.primaryButton, disabled && styles.disabledButtonStyle]}>
-      <Text
+      <AppText
         style={[
           styles.primaryButtonText,
           buttonTitleStyle,
           disabled && styles.disabledButtonText,
         ]}>
         {buttonTitle}
-      </Text>
+      </AppText>
     </LinearGradient>
   );
 
@@ -61,14 +61,14 @@ const AppButton: React.FC<AppButtonProps> = ({
         styles.secondaryButton,
         disabled && styles.disabledSecondaryButtonStyle,
       ]}>
-      <Text
+      <AppText
         style={[
           styles.primaryButtonText,
           buttonTitleStyle,
           disabled && styles.disabledButtonText,
         ]}>
         {buttonTitle}
-      </Text>
+      </AppText>
     </View>
   );
 
@@ -85,25 +85,20 @@ const AppButton: React.FC<AppButtonProps> = ({
       onPress={onPress}
       disabled={disabled}
       activeOpacity={0.9}
-      style={[
-        styles.commonButtonStyle,
-        buttonStyle,
-        disabled ? styles.disabledButtonWrapper : {},
-      ]}>
+      style={[styles.commonButtonStyle, buttonStyle]}>
       <ButtonView />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  primaryButton: {
-    paddingVertical: 12,
-    borderRadius: 15,
-  },
+  primaryButton: {},
   primaryButtonText: {
     fontSize: 18,
     textAlign: 'center',
     fontWeight: 'bold',
+    color: '#ffffff',
+    marginVertical: 12,
   },
   secondaryButton: {
     paddingVertical: 12,
@@ -116,6 +111,15 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     overflow: 'hidden',
     width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9,
   },
   disabledButtonStyle: {
     opacity: 0.6,
