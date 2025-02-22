@@ -85,11 +85,7 @@ const AppButton: React.FC<AppButtonProps> = ({
       onPress={onPress}
       disabled={disabled}
       activeOpacity={0.9}
-      style={[
-        styles.commonButtonStyle,
-        buttonStyle,
-        disabled ? styles.disabledButtonWrapper : {},
-      ]}>
+      style={[styles.commonButtonStyle, buttonStyle]}>
       <ButtonView />
     </TouchableOpacity>
   );
