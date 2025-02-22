@@ -1,4 +1,4 @@
-package com.rhyderpassenger
+package com.rhyder.passenger
 
 import android.app.Application
 import com.facebook.react.PackageList

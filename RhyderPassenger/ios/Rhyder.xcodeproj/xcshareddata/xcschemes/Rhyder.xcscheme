@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "RhyderPassenger.app"
-               BlueprintName = "RhyderPassenger"
-               ReferencedContainer = "container:RhyderPassenger.xcodeproj">
+               BuildableName = "Rhyder.app"
+               BlueprintName = "Rhyder"
+               ReferencedContainer = "container:Rhyder.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "RhyderPassengerTests.xctest"
-               BlueprintName = "RhyderPassengerTests"
-               ReferencedContainer = "container:RhyderPassenger.xcodeproj">
+               BuildableName = "RhyderTests.xctest"
+               BlueprintName = "RhyderTests"
+               ReferencedContainer = "container:Rhyder.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "RhyderPassenger.app"
-            BlueprintName = "RhyderPassenger"
-            ReferencedContainer = "container:RhyderPassenger.xcodeproj">
+            BuildableName = "Rhyder.app"
+            BlueprintName = "Rhyder"
+            ReferencedContainer = "container:Rhyder.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "RhyderPassenger.app"
-            BlueprintName = "RhyderPassenger"
-            ReferencedContainer = "container:RhyderPassenger.xcodeproj">
+            BuildableName = "Rhyder.app"
+            BlueprintName = "Rhyder"
+            ReferencedContainer = "container:Rhyder.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
