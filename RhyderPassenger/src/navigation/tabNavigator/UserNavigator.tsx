@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {AppString} from '../../utils/AppString';
 import Home from '../../modules/UserNavigation/screens/Home';
