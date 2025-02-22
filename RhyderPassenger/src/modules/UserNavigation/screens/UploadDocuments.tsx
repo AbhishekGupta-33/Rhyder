@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import UploadBox from '../components/UploadBox';
+import UploadBox from '../../Authentication/components/UploadBox';
 import {AppString} from '../../../utils/AppString';
 import {AppButton, AppHeader, AppText, ButtonType} from '../../../components';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -25,7 +25,7 @@ import {
   callGetUploadedDocumentsApi,
   callLogoutApi,
   callUploadIdentityApi,
-} from '../redux/thunk';
+} from '../../Authentication/redux/thunk';
 import {useDispatch} from 'react-redux';
 import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
 import {WebView} from 'react-native-webview';
@@ -312,9 +312,6 @@ const UploadDocuments: React.FC = (props: any) => {
     <SafeAreaView style={styles.container}>
       <AppHeader
         headerTitle={AppString.screens.auth.uploadDocuments.title}
-        onBackPress={() => {
-          props.navigation.goBack();
-        }}
       />
       <AppText style={styles.subtitle}>
         {AppString.screens.auth.uploadDocuments.subtitle}

@@ -3,7 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Login from '../modules/Authentication/screens/Login';
 import Welcome from '../modules/Authentication/screens/Welcome';
 import ForgotPassword from '../modules/Authentication/screens/ForgotPassword';
-import UploadDocuments from '../modules/Authentication/screens/UploadDocuments';
 import {AppString} from '../utils/AppString';
 import SignupStep1 from '../modules/Authentication/screens/SignupStep1';
 import SignupVerification from '../modules/Authentication/screens/SignupVerification';
@@ -60,10 +59,6 @@ const AuthNavigator: React.FC = () => {
         <Stack.Screen
           name={AppString.NavigationScreens.auth.ForgotPassword}
           component={ForgotPassword}
-        />
-        <Stack.Screen
-          name={AppString.NavigationScreens.auth.UploadDocuments}
-          component={UploadDocuments}
         />
         <Stack.Screen
           name={AppString.NavigationScreens.auth.SignupVerification}
