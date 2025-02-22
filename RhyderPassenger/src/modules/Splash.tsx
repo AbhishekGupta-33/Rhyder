@@ -10,20 +10,11 @@ const Splash: React.FC = (props: any) => {
   const checkUserLoggedIn = async () => {
     const userData = await getStorageItem(STORAGE_KEY.USER_DETAIL);
     const authToken = await getStorageItem(STORAGE_KEY.AUTH_TOKEN);
-    const refreshToken = await getStorageItem(STORAGE_KEY.REFRESH_TOKEN);
-    // if (userData && authToken && refreshToken) {
-    //   if (userData?.docIssue) {
-    //     props.navigation.replace(AppString.NavigationScreens.stackNavigator.User);
-    //   } else {
-    //     props.navigation.replace(
-    //       AppString.NavigationScreens.stackNavigator.Auth,{
-    //         screen: AppString.NavigationScreens.auth.UploadDocuments
-    //       }
-    //     );
-    //   }
-    // } else {
+    if (userData && authToken) {
+        props.navigation.replace(AppString.NavigationScreens.stackNavigator.User);
+    } else {
       props.navigation.replace(AppString.NavigationScreens.stackNavigator.Auth);
-    // }
+    }
   };
 
   useEffect(() => {

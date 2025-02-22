@@ -5,7 +5,6 @@ export const AppString = {
       Auth: 'auth'
     },
     auth: {
-      UploadDocuments: 'UploadDocuments',
       Welcome: 'welcome',
       Login: 'login',
       SignupStep1: 'signupStep1',
@@ -15,7 +14,8 @@ export const AppString = {
       CreatePassword: 'createPassword'
     },
     user:{
-      Home:'home'
+      Home:'home',
+      UploadDocuments:'UploadDocuments',
     } 
   },
   screens: {

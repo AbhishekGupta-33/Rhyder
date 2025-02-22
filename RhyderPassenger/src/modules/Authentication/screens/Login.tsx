@@ -28,7 +28,6 @@ import {
   storage,
 } from '../../../utils/Storage/storage';
 import {STORAGE_KEY} from '../../../utils/Storage/storageKeys';
-import { loginUserData } from '../redux/authSlice';
 
 const Login: React.FC = (props: any) => {
   // State ------------------------------------------------
@@ -57,18 +56,14 @@ const Login: React.FC = (props: any) => {
 
   useEffect(() => {
     if (loginSuccessResponseData !== null && userLoginDetail.password) {
-      Alert.alert('', `Login Success Fully`, [
+      Alert.alert('', `Login Successfully`, [
         {
           text: 'OK',
           onPress: () => {
             setUserLoginDetail(initalUserLoginDetail);
-            if (loginSuccessResponseData.docIssue) {
-              props.navigation.replace(AppString.NavigationScreens.stackNavigator.User);
-            } else {
-              props.navigation.navigate(
-                AppString.NavigationScreens.auth.UploadDocuments,
-              );
-            }
+            props.navigation.replace(
+              AppString.NavigationScreens.stackNavigator.User,
+            );
           },
         },
       ]);
@@ -86,7 +81,6 @@ const Login: React.FC = (props: any) => {
     } else if (field === 'userName' && !hasValidEmailOrPhoneNumber(value)) {
       error = AppString.screens.auth.login.emailOrPhoneError;
     }
-    console.log(error);
 
     setUserLoginDetail(prev => ({
       ...prev,

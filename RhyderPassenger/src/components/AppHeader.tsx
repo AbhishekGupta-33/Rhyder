@@ -6,7 +6,7 @@ import AppText from './AppText';
 interface HeaderProps {
   headerTitle: string;
   onInfoPress?: () => void;
-  onBackPress: () => void;
+  onBackPress?: () => void;
 }
 
 const AppHeader: React.FC<HeaderProps> = ({
@@ -14,11 +14,18 @@ const AppHeader: React.FC<HeaderProps> = ({
   onInfoPress,
   onBackPress,
 }) => {
-  return (
-    <View style={styles.containerStyle}>
+  const LeftView = () => {
+    return onBackPress ? (
       <TouchableOpacity onPress={onBackPress}>
         <Icon name="arrowleft" size={20} color="black" />
       </TouchableOpacity>
+    ) : (
+      <View style={styles.leftViewStyle}></View>
+    );
+  };
+  return (
+    <View style={styles.containerStyle}>
+      <LeftView />
 
       <AppText style={styles.headerTextStyle}>{headerTitle}</AppText>
 
@@ -40,6 +47,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingVertical: 10,
+  },
+  leftViewStyle: {
+    height: 20,
+    width: 20,
   },
   headerTextStyle: {
     color: '#000000',
