@@ -24,6 +24,7 @@ interface AppButtonProps {
   buttonStyle?: ViewStyle;
   buttonType: ButtonType;
   buttonTitleStyle?: TextStyle;
+  disabled?: boolean;
 }
 
 const AppButton: React.FC<AppButtonProps> = ({
@@ -33,21 +34,39 @@ const AppButton: React.FC<AppButtonProps> = ({
   buttonStyle,
   buttonType,
   buttonTitleStyle,
+  disabled,
 }) => {
   const PrimaryButton = () => (
     <LinearGradient
       start={{x: 0, y: 0}}
       end={{x: 1, y: 0}}
-      colors={['#d566fc', '#ec61cd', '#fd5ea9']}>
-      <Text style={[styles.primaryButtonText, buttonTitleStyle]}>
+      colors={
+        disabled ? ['#d3d3d3', '#a9a9a9'] : ['#d566fc', '#ec61cd', '#fd5ea9']
+      }
+      style={[styles.primaryButton, disabled && styles.disabledButtonStyle]}>
+      <Text
+        style={[
+          styles.primaryButtonText,
+          buttonTitleStyle,
+          disabled && styles.disabledButtonText,
+        ]}>
         {buttonTitle}
       </Text>
     </LinearGradient>
   );
 
   const SecondaryButton = () => (
-    <View>
-      <Text style={[styles.primaryButtonText, buttonTitleStyle]}>
+    <View
+      style={[
+        styles.secondaryButton,
+        disabled && styles.disabledSecondaryButtonStyle,
+      ]}>
+      <Text
+        style={[
+          styles.primaryButtonText,
+          buttonTitleStyle,
+          disabled && styles.disabledButtonText,
+        ]}>
         {buttonTitle}
       </Text>
     </View>
@@ -64,25 +83,52 @@ const AppButton: React.FC<AppButtonProps> = ({
   return (
     <TouchableOpacity
       onPress={onPress}
+      disabled={disabled}
       activeOpacity={0.9}
-      style={[styles.commonButtonStyle, buttonStyle]}>
+      style={[
+        styles.commonButtonStyle,
+        buttonStyle,
+        disabled ? styles.disabledButtonWrapper : {},
+      ]}>
       <ButtonView />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
+  primaryButton: {
+    paddingVertical: 12,
+    borderRadius: 15,
+  },
   primaryButtonText: {
     fontSize: 18,
     textAlign: 'center',
     fontWeight: 'bold',
-    marginVertical: 12,
+  },
+  secondaryButton: {
+    paddingVertical: 12,
+    borderRadius: 15,
+    backgroundColor: '#ffffff',
+    borderWidth: 2,
+    borderColor: '#d566fc',
   },
   commonButtonStyle: {
     borderRadius: 15,
     overflow: 'hidden',
-    borderCurve: 'continuous', // continuous
     width: '100%',
+  },
+  disabledButtonStyle: {
+    opacity: 0.6,
+  },
+  disabledButtonText: {
+    color: '#808080',
+  },
+  disabledButtonWrapper: {
+    opacity: 0.6,
+  },
+  disabledSecondaryButtonStyle: {
+    backgroundColor: '#f0f0f0',
+    borderColor: '#b0b0b0',
   },
 });
 

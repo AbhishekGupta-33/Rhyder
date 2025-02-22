@@ -89,7 +89,8 @@ export const AppString = {
       uploadDocuments: {
         title: 'Upload Documents',
         subtitle: 'Upload documents for the vehicle',
-        nextButton: 'NEXT',
+        nextButton: 'Done',
+        logout:'Logout',
         sections: [
           {
             label: 'Photo*',
