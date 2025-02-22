@@ -19,7 +19,7 @@ import {
   signupResponse,
 } from './authSlice';
 import {
-ApiResponse,
+  ApiResponse,
   uploadDocumentResponse,
   ForgetPasswordRequest,
   ForgotPasswordResponse,
@@ -33,11 +33,17 @@ ApiResponse,
   VerifyOtpResponse,
   documentDeleteResponse,
 } from '../../../utils/ConstantTypes/authTypes';
-import {setStorageItem} from '../../../utils/Storage/storage';
+import {getStorageItem, setStorageItem} from '../../../utils/Storage/storage';
 import {STORAGE_KEY} from '../../../utils/Storage/storageKeys';
-import {deleteDocument, getUploadedDocuments, uploadIdentity} from '../api/DocumentApi';
+import {
+  deleteDocument,
+  getUploadedDocuments,
+  uploadIdentity,
+} from '../api/DocumentApi';
 import {Alert} from 'react-native';
 import {AppString} from '../../../utils/AppString';
+import {clearUserAllData} from '../../../utils/ConstantTypes/globalFunctions';
+import { replace } from '../../../utils/NavigationService';
 
 export const callSendOtpApi = async (phoneNumber: string, dispatch: any) => {
   try {
@@ -117,7 +123,9 @@ export const callForgotPasswordApi = async (
 ) => {
   try {
     dispatch(authenticationLoading());
-    const response: ForgotPasswordResponse = await forgotPassword(forgetPasswordData);
+    const response: ForgotPasswordResponse = await forgotPassword(
+      forgetPasswordData,
+    );
     if (response.isSuccess) {
       dispatch(forgotPasswordResponse(response.data));
     } else {
@@ -136,7 +144,9 @@ export const callResetPasswordApi = async (
 ) => {
   try {
     dispatch(authenticationLoading());
-    const response: ForgotPasswordResponse = await resetPassword(resetPasswordData);
+    const response: ForgotPasswordResponse = await resetPassword(
+      resetPasswordData,
+    );
     if (response.isSuccess) {
       dispatch(resetPasswordResponse(response.data));
     } else {
@@ -199,12 +209,11 @@ export const callDeleteDocumentApi = async (
 };
 
 // get uploaded Documents API
-export const callGetUploadedDocumentsApi = async (
-  dispatch: any,
-) => {
+export const callGetUploadedDocumentsApi = async (dispatch: any) => {
   try {
     dispatch(authenticationLoading());
-    const response: ApiResponse<uploadDocumentResponse> = await getUploadedDocuments();
+    const response: ApiResponse<uploadDocumentResponse> =
+      await getUploadedDocuments();
     dispatch(authenticationLoaded());
     if (response.isSuccess) {
       return response.data;
@@ -218,15 +227,15 @@ export const callGetUploadedDocumentsApi = async (
 };
 
 // get uploaded Documents API
-export const callLogoutApi = async (
-  dispatch: any,
-) => {
+export const callLogoutApi = async (dispatch: any) => {
   try {
     dispatch(authenticationLoading());
-    const response = await logout();
-    console.log("response====",response);
-    
+    const refreshToken = getStorageItem(STORAGE_KEY.REFRESH_TOKEN);
+    const response = await logout(refreshToken);
+    console.log
     dispatch(authenticationLoaded());
+    clearUserAllData();
+    replace(AppString.NavigationScreens.stackNavigator.Auth)
     if (response.isSuccess) {
       return response.data;
     } else {
@@ -234,6 +243,8 @@ export const callLogoutApi = async (
     }
   } catch (error) {
     dispatch(authenticationLoaded());
+    clearUserAllData();
+    replace(AppString.NavigationScreens.stackNavigator.Auth)
     throw error;
   }
 };

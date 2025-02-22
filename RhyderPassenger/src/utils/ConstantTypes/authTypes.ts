@@ -1,3 +1,4 @@
+import {RefreshTokenRequest} from './authTypes';
 // src/types/authTypes.ts
 
 // Send OTP Request
@@ -14,7 +15,7 @@ export interface VerifyOtpRequest {
 // Register Request
 export interface RegisterRequest {
   firstName: string;
-  lastName:string;
+  lastName: string;
   email: string;
   password: string;
   phoneNumber: string;
@@ -22,7 +23,7 @@ export interface RegisterRequest {
 }
 
 export enum RoleType {
-  'Admin' ,
+  'Admin',
   'Driver',
   'Rider',
 }
@@ -144,11 +145,18 @@ export type ForgotPasswordResponse = {
   data: string | null;
   errors: string[];
 };
-export type ForgetPasswordRequest ={
+export type ForgetPasswordRequest = {
   identifier: string;
-}
+};
 
 export type ResetPasswordRequest = {
   identifier: string;
   newPassword: string;
+};
+
+export type RefreshTokenResponse = {
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExpires: string;
+  refreshTokenExpires: string;
 };

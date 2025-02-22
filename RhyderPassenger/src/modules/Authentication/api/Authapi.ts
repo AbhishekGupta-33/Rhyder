@@ -2,7 +2,13 @@
 
 import {ApiName} from '../../../api/apiName';
 import apiClient from '../../../api/axiosInstance';
-import { ForgetPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, VerifyOtpRequest } from '../../../utils/ConstantTypes/authTypes';
+import {
+  ForgetPasswordRequest,
+  LoginRequest,
+  RegisterRequest,
+  ResetPasswordRequest,
+  VerifyOtpRequest,
+} from '../../../utils/ConstantTypes/authTypes';
 
 // 1. Send OTP
 export const sendOtp = async (phoneNumber: string) => {
@@ -15,7 +21,7 @@ export const sendOtp = async (phoneNumber: string) => {
 };
 
 // 2. Verify OTP
-export const verifyOtp = async (credential:VerifyOtpRequest) => {
+export const verifyOtp = async (credential: VerifyOtpRequest) => {
   try {
     const response = await apiClient.post(ApiName.auth.verifyOtp, credential);
     return response.data;
@@ -45,9 +51,11 @@ export const login = async (credentials: LoginRequest) => {
 };
 
 // 5. Logout
-export const logout = async () => {
+export const logout = async (refreshToken: string) => {
   try {
-    const response = await apiClient.post(ApiName.auth.logout);
+    const response = await apiClient.post(ApiName.auth.logout, {
+      refreshToken: refreshToken,
+    });
     return response.data;
   } catch (error) {
     throw error;
