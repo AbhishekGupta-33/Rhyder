@@ -89,6 +89,7 @@ const AppButton: React.FC<AppButtonProps> = ({
         styles.commonButtonStyle,
         buttonStyle,
         disabled ? styles.disabledButtonWrapper : {},
+        buttonType === ButtonType.SECONDARY && { borderColor: '#d566fc', borderWidth: 2 }
       ]}>
       <ButtonView />
     </TouchableOpacity>
@@ -105,11 +106,7 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   secondaryButton: {
-    paddingVertical: 12,
-    borderRadius: 15,
     backgroundColor: '#ffffff',
-    borderWidth: 2,
-    borderColor: '#d566fc',
   },
   commonButtonStyle: {
     borderRadius: 15,
@@ -124,19 +121,6 @@ const styles = StyleSheet.create({
     shadowRadius: 5.46,
 
     elevation: 9,
-  },
-  disabledButtonStyle: {
-    opacity: 0.6,
-  },
-  disabledButtonText: {
-    color: '#808080',
-  },
-  disabledButtonWrapper: {
-    opacity: 0.6,
-  },
-  disabledSecondaryButtonStyle: {
-    backgroundColor: '#f0f0f0',
-    borderColor: '#b0b0b0',
   },
   disabledButtonStyle: {
     opacity: 0.6,

@@ -2,7 +2,13 @@
 
 import {ApiName} from '../../../api/apiName';
 import apiClient from '../../../api/axiosInstance';
-import { ForgetPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, VerifyOtpRequest } from '../../../utils/ConstantTypes/authTypes';
+import {
+  ForgetPasswordRequest,
+  LoginRequest,
+  RegisterRequest,
+  ResetPasswordRequest,
+  VerifyOtpRequest,
+} from '../../../utils/ConstantTypes/authTypes';
 
 // 1. Send OTP
 export const sendOtp = async (phoneNumber: string) => {
@@ -15,7 +21,7 @@ export const sendOtp = async (phoneNumber: string) => {
 };
 
 // 2. Verify OTP
-export const verifyOtp = async (credential:VerifyOtpRequest) => {
+export const verifyOtp = async (credential: VerifyOtpRequest) => {
   try {
     const response = await apiClient.post(ApiName.auth.verifyOtp, credential);
     return response.data;
@@ -48,18 +54,6 @@ export const login = async (credentials: LoginRequest) => {
 export const logout = async () => {
   try {
     const response = await apiClient.post(ApiName.auth.logout);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-// 6. Get Profile
-export const getProfile = async (token: string) => {
-  try {
-    const response = await apiClient.get(ApiName.auth.getProfile, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
     return response.data;
   } catch (error) {
     throw error;

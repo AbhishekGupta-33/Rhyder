@@ -62,7 +62,7 @@ const Login: React.FC = (props: any) => {
           onPress: () => {
             setUserLoginDetail(initalUserLoginDetail);
             props.navigation.replace(
-              AppString.NavigationScreens.stackNavigator.User,
+              AppString.NavigationScreens.navigator.tab,
             );
           },
         },
@@ -193,7 +193,7 @@ const Login: React.FC = (props: any) => {
           <AppButton
             buttonTitle={AppString.screens.auth.login.loginButton}
             onPress={handleLogin}
-            buttonType={ButtonType.PRIMARY}
+            buttonType={ButtonType.SECONDARY}
             buttonTitleStyle={styles.buttonTitleStyle}
           />
 
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   footerText: {textAlign: 'center', marginTop: 10},
   linkText: {color: '#53a1fd'},
   buttonTitleStyle: {
-    color: '#ffffff',
+    color: '#C471ED',
   },
 });
 

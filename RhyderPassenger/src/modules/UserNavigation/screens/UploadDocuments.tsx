@@ -28,6 +28,8 @@ import {
   callLogoutApi,
   callUploadIdentityApi,
 } from '../../Authentication/redux/thunk';
+import {getStorageItem} from '../../../utils/Storage/storage';
+import {STORAGE_KEY} from '../../../utils/Storage/storageKeys';
 
 type eachDocumentType = {
   id: number | undefined;
@@ -275,6 +277,24 @@ const UploadDocuments: React.FC = (props: any) => {
     }
   };
 
+  const handleLogout = async () => {
+    const refreshToken = await getStorageItem(STORAGE_KEY.REFRESH_TOKEN);
+    if (refreshToken) {
+      Alert.alert('', 'Are you sure want to Logout ?', [
+        {
+          text: 'YES',
+          onPress: () => {
+            callLogoutApi(dispatch);
+          },
+        },
+        {
+          text: 'NO',
+          onPress: () => {},
+        },
+      ]);
+    }
+  };
+
   const handleDeletePress = async (
     documentDetail: eachDocumentType,
     docType: string,
@@ -381,16 +401,7 @@ const UploadDocuments: React.FC = (props: any) => {
       <AppButton
         buttonTitle={AppString.screens.auth.uploadDocuments.logout}
         onPress={() => {
-          callLogoutApi(dispatch);
-        }}
-        buttonType={ButtonType.PRIMARY}
-        buttonTitleStyle={styles.buttonTitleStyle}
-        buttonStyle={styles.buttonStyle}
-      />
-      <AppButton
-        buttonTitle={AppString.screens.auth.uploadDocuments.logout}
-        onPress={() => {
-          callLogoutApi(dispatch);
+          handleLogout();
         }}
         buttonType={ButtonType.PRIMARY}
         buttonTitleStyle={styles.buttonTitleStyle}
