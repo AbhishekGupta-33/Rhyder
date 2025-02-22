@@ -1,11 +1,10 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {AppString} from '../utils/AppString';
-import Home from '../modules/UserNavigation/screens/Home';
-import UploadDocuments from '../modules/UserNavigation/screens/UploadDocuments';
-import {getStorageItem} from '../utils/Storage/storage';
-import {STORAGE_KEY} from '../utils/Storage/storageKeys';
-import { log } from '../utils/Logger';
+import {AppString} from '../../utils/AppString';
+import Home from '../../modules/UserNavigation/screens/Home';
+import UploadDocuments from '../../modules/UserNavigation/screens/UploadDocuments';
+import {getStorageItem} from '../../utils/Storage/storage';
+import {STORAGE_KEY} from '../../utils/Storage/storageKeys';
 
 const Stack = createStackNavigator();
 

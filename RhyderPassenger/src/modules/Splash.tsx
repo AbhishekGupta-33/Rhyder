@@ -12,7 +12,7 @@ const Splash: React.FC = (props: any) => {
     const userData = await getStorageItem(STORAGE_KEY.USER_DETAIL);
     const authToken = await getStorageItem(STORAGE_KEY.AUTH_TOKEN);
     if (userData && authToken) {
-      replace(AppString.NavigationScreens.stackNavigator.User);
+      replace(AppString.NavigationScreens.navigator.tab);
     } else {
       replace(AppString.NavigationScreens.stackNavigator.Auth);
     }

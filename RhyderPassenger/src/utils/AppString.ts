@@ -1,8 +1,12 @@
 export const AppString = {
   NavigationScreens: {
+    navigator:{
+      tab:'userTab'
+    },
     stackNavigator: {
       User: 'user',
-      Auth: 'auth'
+      Auth: 'auth',
+      Profile:'profile'
     },
     auth: {
       Welcome: 'welcome',
@@ -16,6 +20,7 @@ export const AppString = {
     user:{
       Home:'home',
       UploadDocuments:'UploadDocuments',
+      Profile:'Profile'
     } 
   },
   screens: {
