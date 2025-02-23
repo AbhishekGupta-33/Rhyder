@@ -3,7 +3,6 @@ import {
   Modal,
   TouchableOpacity,
   View,
-  Image,
   StyleSheet,
   Dimensions,
 } from 'react-native';
@@ -33,15 +32,16 @@ const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
           <TouchableOpacity style={styles.closeButton} onPress={onCancelPress}>
             <Icon name="closecircle" color="#ffffff" size={24} />
           </TouchableOpacity>
-          {selectedDocument?.endsWith('.pdf') ? (
+          {selectedDocument?.url?.endsWith('.pdf') ? (
             <WebView
               source={{uri: selectedDocument.url}}
               style={styles.webView}
             />
           ) : (
             <AppImage
-              source={{uri: selectedDocument.url}}
+              source={{uri: selectedDocument?.url}}
               style={styles.imagePreview}
+              resizeMode={'contain'}
             />
           )}
         </View>
@@ -53,14 +53,14 @@ const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContainer: {
     width: width * 0.9,
     height: height * 0.7,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     borderRadius: 12,
     padding: 10,
     alignItems: 'center',

@@ -6,12 +6,6 @@ import Profile from '../../modules/UserFlow/screens/Profile';
 const Stack = createStackNavigator();
 
 const ProfileNavigator: React.FC = () => {
-  //   const loginSuccessResponseData = getStorageItem(STORAGE_KEY.USER_DETAIL);
-  //   const [initialRouteName, setInitialRouteName] = useState<string>(AppString.NavigationScreens.user.UploadDocuments)
-  //   useLayoutEffect(() => {
-  //     if (loginSuccessResponseData?.docIssue)
-  //       setInitialRouteName(AppString.NavigationScreens.user.Home);
-  //   }, [loginSuccessResponseData]);
 
   return (
     <Stack.Navigator

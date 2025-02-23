@@ -80,7 +80,7 @@ export const AppString = {
       signupVerification: {
         header: 'OTP Verify',
         subheader: 'Please enter the verification code sent to',
-        otpLabel: 'Enter 6-Digits OTP',
+        otpLabel: 'Enter 4-Digits OTP',
         resendButton: 'Resend OTP',
         verifyButton: 'Verify',
         otpError: 'Please enter OTP',

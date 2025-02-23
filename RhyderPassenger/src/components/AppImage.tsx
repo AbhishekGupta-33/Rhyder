@@ -7,9 +7,9 @@ interface AppImageProps {
   style?: object;
 }
 
-const AppImage: React.FC<AppImageProps> = ({source, style}) => {
+const AppImage: React.FC<AppImageProps> = ({source, style, ...res}) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isError, setIsError] = useState(false);
+  // const [isError, setIsError] = useState(false);
 
   return (
     <View style={[styles.container, style]}>
@@ -20,14 +20,18 @@ const AppImage: React.FC<AppImageProps> = ({source, style}) => {
         />
       )}
       <FastImage
-        source={isError ? {uri: appImage.staticImage} : source}
+        source={
+          source?.uri === '' || !isLoaded ? {uri: appImage.staticImage} : source
+        }
         style={[styles.image, style, !isLoaded && styles.hidden]}
+        {...res}
         onLoadStart={() => setIsLoaded(false)}
-        onLoad={() => setIsLoaded(true)}
-        onError={() => {
-          setIsError(true);
+        onLoad={() => {
           setIsLoaded(true);
         }}
+        // onError={() => {
+        //   setIsError(true);
+        // }}
       />
     </View>
   );

@@ -24,6 +24,7 @@ import {authenticationLogin} from '../redux/selector';
 import AuthenticationBottomView from '../components/AuthenticationBottomView';
 import {
   getStorageItem,
+  removeStorageItem,
   setStorageItem,
   storage,
 } from '../../../utils/Storage/storage';
@@ -61,9 +62,7 @@ const Login: React.FC = (props: any) => {
           text: 'OK',
           onPress: () => {
             setUserLoginDetail(initalUserLoginDetail);
-            props.navigation.replace(
-              AppString.NavigationScreens.navigator.tab,
-            );
+            props.navigation.replace(AppString.NavigationScreens.navigator.tab);
           },
         },
       ]);
@@ -109,6 +108,7 @@ const Login: React.FC = (props: any) => {
       // API Call Logic
       if (rememberMe)
         setStorageItem(STORAGE_KEY.USER_IDENTIFIER, `${userName}`);
+      else removeStorageItem(STORAGE_KEY.USER_IDENTIFIER);
       callLoginApi(
         {
           identifier: userName,

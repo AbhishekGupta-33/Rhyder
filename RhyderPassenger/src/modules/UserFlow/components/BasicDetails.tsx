@@ -1,8 +1,10 @@
 import React from 'react';
-import {AppText, ShadowCard} from '../../../components';
+import {AppButton, AppText, ButtonType, ShadowCard} from '../../../components';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {IconButton} from 'react-native-paper';
 import {AppString} from '../../../utils/AppString';
+import {callLogoutApi} from '../../Authentication/redux/thunk';
+import {useDispatch} from 'react-redux';
 
 interface BasicDetailsProps {
   onEditClick: () => void;
@@ -10,6 +12,8 @@ interface BasicDetailsProps {
 }
 
 const BasicDetails: React.FC<BasicDetailsProps> = ({onEditClick, data}) => {
+  const dispatch = useDispatch();
+
   return (
     <ShadowCard style={styles.card}>
       <View style={styles.cardHeader}>
@@ -44,6 +48,15 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({onEditClick, data}) => {
         </View>
       </View>
       <AppText style={styles.value}>{data.email}</AppText>
+      <AppButton
+        buttonTitle={AppString.screens.auth.uploadDocuments.logout}
+        onPress={async () => {
+          await callLogoutApi(dispatch);
+        }}
+        buttonType={ButtonType.PRIMARY}
+        // buttonTitleStyle={styles.buttonTitleStyle}
+        buttonStyle={styles.buttonStyle}
+      />
     </ShadowCard>
   );
 };
@@ -84,5 +97,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   resendLink: {color: 'blue', fontSize: 12, marginTop: 10},
+  buttonStyle: {
+    marginVertical: 20,
+  },
 });
 export default BasicDetails;
