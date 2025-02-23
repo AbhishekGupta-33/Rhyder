@@ -13,6 +13,7 @@ interface BasicDetailsProps {
 
 const BasicDetails: React.FC<BasicDetailsProps> = ({onEditClick, data}) => {
   const dispatch = useDispatch();
+
   return (
     <ShadowCard style={styles.card}>
       <View style={styles.cardHeader}>

@@ -54,7 +54,6 @@ const UploadDocuments: React.FC = () => {
   //Handle uploaded documents
   const handleUploadedDocuments = async () => {
     const getUploadedDocs = await callGetUploadedDocumentsApi(dispatch);
-    log('getUploadedDocs----', getUploadedDocs);
     updateDocuments(getUploadedDocs);
   };
 
@@ -160,7 +159,6 @@ const UploadDocuments: React.FC = () => {
               style={styles.uploadedPhoto}
               resizeMode={'cover'}
             />
-            {log(documents.idProof.url)}
             <TouchableOpacity
               style={styles.deleteIconContainer}
               onPress={() => {
