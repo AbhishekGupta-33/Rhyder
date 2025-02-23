@@ -1,12 +1,12 @@
 export const AppString = {
   NavigationScreens: {
-    navigator:{
-      tab:'userTab'
+    navigator: {
+      tab: 'userTab',
     },
     stackNavigator: {
       User: 'user',
       Auth: 'auth',
-      Profile:'profile'
+      Profile: 'profile',
     },
     auth: {
       Welcome: 'welcome',
@@ -15,13 +15,13 @@ export const AppString = {
       SignupStep2: 'signupStep2',
       ForgotPassword: 'forgotPassword',
       SignupVerification: 'signupVerification',
-      CreatePassword: 'createPassword'
+      CreatePassword: 'createPassword',
     },
-    user:{
-      Home:'home',
-      UploadDocuments:'UploadDocuments',
-      Profile:'Profile'
-    } 
+    user: {
+      Home: 'home',
+      UploadDocuments: 'UploadDocuments',
+      Profile: 'Profile',
+    },
   },
   screens: {
     auth: {
@@ -95,7 +95,7 @@ export const AppString = {
         title: 'Upload Documents',
         subtitle: 'Upload documents for the vehicle',
         nextButton: 'Done',
-        logout:'Logout',
+        logout: 'Logout',
         sections: [
           {
             label: 'Photo*',
@@ -119,7 +119,7 @@ export const AppString = {
             id: 'genderIdentity',
           },
         ],
-        docDeleteSuccess: 'Document delete successfully.'
+        docDeleteSuccess: 'Document delete successfully.',
       },
       forgotPassword: {
         header: 'Forgot Password',
@@ -147,6 +147,41 @@ export const AppString = {
           'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
         signupButton: 'Sign Up',
         loginButton: 'Login',
+      },
+    },
+    user: {
+      profile: {
+        header: 'Basic Info',
+        nameLabel: 'Name',
+        namePlaceholder: 'Enter name',
+        numberLabel: 'Mobile No.',
+        numberPlaceholder: 'Enter number',
+        emailLabel: 'Email',
+        emailPlaceholder: 'Enter email',
+        notVerified: 'Not verified',
+        resendLink: 'Resend link',
+        resendVerificationLink: 'Resend verification link',
+        updateButton: 'Update',
+        pageHeader: 'Profile',
+        tab1: 'Basic Info',
+        tab2: 'Documents',
+        tab3: 'Change Password',
+      },
+      uploadedDocuments: {
+        header: 'Uploaded Documents',
+        photoLabel: 'Photo',
+        identityLabel: 'Identity Proof',
+        genderLabel: 'Gender Proof',
+      },
+      changePassword: {
+        header: 'Change Passwords',
+        currentLabel: 'Current Password*',
+        currentPasswordPlaceholder: 'Enter Old Password',
+        newPasswordLabel: 'New Password*',
+        newPasswordPlaceholder: 'Enter New Password',
+        confirmPasswordLabel: 'Confirm New Password*',
+        confirmPasswordPlaceholder: 'Enter Confirm Password',
+        updateButton: 'Update',
       },
     },
   },
