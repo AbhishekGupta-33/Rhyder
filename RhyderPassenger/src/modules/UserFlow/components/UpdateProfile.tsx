@@ -7,6 +7,7 @@ import {
   ButtonType,
 } from '../../../components';
 import {AppString} from '../../../utils/AppString';
+import { TextInput } from 'react-native-paper';
 
 interface UpdateProfileProps {
   onUpdatePress: () => void;
@@ -15,7 +16,7 @@ interface UpdateProfileProps {
 const UpdateProfile: React.FC<UpdateProfileProps> = ({onUpdatePress}) => {
   const [updateProfileDetails, setUpdateProfileDetails] = useState({
     name: 'Scarlett Johansson',
-    phone: '+1 012 345 6789',
+    phone: '012 345 6789',
     email: 'scarlett1234@gmail.com',
     errors: {
       name: '',
@@ -51,6 +52,11 @@ const UpdateProfile: React.FC<UpdateProfileProps> = ({onUpdatePress}) => {
           handleChange('phone', text);
         }}
         placeholder={AppString.screens.user.profile.numberPlaceholder}
+        leftIcon={
+          <TextInput.Icon
+            icon={'numeric-positive-1'}
+          />
+        }
         error={updateProfileDetails.errors.phone}
       />
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {AppImage, AppText, ShadowCard} from '../../../components';
 import {AppString} from '../../../utils/AppString';
 import {IconButton} from 'react-native-paper';
@@ -54,6 +54,7 @@ const UploadDocuments: React.FC = () => {
   //Handle uploaded documents
   const handleUploadedDocuments = async () => {
     const getUploadedDocs = await callGetUploadedDocumentsApi(dispatch);
+    log('getUploadedDocs----', getUploadedDocs);
     updateDocuments(getUploadedDocs);
   };
 
@@ -108,8 +109,8 @@ const UploadDocuments: React.FC = () => {
     documentDetail: eachDocumentType,
     docType: string,
   ) => {
-    setShowPreview(true);
     setPreViewDocuments(documentDetail);
+    setShowPreview(true);
   };
 
   return (
@@ -159,6 +160,7 @@ const UploadDocuments: React.FC = () => {
               style={styles.uploadedPhoto}
               resizeMode={'cover'}
             />
+            {log(documents.idProof.url)}
             <TouchableOpacity
               style={styles.deleteIconContainer}
               onPress={() => {
@@ -193,13 +195,15 @@ const UploadDocuments: React.FC = () => {
           </TouchableOpacity>
         </View>
       </ShadowCard>
-      <AppPreviewModal
-        visible={showPreview}
-        onCancelPress={() => {
-          setShowPreview(false);
-        }}
-        selectedDocument={preViewDocuments}
-      />
+      {showPreview && (
+        <AppPreviewModal
+          visible={showPreview}
+          onCancelPress={() => {
+            setShowPreview(false);
+          }}
+          selectedDocument={preViewDocuments}
+        />
+      )}
     </>
   );
 };

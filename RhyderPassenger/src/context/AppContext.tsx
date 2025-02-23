@@ -6,8 +6,9 @@ import apiClient from '../api/axiosInstance';
 import {getRefreshToken} from '../modules/Authentication/api/Authapi';
 import {useDispatch} from 'react-redux';
 import {callLogoutApi} from '../modules/Authentication/redux/thunk';
-import { ApiName } from '../api/apiName';
-import { log } from '../utils/Logger';
+import {ApiName} from '../api/apiName';
+import {log} from '../utils/Logger';
+import * as AxiosLogger from 'axios-logger';
 
 interface AppContextType {}
 
@@ -30,7 +31,10 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
   apiClient.interceptors.request.use(
     async config => {
       try {
-        if (config.url?.includes('/api/auth/') && !config.url?.includes(ApiName.auth.getProfile)) {
+        if (
+          config.url?.includes('/api/auth/') &&
+          !config.url?.includes(ApiName.auth.getProfile)
+        ) {
           return config;
         }
 
@@ -38,7 +42,7 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
-        return config;
+        return AxiosLogger.requestLogger(config);
       } catch (error) {
         console.error('Request interceptor error:', error);
         return Promise.reject(error);
@@ -49,14 +53,15 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
 
   // Response Interceptor (Handle Errors Globally)
   apiClient.interceptors.response.use(
-    response => response,
+    response => AxiosLogger.responseLogger(response),
     async error => {
       log('error-----', error.response.config.url);
-      if(error.response.config.url === ApiName.auth.logout){
+      if (error.response.config.url === ApiName.auth.logout) {
         throw Promise.reject(new Error('Something went wrong'));
       }
       const originalRequest = error.config;
-      if (!originalRequest) return Promise.reject(error);
+      if (!originalRequest)
+        return Promise.reject(AxiosLogger.errorLogger(error));
 
       if (
         (error.response?.status === 401 || error.response?.status === 403) &&
@@ -90,9 +95,9 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
             } catch (error) {
               log('error-----newToken-3Erro');
 
-              log('error---',error)
+              log('error---', error);
             }
-            
+
             throw new Error(`${response.errors[0]}`);
           }
           const refreshTokenResponse = response.data;
@@ -117,7 +122,7 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
         'API Error:',
         error.response?.data || error.message || 'Unknown error',
       );
-      return Promise.reject(error);
+      return Promise.reject(AxiosLogger.errorLogger(error));
     },
   );
 

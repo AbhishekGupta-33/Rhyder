@@ -11,12 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/Entypo';
 import {useDispatch, useSelector} from 'react-redux';
 import {callGetProfileApi} from '../redux/thunk';
-import {
-  AppHeader,
-  AppText,
-  AppTextInput,
-  ShadowCard,
-} from '../../../components';
+import {AppHeader, AppText} from '../../../components';
 import {appImage} from '../../../utils/Constants';
 import {AppString} from '../../../utils/AppString';
 import ChangePassword from '../components/ChangePassword';

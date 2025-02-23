@@ -28,7 +28,7 @@ import {
   callLogoutApi,
   callUploadIdentityApi,
 } from '../../Authentication/redux/thunk';
-import {getStorageItem} from '../../../utils/Storage/storage';
+import {getStorageItem, setStorageItem} from '../../../utils/Storage/storage';
 import {STORAGE_KEY} from '../../../utils/Storage/storageKeys';
 
 type eachDocumentType = {
@@ -391,9 +391,11 @@ const UploadDocuments: React.FC = (props: any) => {
             documents.image.url &&
             documents.idProof.url
           ) {
-            props.navigation.replace('user', {
-              screen: AppString.NavigationScreens.user.Home,
-            });
+
+            setStorageItem(STORAGE_KEY.USER_DETAIL, {...getStorageItem(STORAGE_KEY.USER_DETAIL), docIssue: true});
+            // props.navigation.navigate('user', {
+            //   screen: AppString.NavigationScreens.user.Home,
+            // });
           }
         }}
         buttonType={ButtonType.PRIMARY}
