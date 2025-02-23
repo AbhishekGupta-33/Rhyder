@@ -162,7 +162,7 @@ export const callResetPasswordApi = async (
 // Document API
 export const callUploadIdentityApi = async (
   dispatch: any,
-  documentType: string,
+  documentType: number,
   formData: FormData,
   onProgress: (progress: number) => void,
 ) => {

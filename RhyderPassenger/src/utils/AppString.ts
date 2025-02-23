@@ -137,7 +137,6 @@ export const AppString = {
         passwordError: 'Please enter password',
         confirmPasswordLabel: 'Confirm Password',
         confirmPasswordPlaceholder: 'Enter confirm password',
-        confirmPasswordError: 'Password not match',
         resetButton: 'Reset Password',
       },
       welcome: {
@@ -182,6 +181,10 @@ export const AppString = {
         confirmPasswordLabel: 'Confirm New Password*',
         confirmPasswordPlaceholder: 'Enter Confirm Password',
         updateButton: 'Update',
+        oldPasswordError: 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).',
+        confirmPasswordError: 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).',
+        newConfirmPasswordError: 'Password and Confirm password are not same',
+        fieldError: 'Please enter the password'
       },
     },
   },

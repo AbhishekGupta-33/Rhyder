@@ -18,7 +18,7 @@ type eachDocumentType = {
   name: string | number | undefined;
 };
 
-interface documentType {
+interface documentListType {
   image: eachDocumentType;
   idProof: eachDocumentType;
   genderProof: eachDocumentType;
@@ -42,7 +42,7 @@ const initialDocument = {
 };
 
 const UploadDocuments: React.FC = () => {
-  const [documents, setDocuments] = useState<documentType>(initialDocument);
+  const [documents, setDocuments] = useState<documentListType>(initialDocument);
   const dispatch = useDispatch();
   const [showPreview, setShowPreview] = useState<Boolean>(false);
   const [preViewDocuments, setPreViewDocuments] = useState({});
@@ -54,25 +54,26 @@ const UploadDocuments: React.FC = () => {
   //Handle uploaded documents
   const handleUploadedDocuments = async () => {
     const getUploadedDocs = await callGetUploadedDocumentsApi(dispatch);
+    log('getUploadedDocs----', getUploadedDocs);
     updateDocuments(getUploadedDocs);
   };
 
   const updateDocuments = (data: any[]) => {
     const updatedDocuments = {...initialDocument};
     for (let i = 0; i < data.length; i++) {
-      if (DocumentType[0] === DocumentType[data[i].type]) {
+      if (DocumentType.UserImage === data[i].type) {
         updatedDocuments.image = {
           id: data[i].id,
           url: `https://rhyderapi.k-asoftech.com${data[i].fileUrl}`,
           name: data[i].fileName,
         };
-      } else if (DocumentType[1] === DocumentType[data[i].type]) {
+      } else if (DocumentType.IdentityProof === data[i].type) {
         updatedDocuments.idProof = {
           id: data[i].id,
           url: `https://rhyderapi.k-asoftech.com${data[i].fileUrl}`,
           name: data[i].fileName,
         };
-      } else if (DocumentType[2] === DocumentType[data[i].type]) {
+      } else if (DocumentType.GenderIdentityProof === data[i].type) {
         updatedDocuments.genderProof = {
           id: data[i].id,
           url: `https://rhyderapi.k-asoftech.com${data[i].fileUrl}`,
@@ -85,14 +86,14 @@ const UploadDocuments: React.FC = () => {
 
   const handleDeletePress = async (
     documentDetail: eachDocumentType,
-    docType: string,
+    docType: number,
   ) => {
     try {
       const response = await callDeleteDocumentApi(dispatch, documentDetail.id);
       let key =
-        docType === DocumentType[0]
+        docType === DocumentType.UserImage
           ? 'image'
-          : docType === DocumentType[1]
+          : docType === DocumentType.IdentityProof
           ? 'idProof'
           : 'genderProof';
       if (response) {
@@ -128,7 +129,7 @@ const UploadDocuments: React.FC = () => {
           <TouchableOpacity
             style={styles.uploadCard}
             onPress={() => {
-              handlePreviewClick(documents.image, DocumentType[0]);
+              handlePreviewClick(documents.image, DocumentType.UserImage);
             }}>
             <AppImage
               source={{uri: documents.image.url}}
@@ -138,7 +139,7 @@ const UploadDocuments: React.FC = () => {
             <TouchableOpacity
               style={styles.deleteIconContainer}
               onPress={() => {
-                handleDeletePress(documents.image, DocumentType[0]);
+                handleDeletePress(documents.image, DocumentType.UserImage);
               }}>
               <IconButton icon="delete" iconColor="#FF69B4" size={15} />
             </TouchableOpacity>
@@ -152,17 +153,18 @@ const UploadDocuments: React.FC = () => {
           <TouchableOpacity
             style={styles.uploadCard}
             onPress={() => {
-              handlePreviewClick(documents.idProof, DocumentType[1]);
+              handlePreviewClick(documents.idProof, DocumentType.IdentityProof);
             }}>
             <AppImage
               source={{uri: documents.idProof.url}}
               style={styles.uploadedPhoto}
               resizeMode={'cover'}
             />
+            {log(documents.idProof.url)}
             <TouchableOpacity
               style={styles.deleteIconContainer}
               onPress={() => {
-                handleDeletePress(documents.idProof, DocumentType[1]);
+                handleDeletePress(documents.idProof, DocumentType.IdentityProof);
               }}>
               <IconButton icon="delete" iconColor="#FF69B4" size={15} />
             </TouchableOpacity>
@@ -176,7 +178,7 @@ const UploadDocuments: React.FC = () => {
           <TouchableOpacity
             style={styles.uploadCard}
             onPress={() => {
-              handlePreviewClick(documents.genderProof, DocumentType[2]);
+              handlePreviewClick(documents.genderProof, DocumentType.GenderIdentityProof);
             }}>
             <AppImage
               source={{uri: documents.genderProof.url}}
@@ -186,7 +188,7 @@ const UploadDocuments: React.FC = () => {
             <TouchableOpacity
               style={styles.deleteIconContainer}
               onPress={() => {
-                handleDeletePress(documents.genderProof, DocumentType[2]);
+                handleDeletePress(documents.genderProof, DocumentType.GenderIdentityProof);
               }}>
               <IconButton icon="delete" iconColor="#FF69B4" size={15} />
             </TouchableOpacity>

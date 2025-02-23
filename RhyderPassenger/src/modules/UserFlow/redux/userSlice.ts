@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {UserState} from '../../../utils/ConstantTypes/Redux';
 import {ProfileDataResponse} from '../../../utils/ConstantTypes/userTypes';
+import { changePasswordInputResponse } from '../../../utils/ConstantTypes/authTypes';
 
 const initialState: UserState = {
   firstName: '',
