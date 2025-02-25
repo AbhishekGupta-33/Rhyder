@@ -3,7 +3,6 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {AppText} from '../../../components';
-import {DocumentType, RoleType} from '../../../utils/ConstantTypes/authTypes';
 import {IconButton, ProgressBar} from 'react-native-paper';
 
 interface UploadBoxProps {
@@ -38,7 +37,12 @@ const UploadBox: React.FC<UploadBoxProps> = ({
     if (!uploadStatus) return;
     return (
       <View>
-        <IconButton animated icon={'delete'} size={18} onPress={onDeletePress} />
+        <IconButton
+          animated
+          icon={'delete'}
+          size={18}
+          onPress={onDeletePress}
+        />
         <IconButton animated icon={'eye'} size={18} onPress={onViewPress} />
       </View>
     );

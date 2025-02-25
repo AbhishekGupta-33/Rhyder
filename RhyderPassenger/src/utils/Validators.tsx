@@ -16,6 +16,11 @@ export const hasValidEmailOrPhoneNumber = (input: string) => {
   return regex.test(input);
 };
 
+export const hasValidPassword = (input: string) => {
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return regex.test(input);
+};
+
 export const hasNoSpaces = (str: string) => {
   return /^\S*$/.test(str);
 };

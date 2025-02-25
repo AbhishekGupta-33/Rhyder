@@ -13,7 +13,6 @@ interface BasicDetailsProps {
 
 const BasicDetails: React.FC<BasicDetailsProps> = ({onEditClick, data}) => {
   const dispatch = useDispatch();
-
   return (
     <ShadowCard style={styles.card}>
       <View style={styles.cardHeader}>
@@ -38,14 +37,16 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({onEditClick, data}) => {
         <AppText style={styles.label}>
           {AppString.screens.user.profile.emailLabel}
         </AppText>
-        <View style={styles.notVerifiedContainerStyle}>
-          <AppText style={styles.notVerified}>
-            {AppString.screens.user.profile.notVerified}
-          </AppText>
-          <AppText style={styles.resendLink}>
-            {AppString.screens.user.profile.resendLink}
-          </AppText>
-        </View>
+        {!data.isEmailVerified && (
+          <View style={styles.notVerifiedContainerStyle}>
+            <AppText style={styles.notVerified}>
+              {AppString.screens.user.profile.notVerified}
+            </AppText>
+            <AppText style={styles.resendLink}>
+              {AppString.screens.user.profile.resendLink}
+            </AppText>
+          </View>
+        )}
       </View>
       <AppText style={styles.value}>{data.email}</AppText>
       <AppButton

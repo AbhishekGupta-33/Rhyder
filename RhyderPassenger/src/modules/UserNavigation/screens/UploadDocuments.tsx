@@ -38,7 +38,7 @@ type eachDocumentType = {
   uploadStatus: boolean;
   uploadProgress: number;
 };
-interface documentType {
+interface documentListType {
   image: eachDocumentType;
   idProof: eachDocumentType;
   genderProof: eachDocumentType;
@@ -71,7 +71,7 @@ const UploadDocuments: React.FC = (props: any) => {
   let section = AppString.screens.auth.uploadDocuments.sections;
   const {openCamera} = useCameraPermission();
   const dispatch = useDispatch();
-  const [documents, setDocuments] = useState<documentType>(initialDocument);
+  const [documents, setDocuments] = useState<documentListType>(initialDocument);
   const [viewModal, setViewModal] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<string>('');
 
@@ -88,7 +88,7 @@ const UploadDocuments: React.FC = (props: any) => {
   const updateDocuments = (data: any[]) => {
     let updatedDocuments = {...initialDocument};
     for (let i = 0; i < data.length; i++) {
-      if (DocumentType[0] === DocumentType[data[i].type]) {
+      if (DocumentType.UserImage === data[i].type) {
         updatedDocuments.image = {
           id: data[i].id,
           url: data[i].fileUrl,
@@ -96,7 +96,7 @@ const UploadDocuments: React.FC = (props: any) => {
           uploadStatus: true,
           uploadProgress: 0,
         };
-      } else if (DocumentType[1] === DocumentType[data[i].type]) {
+      } else if (DocumentType.IdentityProof === data[i].type) {
         updatedDocuments.idProof = {
           id: data[i].id,
           url: data[i].fileUrl,
@@ -104,7 +104,7 @@ const UploadDocuments: React.FC = (props: any) => {
           uploadStatus: true,
           uploadProgress: 0,
         };
-      } else if (DocumentType[2] === DocumentType[data[i].type]) {
+      } else if (DocumentType.GenderIdentityProof === data[i].type) {
         updatedDocuments.genderProof = {
           id: data[i].id,
           url: data[i].fileUrl,
@@ -142,7 +142,7 @@ const UploadDocuments: React.FC = (props: any) => {
           });
           const response = await callUploadIdentityApi(
             dispatch,
-            DocumentType[0],
+            DocumentType.UserImage,
             fileForm,
             progress => {
               setDocuments({
@@ -197,7 +197,7 @@ const UploadDocuments: React.FC = (props: any) => {
           if (type === section[1].id) {
             const response = await callUploadIdentityApi(
               dispatch,
-              DocumentType[1],
+              DocumentType.IdentityProof,
               fileForm,
               progress => {
                 setDocuments({
@@ -232,7 +232,7 @@ const UploadDocuments: React.FC = (props: any) => {
           } else {
             const response = await callUploadIdentityApi(
               dispatch,
-              DocumentType[2],
+              DocumentType.GenderIdentityProof,
               fileForm,
               progress => {
                 setDocuments({
@@ -297,14 +297,14 @@ const UploadDocuments: React.FC = (props: any) => {
 
   const handleDeletePress = async (
     documentDetail: eachDocumentType,
-    docType: string,
+    docType: number,
   ) => {
     try {
       const response = await callDeleteDocumentApi(dispatch, documentDetail.id);
       let key =
-        docType === DocumentType[0]
+        docType === DocumentType.UserImage
           ? 'image'
-          : docType === DocumentType[1]
+          : docType === DocumentType.IdentityProof
           ? 'idProof'
           : 'genderProof';
       if (response) {
@@ -340,7 +340,7 @@ const UploadDocuments: React.FC = (props: any) => {
         uploadStatus={documents.image.uploadStatus}
         onPress={() => handleFileUpload(section[0].id)}
         onDeletePress={() =>
-          handleDeletePress(documents.image, DocumentType[0])
+          handleDeletePress(documents.image, DocumentType.UserImage)
         }
         onViewPress={() => {
           handleViewPress(documents.image.url);
@@ -355,7 +355,7 @@ const UploadDocuments: React.FC = (props: any) => {
         uploadStatus={documents.idProof.uploadStatus}
         onPress={() => handleFileUpload(section[1].id)}
         onDeletePress={() =>
-          handleDeletePress(documents.idProof, DocumentType[1])
+          handleDeletePress(documents.idProof, DocumentType.IdentityProof)
         }
         onViewPress={() => {
           handleViewPress(documents.idProof.url);
@@ -370,7 +370,10 @@ const UploadDocuments: React.FC = (props: any) => {
         uploadStatus={documents.genderProof.uploadStatus}
         onPress={() => handleFileUpload(section[2].id)}
         onDeletePress={() =>
-          handleDeletePress(documents.genderProof, DocumentType[2])
+          handleDeletePress(
+            documents.genderProof,
+            DocumentType.GenderIdentityProof,
+          )
         }
         onViewPress={() => {
           handleViewPress(documents.genderProof.url);
@@ -391,11 +394,9 @@ const UploadDocuments: React.FC = (props: any) => {
             documents.image.url &&
             documents.idProof.url
           ) {
-
-            setStorageItem(STORAGE_KEY.USER_DETAIL, {...getStorageItem(STORAGE_KEY.USER_DETAIL), docIssue: true});
-            // props.navigation.navigate('user', {
-            //   screen: AppString.NavigationScreens.user.Home,
-            // });
+            props.navigation.navigate('user', {
+              screen: AppString.NavigationScreens.user.Home,
+            });
           }
         }}
         buttonType={ButtonType.PRIMARY}

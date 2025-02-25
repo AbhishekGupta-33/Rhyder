@@ -23,9 +23,9 @@ export interface RegisterRequest {
 }
 
 export enum RoleType {
-  'Admin',
-  'Driver',
-  'Rider',
+  'Admin' = 1,
+  'Driver' = 2,
+  'Rider' = 3,
 }
 
 export enum DocumentType {
@@ -160,3 +160,12 @@ export type RefreshTokenResponse = {
   accessTokenExpires: string;
   refreshTokenExpires: string;
 };
+
+// Change Password------
+
+export type changePasswordInputRequest = {
+  oldPassword: string;
+  newPassword: string;
+};
+
+export type changePasswordInputResponse = ApiResponse<string | null>;

@@ -38,7 +38,7 @@ export const uploadImage = async (
  * @param formData - File data
  */
 export const uploadIdentity = async (
-  documentType: string,
+  documentType: number,
   formData: FormData,
   onProgress: (progress: number) => void,
 ) => {

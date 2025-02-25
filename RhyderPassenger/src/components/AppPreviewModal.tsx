@@ -26,7 +26,7 @@ const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
   console.log('selectedDocument===', selectedDocument);
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
+    <Modal visible={visible} transparent animationType={'fade'}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={onCancelPress}>
