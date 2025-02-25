@@ -10,25 +10,18 @@ import {log} from '../../utils/Logger';
 const Stack = createStackNavigator();
 
 const UserNavigator: React.FC = () => {
-
-  const Listener = storage.addOnValueChangedListener(changedKey => {
-    setIsDocumentUploaded(storage.getString(STORAGE_KEY.USER_DETAIL)?.docIssue);
-  });
+  const loginSuccessResponseData = getStorageItem(STORAGE_KEY.USER_DETAIL);
 
   const [isDocumentUploaded, setIsDocumentUploaded] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   if (loginSuccessResponseData?.docIssue) {
-  //     setIsDocumentUploaded(true);
-  //   } else {
-  //     setIsDocumentUploaded(false);
-  //   }
-  // }, [loginSuccessResponseData]);
-  // log(
-  //   'isDocumentUploaded----',
-  //   isDocumentUploaded,
-  //   loginSuccessResponseDataListener,
-  // );
+  useEffect(() => {
+    if (loginSuccessResponseData?.docIssue) {
+      setIsDocumentUploaded(true);
+    } else {
+      setIsDocumentUploaded(false);
+    }
+  }, [loginSuccessResponseData]);
+  log('');
 
   return (
     <Stack.Navigator
