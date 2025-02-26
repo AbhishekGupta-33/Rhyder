@@ -7,3 +7,10 @@ export type ProfileDataResponse = {
   phoneNumber?: string;
   roleId: number | string;
 };
+
+export type ProfileDataRequest = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+}

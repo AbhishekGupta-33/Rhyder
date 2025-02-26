@@ -1,5 +1,6 @@
 import React from 'react';
-import {View, Modal, ActivityIndicator, StyleSheet} from 'react-native';
+import {View, ActivityIndicator, StyleSheet} from 'react-native';
+import { Modal } from 'react-native-paper';
 
 type LoaderProps = {
   loading: boolean;
@@ -13,7 +14,8 @@ const Loader: React.FC<LoaderProps> = ({
   color = '#6200EE',
 }) => {
   return (
-    <Modal visible={loading} transparent animationType="fade">
+    <Modal visible={loading}
+     >
       <View style={styles.container}>
         <ActivityIndicator
           size={size}
@@ -36,7 +38,8 @@ const styles = StyleSheet.create({
   },
   loaderContainerStyle: {
     backgroundColor: 'white',
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
     borderRadius: 10,
   },
 });

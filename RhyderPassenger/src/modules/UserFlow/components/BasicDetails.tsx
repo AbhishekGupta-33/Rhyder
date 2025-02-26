@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {AppButton, AppText, ButtonType, ShadowCard} from '../../../components';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {IconButton} from 'react-native-paper';
 import {AppString} from '../../../utils/AppString';
 import {callLogoutApi} from '../../Authentication/redux/thunk';
 import {useDispatch} from 'react-redux';
+import UpdateProfile from './UpdateProfile';
 
 interface BasicDetailsProps {
   onEditClick: () => void;
@@ -13,42 +14,54 @@ interface BasicDetailsProps {
 
 const BasicDetails: React.FC<BasicDetailsProps> = ({onEditClick, data}) => {
   const dispatch = useDispatch();
+  const [isEditDetails, setsEditDetails] = useState(false);
+
+  const BasicDetailsView = () => {
+    return (
+      <>
+        <AppText style={styles.label}>
+          {AppString.screens.user.profile.nameLabel}
+        </AppText>
+        <AppText style={styles.value}>
+          {data.firstName + ' ' + data.lastName}
+        </AppText>
+        <AppText style={styles.label}>
+          {AppString.screens.user.profile.numberLabel}
+        </AppText>
+        <AppText style={styles.value}>{data.phoneNumber}</AppText>
+        <View style={styles.emailContainer}>
+          <AppText style={styles.label}>
+            {AppString.screens.user.profile.emailLabel}
+          </AppText>
+          {!data.isEmailVerified && (
+            <View style={styles.notVerifiedContainerStyle}>
+              <AppText style={styles.notVerified}>
+                {AppString.screens.user.profile.notVerified}
+              </AppText>
+              <AppText style={styles.resendLink}>
+                {AppString.screens.user.profile.resendLink}
+              </AppText>
+            </View>
+          )}
+        </View>
+        <AppText style={styles.value}>{data.email}</AppText>
+      </>
+    );
+  };
   return (
     <ShadowCard style={styles.card}>
       <View style={styles.cardHeader}>
         <AppText style={styles.cardTitle}>
           {AppString.screens.user.profile.header}
         </AppText>
-        <TouchableOpacity onPress={onEditClick}>
+        <TouchableOpacity
+          onPress={() => {
+            setsEditDetails(!isEditDetails);
+          }}>
           <IconButton icon="pencil" iconColor="#FF69B4" size={20} />
         </TouchableOpacity>
       </View>
-      <AppText style={styles.label}>
-        {AppString.screens.user.profile.nameLabel}
-      </AppText>
-      <AppText style={styles.value}>
-        {data.firstName + ' ' + data.lastName}
-      </AppText>
-      <AppText style={styles.label}>
-        {AppString.screens.user.profile.numberLabel}
-      </AppText>
-      <AppText style={styles.value}>{data.phoneNumber}</AppText>
-      <View style={styles.emailContainer}>
-        <AppText style={styles.label}>
-          {AppString.screens.user.profile.emailLabel}
-        </AppText>
-        {!data.isEmailVerified && (
-          <View style={styles.notVerifiedContainerStyle}>
-            <AppText style={styles.notVerified}>
-              {AppString.screens.user.profile.notVerified}
-            </AppText>
-            <AppText style={styles.resendLink}>
-              {AppString.screens.user.profile.resendLink}
-            </AppText>
-          </View>
-        )}
-      </View>
-      <AppText style={styles.value}>{data.email}</AppText>
+      {isEditDetails ? <UpdateProfile /> : <BasicDetailsView />}
       <AppButton
         buttonTitle={AppString.screens.auth.uploadDocuments.logout}
         onPress={async () => {

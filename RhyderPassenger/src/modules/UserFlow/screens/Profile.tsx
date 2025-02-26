@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import {useDispatch, useSelector} from 'react-redux';
-import {callGetProfileApi} from '../redux/thunk';
+import {callEditProfile, callGetProfileApi} from '../redux/thunk';
 import {AppHeader, AppText} from '../../../components';
 import {appImage} from '../../../utils/Constants';
 import {AppString} from '../../../utils/AppString';
@@ -20,20 +20,13 @@ import BasicDetails from '../components/BasicDetails';
 import UpdateProfile from '../components/UpdateProfile';
 import {pick, types} from '@react-native-documents/picker';
 import {profileResponseData} from '../redux/selector';
+import OtpVerification from '../components/OtpVerification';
 
 const Profile: React.FC = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [selectedTab, setSelectedTab] = useState(1);
-  const [changePasswordDetails, setChangePasswordDetails] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmNewPassword: '',
-    errors: {
-      currentPassword: '',
-      newPassword: '',
-      confirmNewPassword: '',
-    },
-  });
+  const [userUpdatedDetails, setUserUpdatedDetails] = useState({});
+  const [otpVerificationModal, setOtpVerificationModal] = useState(false);
   const dispatch = useDispatch();
   const profileData = useSelector(profileResponseData);
 
@@ -49,6 +42,15 @@ const Profile: React.FC = () => {
       transitionStyle: 'flipHorizontal',
     });
   };
+
+  const onProfileUpdate = async(editInput: any) =>{
+    if(editInput.phone === profileData.phoneNumber){
+      await callEditProfile(dispatch, editInput)
+    }else{
+      setUserUpdatedDetails(editInput)
+      setOtpVerificationModal(true)
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -91,7 +93,7 @@ const Profile: React.FC = () => {
         )}
         {selectedTab === 1 &&
           (isEditable ? (
-            <UpdateProfile onUpdatePress={() => setIsEditable(false)} />
+            <UpdateProfile onUpdatePress={onProfileUpdate} />
           ) : (
             <BasicDetails
               data={profileData}
@@ -101,6 +103,8 @@ const Profile: React.FC = () => {
         {selectedTab === 2 && <UploadDocuments />}
         {selectedTab === 3 && <ChangePassword />}
       </ScrollView>
+      {otpVerificationModal && <OtpVerification userDetail={userUpdatedDetails}/>}
+      
     </SafeAreaView>
   );
 };
