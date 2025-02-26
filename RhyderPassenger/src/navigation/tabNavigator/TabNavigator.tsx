@@ -1,14 +1,36 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import UserNavigator from './UserNavigator';
 import ProfileNavigator from './ProfileNavigator';
 import Icon from 'react-native-vector-icons/Entypo';
 import {AppText} from '../../components';
 import {AppString} from '../../utils/AppString';
+import { useDispatch, useSelector } from 'react-redux';
+import { userError, userLoaded, userLoading } from '../../modules/UserFlow/redux/selector';
+import { userError as userErrorClean } from '../../modules/UserFlow/redux/userSlice';
+import { Alert } from 'react-native';
+import Loader from '../../components/AppLoader';
+import { log } from '../../utils/Logger';
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator: React.FC = () => {
+
+  const isUserError = useSelector(userError);
+  const isUserLoading = useSelector(userLoading)
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (isUserError) {
+      Alert.alert('', `${isUserError}`, [
+        {
+          text: 'OK',
+          onPress: () => dispatch(userErrorClean('')),
+        },
+      ]);
+    }
+  }, [isUserError]);
+
+
   const changeIconOnfocus = (focus: boolean, name: string, title: string) => {
     return (
       <>
@@ -31,8 +53,9 @@ const TabNavigator: React.FC = () => {
       </>
     );
   };
-
+log('isUserLoading---------',isUserLoading)
   return (
+    <>
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
@@ -67,6 +90,8 @@ const TabNavigator: React.FC = () => {
         }}
       />
     </Tab.Navigator>
+    <Loader loading={isUserLoading}/>
+    </>
   );
 };
 export default TabNavigator;

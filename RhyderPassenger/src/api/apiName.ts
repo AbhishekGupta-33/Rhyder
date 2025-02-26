@@ -10,6 +10,8 @@ export const ApiName = {
     forgotPassword: '/api/auth/forgot-password',
     verifyPasswordResetOtp: '/api/auth/verify-password-reset-otp',
     resetPassword: '/api/auth/reset-password',
+    changePassword: '/api/auth/change-password',
+    editProfile: '/api/auth/edit-profile',
   },
   documents: {
     uploadImage: '/api/documents/upload-image',

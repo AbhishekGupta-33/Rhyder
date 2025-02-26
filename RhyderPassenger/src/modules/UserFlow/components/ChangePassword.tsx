@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
   AppButton,
@@ -9,21 +9,32 @@ import {
 } from '../../../components';
 import {AppString} from '../../../utils/AppString';
 import {hasData, hasValidPassword} from '../../../utils/Validators';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {callChangePasswordApi} from '../redux/thunk';
+import { userLoaded } from '../redux/selector';
 
-const ChangePassword: React.FC = () => {
-  const [changePasswordDetails, setChangePasswordDetails] = useState({
+const initialChangePasswordDetails = {
+  currentPassword: '',
+  newPassword: '',
+  confirmNewPassword: '',
+  errors: {
     currentPassword: '',
     newPassword: '',
     confirmNewPassword: '',
-    errors: {
-      currentPassword: '',
-      newPassword: '',
-      confirmNewPassword: '',
-    },
-  });
+  },
+}
+
+const ChangePassword: React.FC = () => {
+  const [changePasswordDetails, setChangePasswordDetails] = useState(initialChangePasswordDetails);
+  const isUserLoaded = useSelector(userLoaded)
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(isUserLoaded){
+      setChangePasswordDetails(initialChangePasswordDetails)
+    }
+  }, [isUserLoaded])
+  
 
   const validateField = (field: string, value: string) => {
     if (!hasData(value))
@@ -107,7 +118,7 @@ const ChangePassword: React.FC = () => {
       <AppTextInput
         label={AppString.screens.user.changePassword.currentLabel}
         value={changePasswordDetails.currentPassword}
-        onChangeText={text => {
+        onChangeText={(text: any) => {
           handleInputChange('currentPassword', text);
         }}
         placeholder={
@@ -118,7 +129,7 @@ const ChangePassword: React.FC = () => {
       <AppTextInput
         label={AppString.screens.user.changePassword.newPasswordLabel}
         value={changePasswordDetails.newPassword}
-        onChangeText={text => {
+        onChangeText={(text: any) => {
           handleInputChange('newPassword', text);
         }}
         placeholder={
@@ -129,7 +140,7 @@ const ChangePassword: React.FC = () => {
       <AppTextInput
         label={AppString.screens.user.changePassword.confirmPasswordLabel}
         value={changePasswordDetails.confirmNewPassword}
-        onChangeText={text => {
+        onChangeText={(text: any) => {
           handleInputChange('confirmNewPassword', text);
         }}
         placeholder={

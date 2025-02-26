@@ -33,7 +33,8 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
       try {
         if (
           config.url?.includes('/api/auth/') &&
-          !config.url?.includes(ApiName.auth.getProfile)
+          !config.url?.includes(ApiName.auth.getProfile) &&
+          !config.url?.includes(ApiName.auth.resetPassword)
         ) {
           return config;
         }

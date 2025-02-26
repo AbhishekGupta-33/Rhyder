@@ -151,7 +151,8 @@ export const AppString = {
     user: {
       profile: {
         header: 'Basic Info',
-        nameLabel: 'Name',
+        firstNameLabel: 'First Name',
+        lastNameLabel: 'Last Name',
         namePlaceholder: 'Enter name',
         numberLabel: 'Mobile No.',
         numberPlaceholder: 'Enter number',
@@ -165,6 +166,11 @@ export const AppString = {
         tab1: 'Basic Info',
         tab2: 'Documents',
         tab3: 'Change Password',
+        fieldError: 'Please enter the correct value',
+        emailError: 'Please enter correct email',
+        phoneError: 'Please enter correct phone number',
+        firstNameError: 'Please enter first name',
+        lastNameError: 'Please enter last name',
       },
       uploadedDocuments: {
         header: 'Uploaded Documents',
