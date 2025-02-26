@@ -162,18 +162,20 @@ export const callResetPasswordApi = async (
 // Document API
 export const callUploadIdentityApi = async (
   dispatch: any,
-  documentType: string,
+  DocumentType: number,
   formData: FormData,
   onProgress: (progress: number) => void,
 ) => {
   try {
     const response: ApiResponse<uploadDocumentResponse> = await uploadIdentity(
-      documentType,
+      DocumentType,
       formData,
       (progress: number) => {
         onProgress(progress);
       },
     );
+    console.log("response=====callUploadIdentityApi",response);
+    
     dispatch(authenticationLoaded());
     if (response.isSuccess) {
       return response.data;
@@ -182,6 +184,8 @@ export const callUploadIdentityApi = async (
     }
   } catch (error) {
     dispatch(authenticationLoaded());
+    console.log("error=======callUploadIdentityApi",error);
+    
     throw error;
   }
 };

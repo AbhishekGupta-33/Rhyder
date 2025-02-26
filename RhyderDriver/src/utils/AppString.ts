@@ -99,13 +99,14 @@ export const AppString = {
         step1: 'Vehicle Details',
         step2: 'Vehicle Documents',
         step3: 'Driver Documents',
+        stepCountData:['Vehicle Details', 'Vehicle Documents', 'Driver Documents'],
         sections: [
           {
             label: '',
             uploadText: 'Click to Upload Vehicle Images',
             fileType: 'PDF',
             fileSize: 'min-400 kb to max-800 kb',
-            id: 'vehicleImage',
+            id: 'vehicleImages',
           },
         ],
         make: 'Make*',
@@ -157,14 +158,14 @@ export const AppString = {
             uploadText: 'Click to Upload Driver Photo',
             fileType: 'JPG',
             fileSize: 'min-400 kb to max-800 kb',
-            id: 'photo',
+            id: 'driverPhoto',
           },
           {
             label: 'US Driver License*',
             uploadText: 'Click to Upload US Driver License',
             fileType: 'PDF',
             fileSize: 'min-400 kb to max-800 kb',
-            id: 'license',
+            id: 'usDriverLicense',
           },
           {
             label: 'Identity Proof (Transgender)',
