@@ -8,6 +8,7 @@ import {
 } from '../utils/ConstantTypes/globalFunctions';
 import {
   callDeleteDocumentApi,
+  callGetUploadedDocumentsApi,
   callUploadIdentityApi,
 } from '../modules/Authentication/redux/thunk';
 import {DocumentType} from '../utils/ConstantTypes/authTypes';
@@ -38,6 +39,7 @@ interface DocumentsContextType {
     documentDetail: eachDocumentType,
     docType: number,
   ) => Promise<void>;
+  handleUploadedDocuments: () => void;
 }
 
 const DocumentsContext = createContext<DocumentsContextType | undefined>(
@@ -134,8 +136,6 @@ export const DocumentsProvider = ({children}: {children: ReactNode}) => {
             type: image.type,
           });
           console.log('fileForm====context', fileForm);
-          // let response = false;
-
           const response = await callUploadIdentityApi(
             dispatch,
             DocumentType.VehichleImages,
@@ -659,8 +659,100 @@ export const DocumentsProvider = ({children}: {children: ReactNode}) => {
     }
   };
 
+  const handleUploadedDocuments = async () => {
+    const getUploadedDocs: any = await callGetUploadedDocumentsApi(dispatch);
+    console.log('getUploadedDocs====', getUploadedDocs);
+    updateDocuments(getUploadedDocs);
+  };
+
+  const updateDocuments = (data: any[]) => {
+    let updatedDocuments = {...initialDocument};
+    for (let i = 0; i < data.length; i++) {
+      if (DocumentType.VehichleImages === data[i].type) {
+        updatedDocuments.vehicleImage = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      } else if (DocumentType.RegistrationCertificate === data[i].type) {
+        updatedDocuments.registrationCertificate = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      } else if (DocumentType.VehicleInsurance === data[i].type) {
+        updatedDocuments.insurance = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      } else if (DocumentType.VehicleInspection === data[i].type) {
+        updatedDocuments.inspection = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      } else if (DocumentType.UserImage === data[i].type) {
+        updatedDocuments.driverPhoto = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      } else if (DocumentType.DriverLicense === data[i].type) {
+        updatedDocuments.usDriverLicense = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      } else if (DocumentType.GenderIdentityProof === data[i].type) {
+        updatedDocuments.genderProof = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      } else if (DocumentType.DriverPermanentAddress === data[i].type) {
+        updatedDocuments.permanentAddress = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      } else if (DocumentType.DriverCurrentAddress === data[i].type) {
+        updatedDocuments.currentAddress = {
+          id: data[i].id,
+          url: data[i].fileUrl,
+          name: data[i].fileName,
+          uploadStatus: true,
+          uploadProgress: 0,
+        };
+      }
+    }
+    setDocuments(updatedDocuments);
+  };
+
   return (
-    <DocumentsContext.Provider value={{documents, handleFileUpload, handleDeletePress}}>
+    <DocumentsContext.Provider
+      value={{
+        documents,
+        handleFileUpload,
+        handleDeletePress,
+        handleUploadedDocuments,
+      }}>
       {children}
     </DocumentsContext.Provider>
   );

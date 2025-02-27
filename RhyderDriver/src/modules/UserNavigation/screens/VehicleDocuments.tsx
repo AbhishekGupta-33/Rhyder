@@ -20,49 +20,16 @@ const VehicleDocuments: React.FC = (props: any) => {
   const dispatch = useDispatch();
   const [showPreview, setShowPreview] = useState(false);
   const [preViewDocuments, setPreViewDocuments] = useState({});
-  const {documents, handleFileUpload, handleDeletePress} = useDocuments();
+  const {
+    documents,
+    handleFileUpload,
+    handleDeletePress,
+    handleUploadedDocuments,
+  } = useDocuments();
 
   useEffect(() => {
-    // handleUploadedDocuments();
+    handleUploadedDocuments();
   }, []);
-
-  //Handle uploaded documents
-  // const handleUploadedDocuments = async () => {
-  //   const getUploadedDocs: any = await callGetUploadedDocumentsApi(dispatch);
-  //   updateDocuments(getUploadedDocs);
-  // };
-
-  // const updateDocuments = (data: any[]) => {
-  //   let updatedDocuments = {...initialDocument};
-  //   for (let i = 0; i < data.length; i++) {
-  //     if (DocumentType[0] === DocumentType[data[i].type]) {
-  //       updatedDocuments.image = {
-  //         id: data[i].id,
-  //         url: data[i].fileUrl,
-  //         name: data[i].fileName,
-  //         uploadStatus: true,
-  //         uploadProgress: 0,
-  //       };
-  //     } else if (DocumentType[1] === DocumentType[data[i].type]) {
-  //       updatedDocuments.idProof = {
-  //         id: data[i].id,
-  //         url: data[i].fileUrl,
-  //         name: data[i].fileName,
-  //         uploadStatus: true,
-  //         uploadProgress: 0,
-  //       };
-  //     } else if (DocumentType[2] === DocumentType[data[i].type]) {
-  //       updatedDocuments.genderProof = {
-  //         id: data[i].id,
-  //         url: data[i].fileUrl,
-  //         name: data[i].fileName,
-  //         uploadStatus: true,
-  //         uploadProgress: 0,
-  //       };
-  //     }
-  //   }
-  //   setDocuments(updatedDocuments);
-  // };
 
   const handleLogout = async () => {
     const refreshToken = await getStorageItem(STORAGE_KEY.REFRESH_TOKEN);
@@ -172,9 +139,9 @@ const VehicleDocuments: React.FC = (props: any) => {
           //     ...getStorageItem(STORAGE_KEY.USER_DETAIL),
           //     docIssue: true,
           //   });
-          //   // props.navigation.navigate('user', {
-          //   //   screen: AppString.NavigationScreens.user.Home,
-          //   // });
+            // props.navigation.navigate('user', {
+            //   screen: AppString.NavigationScreens.user.Home,
+            // });
           // }
           navigate(AppString.NavigationScreens.user.driverDocuments);
         }}

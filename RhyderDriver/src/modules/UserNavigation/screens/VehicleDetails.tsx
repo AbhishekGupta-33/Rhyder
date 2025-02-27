@@ -16,6 +16,7 @@ import {hasData} from '../../../utils/Validators';
 import {useDocuments} from '../../../context/DocumentsContext';
 import AppPreviewModal from '../../../components/AppPreviewModal';
 import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
+import {setVehicleData} from '../redux/userNavigationSlice';
 
 const VehicleDetails: React.FC = (props: any) => {
   const [vehicleDetails, setVehicleDetails] = useState({
@@ -86,8 +87,17 @@ const VehicleDetails: React.FC = (props: any) => {
     }));
 
     if (isValid) {
-      console.log('Valid Data:', vehicleDetails);
-      props.navigation.navigate('vehicleDocuments', {vehicleDetails});
+      let vehicleData = {
+        make: vehicleDetails.make,
+        model: vehicleDetails.model,
+        year: vehicleDetails.year,
+        vehiclePlateNo: vehicleDetails.vehiclePlateNo,
+        vehicleType: vehicleDetails.vehicleType,
+        seater: vehicleDetails.seater,
+        color: vehicleDetails.color,
+      };
+      dispatch(setVehicleData(vehicleData));
+      props.navigation.navigate('vehicleDocuments');
     } else {
       Alert.alert('Validation Error', 'Please fill in all required fields.');
     }
@@ -228,7 +238,6 @@ const VehicleDetails: React.FC = (props: any) => {
               handleNext();
             }}
             buttonType={ButtonType.PRIMARY}
-            buttonTitleStyle={styles.buttonTitleStyle}
             buttonStyle={styles.buttonStyle}
           />
         </View>
