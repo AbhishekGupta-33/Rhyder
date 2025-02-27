@@ -23,16 +23,27 @@ export interface RegisterRequest {
 }
 
 export enum RoleType {
-  'Admin',
-  'Driver',
-  'Rider',
+  'Admin' = 1,
+  'Driver' = 2,
+  'Rider' = 3,
 }
 
 export enum DocumentType {
-  'vehicleImage',
   'UserImage',
   'IdentityProof',
   'GenderIdentityProof',
+
+  'VehichleImages',
+  'RegistrationCertificate',
+  'VehicleInsurance',
+  'VehicleInspection',
+
+  'DriverImage',
+  'DriverIdentityProof',
+  'DriverLicense',
+  'DriverPermanentAddress',
+  'DriverCurrentAddress',
+  'DriverSocialSecurityNumber',
 }
 
 // Login Request

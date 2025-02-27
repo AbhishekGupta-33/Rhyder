@@ -42,9 +42,27 @@ export type UserState = {
   profileData: ProfileDataType;
 };
 
+export type VehicleDetails = {
+  make: string;
+  model: string;
+  year: string;
+  vehiclePlateNo: string;
+  vehicleType: string;
+  seater: string;
+  color: string;
+};
+
+export type UserNavigationState = {
+  loading: boolean;
+  loaded: boolean;
+  error: Error | undefined | string;
+  vehicleDetails: VehicleDetails;
+};
+
 export type ReduxState = Record<string, any> & {
   Authentication: AuthenticationState;
   User: UserState;
+  UserNavigation: UserNavigationState;
 };
 
 export type GetState = () => ReduxState;

@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 interface StepCountProps {
   steps: string[];
   currentStep: number;
+  style: any;
 }
 
 const AppStepCount: React.FC<StepCountProps> = ({

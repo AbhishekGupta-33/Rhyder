@@ -13,7 +13,7 @@ export const ApiName = {
   },
   documents: {
     uploadImage: '/api/documents/upload-image',
-    uploadIdentity: (documentType: string) =>
+    uploadIdentity: (documentType: number) =>
       `/api/documents/upload-identity/${documentType}`,
     getUserImage: '/api/documents/user-image',
     getRequiredDocuments: '/api/documents/required',

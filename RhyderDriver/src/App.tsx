@@ -5,14 +5,17 @@ import {Provider} from 'react-redux';
 import {store} from './redux/store';
 import {navigationRef} from './utils/NavigationService';
 import {AppProvider} from './context/AppContext';
+import {DocumentsProvider} from './context/DocumentsContext';
 
 const App: React.FC = () => {
   return (
     <Provider store={store}>
       <AppProvider>
-        <NavigationContainer ref={navigationRef}>
-          <AppRoutes />
-        </NavigationContainer>
+        <DocumentsProvider>
+          <NavigationContainer ref={navigationRef}>
+            <AppRoutes />
+          </NavigationContainer>
+        </DocumentsProvider>
       </AppProvider>
     </Provider>
   );

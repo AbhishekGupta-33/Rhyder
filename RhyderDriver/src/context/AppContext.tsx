@@ -41,6 +41,7 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
         const token = await getStorageItem(STORAGE_KEY.AUTH_TOKEN);
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
+          log('error-----', config.headers.Authorization,config);
         }
         return AxiosLogger.requestLogger(config);
       } catch (error) {
