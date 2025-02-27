@@ -14,7 +14,16 @@ const DriverDocuments: React.FC = (props: any) => {
   const [showPreview, setShowPreview] = useState(false);
   const [preViewDocuments, setPreViewDocuments] = useState({});
 
-  const {documents, handleFileUpload, handleDeletePress} = useDocuments();
+  const {
+    documents,
+    handleFileUpload,
+    handleDeletePress,
+    handleUploadedDocuments,
+  } = useDocuments();
+
+  useEffect(() => {
+    handleUploadedDocuments();
+  }, []);
 
   const handleViewPress = (docUrl: string) => {
     if (docUrl) {

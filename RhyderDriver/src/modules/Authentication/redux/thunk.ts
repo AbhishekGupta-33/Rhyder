@@ -201,7 +201,7 @@ export const callDeleteDocumentApi = async (
     );
     dispatch(authenticationLoaded());
     if (response.isSuccess) {
-      Alert.alert('', AppString.screens.auth.uploadDocuments.docDeleteSuccess);
+      Alert.alert('', 'Document deleted successfully');
       return response.data;
     } else {
       dispatch(authenticationError(response.errors[0]));
