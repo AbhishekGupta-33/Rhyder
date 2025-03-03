@@ -5,9 +5,15 @@ import {appImage} from '../utils/Constants';
 interface AppImageProps {
   source: any;
   style?: object;
+  resizeMode?: any;
 }
 
-const AppImage: React.FC<AppImageProps> = ({source, style, ...res}) => {
+const AppImage: React.FC<AppImageProps> = ({
+  source,
+  style,
+  resizeMode,
+  ...res
+}) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -20,6 +26,7 @@ const AppImage: React.FC<AppImageProps> = ({source, style, ...res}) => {
         />
       )}
       <FastImage
+        resizeMode={resizeMode}
         source={
           source?.uri === '' || !isLoaded ? {uri: appImage.staticImage} : source
         }

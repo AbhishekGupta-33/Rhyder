@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AppText from './AppText';
+import useTheme from '../hooks/useTheme';
 
 // Enum for button types
 export const ButtonType = {
@@ -36,12 +37,57 @@ const AppButton: React.FC<AppButtonProps> = ({
   buttonTitleStyle,
   disabled,
 }) => {
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    primaryButton: {},
+    primaryButtonText: {
+      fontSize: theme.fontSize.font_18,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      color: theme.colors.white,
+      marginVertical: theme.margin.margin_12,
+    },
+    secondaryButton: {
+      backgroundColor: theme.colors.white,
+    },
+    commonButtonStyle: {
+      borderRadius: theme.radius.borderRadius_15,
+      overflow: 'hidden',
+      width: '100%',
+      shadowColor: theme.colors.black,
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.32,
+      shadowRadius: 5.46,
+
+      elevation: 9,
+    },
+    disabledButtonStyle: {
+      opacity: 0.6,
+    },
+    disabledButtonText: {
+      color: theme.colors.gray,
+    },
+    disabledButtonWrapper: {
+      opacity: 0.6,
+    },
+    disabledSecondaryButtonStyle: {
+      backgroundColor: theme.colors.white,
+      borderColor: theme.colors.gray,
+    },
+  });
+
   const PrimaryButton = () => (
     <LinearGradient
       start={{x: 0, y: 0}}
       end={{x: 1, y: 0}}
       colors={
-        disabled ? ['#d3d3d3', '#a9a9a9'] : ['#d566fc', '#ec61cd', '#fd5ea9']
+        disabled
+          ? theme.colors.disabled_button_gradient
+          : theme.colors.primary_button_gradient
       }
       style={[styles.primaryButton, disabled && styles.disabledButtonStyle]}>
       <AppText
@@ -89,52 +135,13 @@ const AppButton: React.FC<AppButtonProps> = ({
         styles.commonButtonStyle,
         buttonStyle,
         disabled ? styles.disabledButtonWrapper : {},
-        buttonType === ButtonType.SECONDARY && { borderColor: '#d566fc', borderWidth: 2 }
+        buttonType === ButtonType.SECONDARY && {
+          borderColor: theme.colors.primary,
+          borderWidth: 2,
+        },
       ]}>
       <ButtonView />
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  primaryButton: {},
-  primaryButtonText: {
-    fontSize: 18,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginVertical: 12,
-  },
-  secondaryButton: {
-    backgroundColor: '#ffffff',
-  },
-  commonButtonStyle: {
-    borderRadius: 15,
-    overflow: 'hidden',
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.32,
-    shadowRadius: 5.46,
-
-    elevation: 9,
-  },
-  disabledButtonStyle: {
-    opacity: 0.6,
-  },
-  disabledButtonText: {
-    color: '#808080',
-  },
-  disabledButtonWrapper: {
-    opacity: 0.6,
-  },
-  disabledSecondaryButtonStyle: {
-    backgroundColor: '#f0f0f0',
-    borderColor: '#b0b0b0',
-  },
-});
-
 export default AppButton;

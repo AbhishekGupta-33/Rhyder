@@ -9,7 +9,6 @@ import {
 import {AppButton, AppHeader, AppText, ButtonType} from '../../../components';
 import {ScrollView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {Surface} from 'react-native-paper';
 import {
   authenticationSignUp,
   otpSendResponseData,
@@ -20,8 +19,11 @@ import {hasData} from '../../../utils/Validators';
 import {AppString} from '../../../utils/AppString';
 import {callSendOtpApi, callVerifyOtpApi} from '../redux/thunk';
 import {otpVerifyResponse} from '../redux/authSlice';
+import useTheme from '../../../hooks/useTheme';
+import AuthenticationBottomView from '../components/AuthenticationBottomView';
 
 const SignupVerification: React.FC = (props: any) => {
+  const theme = useTheme();
   const [otpData, setOtpData] = useState({otp: '', otpError: ''});
   const {phoneNumber} = useSelector(authenticationSignUp);
   const [timer, setTimer] = useState(30);
@@ -49,16 +51,16 @@ const SignupVerification: React.FC = (props: any) => {
         {
           text: 'OK',
           onPress: () => {
-            if(hasShownAlert){
-              setHasShownAlert(false)
-            }else{
+            if (hasShownAlert) {
+              setHasShownAlert(false);
+            } else {
               props.navigation.navigate(
                 isFrom
                   ? AppString.NavigationScreens.auth.CreatePassword
                   : AppString.NavigationScreens.auth.SignupStep2,
               );
             }
-           
+
             dispatch(otpVerifyResponse(''));
           },
         },
@@ -84,6 +86,63 @@ const SignupVerification: React.FC = (props: any) => {
     setHasShownAlert(true);
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.white,
+    },
+    scrollView: {
+      flexGrow: 1,
+      justifyContent: 'flex-end',
+    },
+    header: {
+      alignItems: 'center',
+      marginBottom: theme.margin.margin_30,
+    },
+    logo: {
+      fontSize: theme.fontSize.font_32,
+      fontWeight: 'bold',
+      color: theme.colors.pink,
+    },
+    subAppText: {
+      fontSize: theme.fontSize.font_14,
+      color: theme.colors.black,
+    },
+    subtitle: {
+      fontSize: theme.fontSize.font_14,
+      textAlign: 'left',
+    },
+    phoneNumber: {
+      fontSize: theme.fontSize.font_16,
+      fontWeight: 'bold',
+      marginBottom: theme.margin.margin_15,
+    },
+    label: {
+      fontSize: theme.fontSize.font_14,
+      marginBottom: theme.margin.margin_10,
+    },
+    resendAppText: {
+      color: theme.colors.blue,
+      fontSize: theme.fontSize.font_14,
+      paddingVertical: theme.spacing.spacing_10,
+    },
+    resendViewStyle: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+      marginVertical: theme.margin.margin_10,
+    },
+    errorText: {
+      color: theme.colors.error,
+      fontSize: theme.fontSize.font_14,
+      marginTop: theme.margin.margin_5,
+    },
+    disabledText: {
+      color: theme.colors.gray,
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -92,7 +151,7 @@ const SignupVerification: React.FC = (props: any) => {
           <AppText style={styles.subAppText}>THE ALTERNATIVE ROUTE</AppText>
         </View>
 
-        <Surface style={styles.card}>
+        <AuthenticationBottomView>
           <AppHeader
             headerTitle={AppString.screens.auth.signupVerification.header}
             onBackPress={() => props.navigation.goBack()}
@@ -108,7 +167,7 @@ const SignupVerification: React.FC = (props: any) => {
 
           <OtpInput
             numberOfDigits={4}
-            focusColor="pink"
+            focusColor={theme.colors.pink}
             autoFocus={false}
             hideStick={true}
             placeholder="****"
@@ -148,83 +207,12 @@ const SignupVerification: React.FC = (props: any) => {
             buttonTitle={AppString.screens.auth.signupVerification.verifyButton}
             onPress={handleVerify}
             buttonType={ButtonType.PRIMARY}
-            buttonTitleStyle={{color: '#ffffff'}}
-            buttonStyle={{marginVertical: 5}}
+            buttonStyle={{marginVertical: theme.margin.margin_5}}
           />
-        </Surface>
+        </AuthenticationBottomView>
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  scrollView: {
-    flexGrow: 1,
-    justifyContent: 'flex-end',
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  logo: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: 'pink',
-  },
-  subAppText: {
-    fontSize: 14,
-    color: 'black',
-  },
-  card: {
-    backgroundColor: 'white',
-    padding: 20,
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-  },
-  subtitle: {
-    fontSize: 14,
-    textAlign: 'left',
-  },
-  phoneNumber: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 14,
-    marginBottom: 10,
-  },
-  resendAppText: {
-    color: 'blue',
-    fontSize: 14,
-    paddingVertical: 10,
-  },
-  resendViewStyle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    marginVertical: 10,
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 14,
-    marginTop: 5,
-  },
-  disabledText: {
-    color: 'gray',
-  },
-});
 
 export default SignupVerification;

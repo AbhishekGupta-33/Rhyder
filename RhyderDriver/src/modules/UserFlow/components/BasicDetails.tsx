@@ -5,6 +5,7 @@ import {IconButton} from 'react-native-paper';
 import {AppString} from '../../../utils/AppString';
 import {callLogoutApi} from '../../Authentication/redux/thunk';
 import {useDispatch} from 'react-redux';
+import useTheme from '../../../hooks/useTheme';
 
 interface BasicDetailsProps {
   onEditClick: () => void;
@@ -12,7 +13,62 @@ interface BasicDetailsProps {
 }
 
 const BasicDetails: React.FC<BasicDetailsProps> = ({onEditClick, data}) => {
+  const theme = useTheme();
   const dispatch = useDispatch();
+
+  const styles = StyleSheet.create({
+    card: {
+      padding: theme.spacing.spacing_15,
+      marginVertical: theme.margin.margin_15,
+      borderRadius: theme.radius.borderRadius_20,
+    },
+    cardHeader: {
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.gray,
+      borderStyle: 'solid',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    cardTitle: {
+      fontSize: theme.fontSize.font_18,
+      fontWeight: 'bold',
+      color: theme.colors.black,
+      marginVertical: theme.margin.margin_10,
+    },
+    label: {
+      color: theme.colors.gray_light,
+      marginTop: theme.margin.margin_10,
+      fontSize: theme.fontSize.font_14,
+    },
+    value: {
+      fontSize: theme.fontSize.font_14,
+      fontWeight: 'bold',
+      marginBottom: theme.margin.margin_10,
+    },
+    emailContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    notVerifiedContainerStyle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    notVerified: {
+      color: theme.colors.gray_light,
+      fontStyle: 'italic',
+      fontSize: theme.fontSize.font_12,
+      marginTop: theme.margin.margin_10,
+    },
+    resendLink: {
+      color: theme.colors.blue,
+      fontSize: theme.fontSize.font_12,
+      marginTop: theme.margin.margin_10,
+    },
+    buttonStyle: {
+      marginVertical: theme.margin.margin_20,
+    },
+  });
 
   return (
     <ShadowCard style={styles.card}>
@@ -21,7 +77,11 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({onEditClick, data}) => {
           {AppString.screens.user.profile.header}
         </AppText>
         <TouchableOpacity onPress={onEditClick}>
-          <IconButton icon="pencil" iconColor="#FF69B4" size={20} />
+          <IconButton
+            icon="pencil"
+            iconColor={theme.colors.pink}
+            size={theme.fontSize.font_20}
+          />
         </TouchableOpacity>
       </View>
       <AppText style={styles.label}>
@@ -60,45 +120,4 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({onEditClick, data}) => {
     </ShadowCard>
   );
 };
-const styles = StyleSheet.create({
-  card: {
-    padding: 15,
-    marginVertical: 15,
-    borderRadius: 20,
-  },
-  cardHeader: {
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-    borderStyle: 'solid',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000000',
-    marginVertical: 10,
-  },
-  label: {color: '#777', marginTop: 10, fontSize: 14},
-  value: {fontSize: 14, fontWeight: 'bold', marginBottom: 10},
-  emailContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  notVerifiedContainerStyle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  notVerified: {
-    color: '#777',
-    fontStyle: 'italic',
-    fontSize: 12,
-    marginTop: 10,
-  },
-  resendLink: {color: 'blue', fontSize: 12, marginTop: 10},
-  buttonStyle: {
-    marginVertical: 20,
-  },
-});
 export default BasicDetails;

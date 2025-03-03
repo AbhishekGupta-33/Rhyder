@@ -13,9 +13,9 @@ export const isFileSizeValid = (
 };
 
 
-const getFilePath = (uri:string) => {
-  if (Platform.OS === "android" && uri.startsWith("content://")) {
-    return uri.replace("content://", "file://");
+const getFilePath = (uri: string) => {
+  if (Platform.OS === 'android' && uri.startsWith('content://')) {
+    return 'file://' + uri;
   }
   return uri;
 };

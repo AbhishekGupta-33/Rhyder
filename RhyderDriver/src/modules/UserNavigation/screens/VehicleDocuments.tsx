@@ -14,8 +14,10 @@ import {navigate} from '../../../utils/NavigationService';
 import AppStepCount from '../../../components/AppStepCount';
 import AppPreviewModal from '../../../components/AppPreviewModal';
 import {useDocuments} from '../../../context/DocumentsContext';
+import useTheme from '../../../hooks/useTheme';
 
 const VehicleDocuments: React.FC = (props: any) => {
+  const theme = useTheme();
   let section = AppString.screens.auth.vehicleDocuments.sections;
   const dispatch = useDispatch();
   const [showPreview, setShowPreview] = useState(false);
@@ -58,6 +60,61 @@ const VehicleDocuments: React.FC = (props: any) => {
       Alert.alert('Error', 'No document available to view.');
     }
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      paddingHorizontal: theme.spacing.spacing_20,
+      backgroundColor: theme.colors.white,
+    },
+    title: {
+      fontSize: theme.fontSize.font_22,
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    subtitle: {
+      fontSize: theme.fontSize.font_14,
+      textAlign: 'center',
+      color: theme.colors.gray,
+      marginBottom: theme.margin.margin_20,
+    },
+    label: {
+      fontSize: theme.fontSize.font_16,
+      fontWeight: '500',
+      marginTop: theme.margin.margin_15,
+    },
+    buttonTitleStyle: {
+      color: theme.colors.white,
+    },
+    modalContainer: {
+      flex: 1,
+      backgroundColor: theme.colors.modal_background_color,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    closeButton: {
+      position: 'absolute',
+      top: 40,
+      right: 20,
+      backgroundColor: theme.colors.white,
+      padding: theme.spacing.spacing_10,
+      borderRadius: theme.radius.borderRadius_20,
+    },
+    closeText: {
+      color: theme.colors.black,
+      fontSize: theme.fontSize.font_16,
+      fontWeight: 'bold',
+    },
+    webView: {width: '90%', height: '80%'},
+    imagePreview: {width: '90%', height: '80%'},
+    buttonStyle: {
+      marginTop: theme.margin.margin_20,
+    },
+    steperStyle: {
+      // marginTop: 20,
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <AppHeader headerTitle={AppString.screens.auth.vehicleDocuments.title} />
@@ -139,9 +196,9 @@ const VehicleDocuments: React.FC = (props: any) => {
           //     ...getStorageItem(STORAGE_KEY.USER_DETAIL),
           //     docIssue: true,
           //   });
-            // props.navigation.navigate('user', {
-            //   screen: AppString.NavigationScreens.user.Home,
-            // });
+          // props.navigation.navigate('user', {
+          //   screen: AppString.NavigationScreens.user.Home,
+          // });
           // }
           navigate(AppString.NavigationScreens.user.driverDocuments);
         }}
@@ -161,55 +218,5 @@ const VehicleDocuments: React.FC = (props: any) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: 'white',
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    textAlign: 'center',
-    color: 'gray',
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginTop: 15,
-  },
-  buttonTitleStyle: {
-    color: '#ffffff',
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 40,
-    right: 20,
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 20,
-  },
-  closeText: {color: 'black', fontSize: 16, fontWeight: 'bold'},
-  webView: {width: '90%', height: '80%'},
-  imagePreview: {width: '90%', height: '80%'},
-  buttonStyle: {
-    marginTop: 20,
-  },
-  steperStyle: {
-    // marginTop: 20,
-  },
-});
 
 export default VehicleDocuments;

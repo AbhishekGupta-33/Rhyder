@@ -22,8 +22,10 @@ import Loader from '../../../components/AppLoader';
 import {appImage} from '../../../utils/Constants';
 import {RoleType} from '../../../utils/ConstantTypes/authTypes';
 import {signupResponse} from '../redux/authSlice';
+import useTheme from '../../../hooks/useTheme';
 
 const SignupStep2: React.FC = (props: any) => {
+  const theme = useTheme();
   const [userDetails, setUserDetails] = useState({
     firstName: '',
     lastName: '',
@@ -139,6 +141,33 @@ const SignupStep2: React.FC = (props: any) => {
     [],
   );
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.white,
+    },
+    scrollView: {
+      flexGrow: 1,
+      paddingHorizontal: theme.spacing.spacing_20,
+      backgroundColor: theme.colors.white,
+    },
+    rememberMe: {flexDirection: 'row', alignItems: 'center'},
+    confirmationText: {
+      fontSize: theme.fontSize.font_14,
+      color: theme.colors.input_label_color,
+      maxWidth: '85%',
+    },
+    subHeaderStyle: {
+      color: theme.colors.gray,
+      fontSize: theme.fontSize.font_12,
+      marginVertical: theme.margin.margin_10,
+    },
+    buttonStyle: {
+      marginBottom: theme.margin.margin_20,
+      backgroundColor: theme.colors.red,
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -195,7 +224,7 @@ const SignupStep2: React.FC = (props: any) => {
           <View style={styles.rememberMe}>
             <IconButton
               icon={rememberMe ? 'checkbox-outline' : 'checkbox-blank-outline'}
-              iconColor={'#FF5F9B'}
+              iconColor={theme.colors.pink}
               size={20}
               onPress={() => setRememberMe(!rememberMe)}
             />
@@ -208,7 +237,6 @@ const SignupStep2: React.FC = (props: any) => {
           buttonTitle={AppString.screens.auth.signupStep2.signUpButton}
           onPress={handleSignupStep2}
           buttonType={ButtonType.PRIMARY}
-          buttonTitleStyle={styles.buttonTitleStyle}
           buttonStyle={styles.buttonStyle}
         />
         <AppModal
@@ -228,27 +256,5 @@ const SignupStep2: React.FC = (props: any) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  scrollView: {flexGrow: 1, paddingHorizontal: 20, backgroundColor: 'white'},
-  rememberMe: {flexDirection: 'row', alignItems: 'center'},
-  confirmationText: {fontSize: 14, color: '#333', maxWidth: '85%'},
-  buttonTitleStyle: {
-    color: 'white',
-  },
-  subHeaderStyle: {
-    color: 'gray',
-    fontSize: 12,
-    marginVertical: 10,
-  },
-  buttonStyle: {
-    marginBottom: 20,
-    backgroundColor: 'red',
-  },
-});
 
 export default SignupStep2;

@@ -8,8 +8,10 @@ import AppStepCount from '../../../components/AppStepCount';
 import {useDocuments} from '../../../context/DocumentsContext';
 import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
 import AppPreviewModal from '../../../components/AppPreviewModal';
+import useTheme from '../../../hooks/useTheme';
 
 const DriverDocuments: React.FC = (props: any) => {
+  const theme = useTheme();
   let section = AppString.screens.auth.driverDocuments.sections;
   const [showPreview, setShowPreview] = useState(false);
   const [preViewDocuments, setPreViewDocuments] = useState({});
@@ -38,6 +40,36 @@ const DriverDocuments: React.FC = (props: any) => {
   const handleDone = () => {
     console.log('Click done----');
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    subtitle: {
+      fontSize: theme.fontSize.font_14,
+      textAlign: 'left',
+      color: theme.colors.gray,
+      marginBottom: theme.margin.margin_20,
+    },
+    text: {
+      fontSize: theme.fontSize.font_24,
+    },
+    scrollViewStyle: {
+      paddingHorizontal: theme.margin.margin_20,
+    },
+    steperStyle: {
+      // marginTop: 20,
+    },
+    buttonStyle: {
+      marginTop: theme.margin.margin_20,
+      marginBottom: theme.margin.margin_30,
+    },
+    buttonTitleStyle: {
+      color: theme.colors.white,
+    },
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -175,35 +207,5 @@ const DriverDocuments: React.FC = (props: any) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    textAlign: 'left',
-    color: 'gray',
-    marginBottom: 20,
-  },
-  text: {
-    fontSize: 24,
-  },
-  scrollViewStyle: {
-    paddingHorizontal: 20,
-  },
-  steperStyle: {
-    // marginTop: 20,
-  },
-  buttonStyle: {
-    marginTop: 20,
-    marginBottom: 30,
-  },
-  buttonTitleStyle: {
-    color: 'white',
-  },
-});
 
 export default DriverDocuments;

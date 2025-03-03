@@ -1,10 +1,10 @@
 // components/UploadBox.tsx
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {AppText} from '../../../components';
-import {DocumentType, RoleType} from '../../../utils/ConstantTypes/authTypes';
 import {IconButton, ProgressBar} from 'react-native-paper';
+import useTheme from '../../../hooks/useTheme';
 
 interface UploadBoxProps {
   title: string;
@@ -29,6 +29,53 @@ const UploadBox: React.FC<UploadBoxProps> = ({
   onDeletePress,
   onViewPress,
 }) => {
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      borderWidth: 1,
+      borderStyle: 'dashed',
+      borderRadius: theme.radius.borderRadius_10,
+      // alignItems: 'center',
+      justifyContent: 'center',
+      borderColor: theme.colors.gray,
+      marginVertical: theme.margin.margin_10,
+    },
+    rowContainer: {
+      flexDirection: 'row',
+    },
+    text: {
+      fontSize: theme.fontSize.font_14,
+      fontWeight: '500',
+    },
+    subText: {
+      fontSize: theme.fontSize.font_12,
+      color: theme.colors.gray,
+      marginTop: theme.margin.margin_2,
+    },
+    label: {
+      fontSize: theme.fontSize.font_16,
+      fontWeight: '500',
+      marginTop: theme.margin.margin_15,
+    },
+    InnerContainer: {
+      flexDirection: 'row',
+      padding: theme.spacing.spacing_20,
+      // paddingVertical: 30,
+      width: '80%',
+    },
+    innerRowView: {
+      marginStart: theme.margin.margin_10,
+    },
+    loader: {
+      width: '95%',
+      borderRadius: theme.radius.borderRadius_10,
+      height: 10,
+      alignSelf: 'center',
+      marginBottom: theme.margin.margin_10,
+    },
+  });
+
   const LoaderView = () => {
     if (uploadProgress === 0) return;
     return <ProgressBar animatedValue={uploadProgress} style={styles.loader} />;
@@ -38,7 +85,12 @@ const UploadBox: React.FC<UploadBoxProps> = ({
     if (!uploadStatus) return;
     return (
       <View>
-        <IconButton animated icon={'delete'} size={18} onPress={onDeletePress} />
+        <IconButton
+          animated
+          icon={'delete'}
+          size={theme.fontSize.font_18}
+          onPress={onDeletePress}
+        />
         <IconButton animated icon={'eye'} size={18} onPress={onViewPress} />
       </View>
     );
@@ -52,7 +104,11 @@ const UploadBox: React.FC<UploadBoxProps> = ({
             activeOpacity={0.5}
             style={styles.InnerContainer}
             onPress={onPress}>
-            <Ionicons name="cloud-upload-outline" size={30} color="gray" />
+            <Ionicons
+              name="cloud-upload-outline"
+              size={theme.fontSize.font_30}
+              color={theme.colors.gray}
+            />
             <View style={styles.innerRowView}>
               <AppText style={styles.text}>{label}</AppText>
               <AppText
@@ -67,50 +123,5 @@ const UploadBox: React.FC<UploadBoxProps> = ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderRadius: 10,
-    // alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: 'gray',
-    marginVertical: 10,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-  },
-  text: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  subText: {
-    fontSize: 12,
-    color: 'gray',
-    marginTop: 2,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginTop: 15,
-  },
-  InnerContainer: {
-    flexDirection: 'row',
-    padding: 20,
-    // paddingVertical: 30,
-    width: '80%',
-  },
-  innerRowView: {
-    marginStart: 10,
-  },
-  loader: {
-    width: '95%',
-    borderRadius: 5,
-    height: 10,
-    alignSelf: 'center',
-    marginBottom: 10,
-  },
-});
 
 export default UploadBox;

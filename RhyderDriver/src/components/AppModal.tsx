@@ -4,6 +4,7 @@ import {BlurView} from '@react-native-community/blur';
 import AppButton, {ButtonType} from './AppButton';
 import AppText from './AppText';
 import AppImage from './AppImage';
+import useTheme from '../hooks/useTheme';
 
 // Enum for modal types
 export enum ModalType {
@@ -33,21 +34,61 @@ const AppModal: React.FC<AppModalProps> = ({
   title,
   subTitle,
 }) => {
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    modalContainerStyle: {
+      flex: 1,
+      backgroundColor: theme.colors.modal_background_color,
+      justifyContent: 'center',
+      paddingHorizontal: theme.spacing.spacing_10,
+    },
+    innerViewStyle: {
+      width: '100%',
+      backgroundColor: theme.colors.white,
+      borderRadius: theme.radius.borderRadius_10,
+      alignItems: 'center',
+    },
+    imageStyle: {
+      width: '100%',
+      height: 200,
+    },
+    buttonStyle: {
+      margin: theme.margin.margin_10,
+    },
+    primaryButtonViewStyle: {
+      flexDirection: 'row',
+    },
+    absolute: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+    },
+    textStyle: {
+      textAlign: 'center',
+    },
+  });
+
   return (
     <Modal visible={visible} transparent animationType="slide">
       <BlurView
         style={styles.absolute}
         blurType={'light'}
         blurAmount={1}
-        reducedTransparencyFallbackColor="red"
+        reducedTransparencyFallbackColor={theme.colors.red}
       />
       <View style={styles.modalContainerStyle}>
         <View style={styles.innerViewStyle}>
           <AppImage source={{uri: imageURL}} style={styles.imageStyle} />
-          <AppText size={20} bold color="#0cbaf3" style={styles.textStyle}>
+          <AppText size={theme.fontSize.font_20} bold style={styles.textStyle}>
             {title}
           </AppText>
-          <AppText size={18} color="gray" style={styles.textStyle}>
+          <AppText
+            size={theme.fontSize.font_18}
+            color={theme.colors.gray}
+            style={styles.textStyle}>
             {subTitle}
           </AppText>
           {modalType === ModalType.PRIMARY ? (
@@ -56,16 +97,22 @@ const AppModal: React.FC<AppModalProps> = ({
                 buttonTitle={cancelButtonTitle}
                 onPress={onCancelPress}
                 buttonType={ButtonType.PRIMARY}
-                buttonTitleStyle={{color: '#ffffff'}}
-                buttonStyle={{marginVertical: 5, width: '45%'}}
+                buttonTitleStyle={{color: theme.colors.white}}
+                buttonStyle={{
+                  marginVertical: theme.margin.margin_5,
+                  width: '45%',
+                }}
               />
               {onOkPress && okButtonTitle && (
                 <AppButton
                   buttonTitle={okButtonTitle}
                   buttonType={ButtonType.PRIMARY}
                   onPress={onOkPress}
-                  buttonStyle={{marginVertical: 5, width: '45%'}}
-                  buttonTitleStyle={{color: '#ffffff'}}
+                  buttonStyle={{
+                    marginVertical: theme.margin.margin_5,
+                    width: '45%',
+                  }}
+                  buttonTitleStyle={{color: theme.colors.white}}
                 />
               )}
             </View>
@@ -74,8 +121,8 @@ const AppModal: React.FC<AppModalProps> = ({
               buttonTitle={cancelButtonTitle}
               buttonType={ButtonType.PRIMARY}
               onPress={onCancelPress}
-              buttonStyle={{marginVertical: 5, width: '45%'}}
-              buttonTitleStyle={{color: '#ffffff'}}
+              buttonStyle={{marginVertical: theme.margin.margin_5, width: '45%'}}
+              buttonTitleStyle={{color: theme.colors.white}}
             />
           )}
         </View>
@@ -83,40 +130,5 @@ const AppModal: React.FC<AppModalProps> = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  modalContainerStyle: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-  },
-  innerViewStyle: {
-    width: '100%',
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  imageStyle: {
-    width: '100%',
-    height: 200,
-  },
-  buttonStyle: {
-    margin: 10,
-  },
-  primaryButtonViewStyle: {
-    flexDirection: 'row',
-  },
-  absolute: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-  textStyle: {
-    textAlign: 'center',
-  },
-});
 
 export default AppModal;

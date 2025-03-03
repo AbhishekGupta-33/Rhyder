@@ -15,8 +15,10 @@ import {
   authenticationSignUp,
   resetPasswordResponseData,
 } from '../redux/selector';
+import useTheme from '../../../hooks/useTheme';
 
 const CreatePassword: React.FC = (props: any) => {
+  const theme = useTheme()
   const [createPasswordDetail, setCreatePasswordDetail] = useState({
     password: '',
     passwordError: '',
@@ -93,6 +95,20 @@ const CreatePassword: React.FC = (props: any) => {
     );
   };
 
+  const styles = StyleSheet.create({
+    scrollView: {
+      flexGrow: 1,
+      justifyContent: 'flex-end',
+    },
+    container: {
+      flex: 1,
+    },
+    subheaderStyle: {
+      marginBottom: theme.margin.margin_10,
+      color: theme.colors.gray,
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -135,29 +151,11 @@ const CreatePassword: React.FC = (props: any) => {
             buttonTitle={AppString.screens.auth.forgotPassword.resetButton}
             onPress={handleCreatePassword}
             buttonType={ButtonType.PRIMARY}
-            buttonTitleStyle={styles.buttonTitleStyle}
           />
         </AuthenticationBottomView>
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flexGrow: 1,
-    justifyContent: 'flex-end',
-  },
-  container: {
-    flex: 1,
-  },
-  buttonTitleStyle: {
-    color: '#ffffff',
-  },
-  subheaderStyle: {
-    marginBottom: 10,
-    color: 'gray',
-  },
-});
 
 export default CreatePassword;
