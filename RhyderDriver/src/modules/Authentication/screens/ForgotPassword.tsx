@@ -14,8 +14,10 @@ import { callForgotPasswordApi } from '../redux/thunk';
 import { useDispatch, useSelector } from 'react-redux';
 import { forgetPasswordResponseData } from '../redux/selector';
 import { authenticationSignupNumber } from '../redux/authSlice';
+import useTheme from '../../../hooks/useTheme';
 
 const ForgotPassword: React.FC = (props: any) => {
+  const theme = useTheme()
   const [forgotPasswordDetail, setForgotPasswordDetail] = useState({
     emailOrPhoneNumber: '',
     emailOrPhoneNumberError: '',
@@ -67,6 +69,20 @@ const ForgotPassword: React.FC = (props: any) => {
     }
   };
 
+  const styles = StyleSheet.create({
+    scrollView: {
+      flexGrow: 1,
+      justifyContent: 'flex-end',
+    },
+    container: {
+      flex: 1,
+    },
+    subheaderStyle: {
+      marginBottom: theme.margin.margin_10,
+      color: theme.colors.gray,
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -99,29 +115,11 @@ const ForgotPassword: React.FC = (props: any) => {
             buttonTitle={AppString.screens.auth.forgotPassword.resetButton}
             onPress={handleForgot}
             buttonType={ButtonType.PRIMARY}
-            buttonTitleStyle={styles.buttonTitleStyle}
           />
         </AuthenticationBottomView>
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flexGrow: 1,
-    justifyContent: 'flex-end',
-  },
-  container: {
-    flex: 1,
-  },
-  buttonTitleStyle: {
-    color: '#ffffff',
-  },
-  subheaderStyle: {
-    marginBottom: 10,
-    color: 'gray',
-  },
-});
 
 export default ForgotPassword;

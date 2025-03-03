@@ -4,6 +4,7 @@ import {TextInput} from 'react-native-paper';
 import AppText from './AppText';
 import {removeSpaces} from '../utils/Validators';
 import AppErrorText from './AppErrorText';
+import useTheme from '../hooks/useTheme';
 
 interface AppTextInputProps {
   label: string;
@@ -17,7 +18,7 @@ interface AppTextInputProps {
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   isLastField?: boolean;
   [key: string]: any;
-  leftIcon: any
+  leftIcon: any;
 }
 
 const AppTextInput: React.FC<AppTextInputProps> = ({
@@ -34,7 +35,28 @@ const AppTextInput: React.FC<AppTextInputProps> = ({
   leftIcon,
   ...rest
 }) => {
+  const theme = useTheme();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const styles = StyleSheet.create({
+    container: {
+      marginBottom: theme.margin.margin_5,
+    },
+    label: {
+      fontSize: theme.fontSize.font_14,
+      fontWeight: '600',
+      color: theme.colors.input_label_color,
+      marginBottom: theme.margin.margin_5,
+    },
+    input: {
+      backgroundColor: theme.colors.white,
+    },
+    errorText: {
+      color: theme.colors.error,
+      fontSize: theme.fontSize.font_12,
+      marginTop: theme.margin.margin_5,
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -49,9 +71,12 @@ const AppTextInput: React.FC<AppTextInputProps> = ({
         placeholder={placeholder}
         keyboardType={keyboardType}
         autoCapitalize={autoCapitalize}
+        placeholderTextColor={theme.colors.gray}
         returnKeyType={isLastField ? 'done' : 'next'}
-        outlineColor={error ? 'red' : '#E0E0E0'}
-        activeOutlineColor={error ? 'red' : '#6200EE'}
+        outlineColor={
+          error ? theme.colors.red : theme.colors.textInputInActiveBorder
+        }
+        activeOutlineColor={error ? theme.colors.red : theme.colors.primary}
         left={leftIcon}
         right={
           secureTextEntry ? (
@@ -69,25 +94,5 @@ const AppTextInput: React.FC<AppTextInputProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 5,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 5,
-  },
-  input: {
-    backgroundColor: 'white',
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 12,
-    marginTop: 5,
-  },
-});
 
 export default AppTextInput;

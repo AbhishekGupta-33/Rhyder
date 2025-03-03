@@ -3,8 +3,70 @@ import { View, StyleSheet } from 'react-native';
 import { AppButton, AppImage, AppText, ButtonType } from '../../../components';
 import { appImage } from '../../../utils/Constants';
 import { AppString } from '../../../utils/AppString';
+import useTheme from '../../../hooks/useTheme';
 
 const Welcome: React.FC = (props: any) => {
+  const theme = useTheme()
+  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.white,
+    },
+    mapContainer: {
+      flex: 1,
+      backgroundColor: theme.colors.white,
+    },
+    contentContainer: {
+      flex: 1,
+      // alignItems: 'center',
+      paddingHorizontal: theme.margin.margin_20,
+    },
+    heading: {
+      fontSize: theme.fontSize.font_24,
+      fontWeight: 'bold',
+      color: theme.colors.black,
+      marginTop: theme.margin.margin_20,
+    },
+    brand: {
+      fontSize: theme.fontSize.font_32,
+      fontWeight: 'bold',
+      color: theme.colors.black,
+    },
+    description: {
+      color: theme.colors.gray,
+      marginVertical: theme.margin.margin_15,
+    },
+    signUpButton: {
+      width: '100%',
+      borderRadius: theme.radius.borderRadius_25,
+      overflow: 'hidden',
+      marginVertical: theme.margin.margin_10,
+    },
+    gradientButton: {
+      paddingVertical: theme.margin.margin_15,
+      alignItems: 'center',
+    },
+    signUpText: {
+      color: theme.colors.white,
+      fontWeight: 'bold',
+      fontSize: theme.fontSize.font_16,
+    },
+    loginButton: {
+      borderWidth: 1,
+      borderColor: theme.colors.purple,
+      borderRadius: theme.radius.borderRadius_25,
+      paddingVertical: theme.spacing.spacing_15,
+      width: '100%',
+      alignItems: 'center',
+    },
+    loginText: {
+      color: theme.colors.purple,
+      fontWeight: 'bold',
+      fontSize: theme.fontSize.font_16,
+    },
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
@@ -24,8 +86,8 @@ const Welcome: React.FC = (props: any) => {
             props.navigation.navigate(AppString.NavigationScreens.auth.SignupStep1);
           }}
           buttonType={ButtonType.PRIMARY}
-          buttonTitleStyle={{ color: '#ffffff' }}
-          buttonStyle={{ marginVertical: 5 }}
+          buttonTitleStyle={{ color: theme.colors.white }}
+          buttonStyle={{ marginVertical: theme.margin.margin_5 }}
         />
 
         <AppButton
@@ -34,70 +96,11 @@ const Welcome: React.FC = (props: any) => {
             props.navigation.navigate(AppString.NavigationScreens.auth.Login);
           }}
           buttonType={ButtonType.SECONDARY}
-          buttonTitleStyle={{ color: '#C471ED' }}
+          buttonTitleStyle={{ color: theme.colors.purple }}
         />
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  mapContainer: {
-    flex: 1,
-    backgroundColor: '#eee',
-  },
-  contentContainer: {
-    flex: 1,
-    // alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
-    marginTop: 20,
-  },
-  brand: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  description: {
-    color: '#666',
-    marginVertical: 15,
-  },
-  signUpButton: {
-    width: '100%',
-    borderRadius: 25,
-    overflow: 'hidden',
-    marginVertical: 10,
-  },
-  gradientButton: {
-    paddingVertical: 15,
-    alignItems: 'center',
-  },
-  signUpText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  loginButton: {
-    borderWidth: 1,
-    borderColor: '#C471ED',
-    borderRadius: 25,
-    paddingVertical: 15,
-    width: '100%',
-    alignItems: 'center',
-  },
-  loginText: {
-    color: '#C471ED',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-});
 
 export default Welcome;

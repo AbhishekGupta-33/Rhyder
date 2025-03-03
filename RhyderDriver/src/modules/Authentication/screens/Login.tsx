@@ -29,8 +29,10 @@ import {
   storage,
 } from '../../../utils/Storage/storage';
 import {STORAGE_KEY} from '../../../utils/Storage/storageKeys';
+import useTheme from '../../../hooks/useTheme';
 
 const Login: React.FC = (props: any) => {
+  const theme = useTheme();
   // State ------------------------------------------------
   const initalUserLoginDetail = {
     userName: '',
@@ -124,6 +126,51 @@ const Login: React.FC = (props: any) => {
     rememberMe,
   ]);
 
+  const styles = StyleSheet.create({
+    container: {flex: 1},
+    scrollView: {flexGrow: 1, justifyContent: 'flex-end'},
+    googleButton: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      padding: theme.spacing.spacing_12,
+    },
+    googleText: {
+      fontSize: theme.fontSize.font_16,
+      color: theme.colors.input_label_color,
+    },
+    dividerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical: theme.margin.margin_15,
+    },
+    line: {
+      flex: 1,
+      height: 1,
+      backgroundColor: theme.colors.textInputInActiveBorder,
+    },
+    orText: {
+      marginHorizontal: theme.margin.margin_10,
+      fontSize: theme.fontSize.font_14,
+      color: theme.colors.gray_light,
+    },
+    options: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    rememberMe: {flexDirection: 'row', alignItems: 'center'},
+    rememberText: {
+      fontSize: theme.fontSize.font_14,
+      color: theme.colors.gray_light,
+    },
+    forgotText: {fontSize: theme.fontSize.font_14, color: theme.colors.blue_60},
+    footerText: {textAlign: 'center', marginTop: theme.margin.margin_10},
+    linkText: {color: theme.colors.link},
+    buttonTitleStyle: {
+      color: theme.colors.purple,
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -170,7 +217,7 @@ const Login: React.FC = (props: any) => {
                 icon={
                   rememberMe ? 'checkbox-outline' : 'checkbox-blank-outline'
                 }
-                iconColor={'#FF5F9B'}
+                iconColor={theme.colors.pink}
                 size={20}
                 onPress={() => setRememberMe(!rememberMe)}
               />
@@ -214,32 +261,5 @@ const Login: React.FC = (props: any) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {flex: 1},
-  scrollView: {flexGrow: 1, justifyContent: 'flex-end'},
-  googleButton: {flexDirection: 'row', justifyContent: 'center', padding: 12},
-  googleText: {fontSize: 16, color: '#333'},
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 15,
-  },
-  line: {flex: 1, height: 1, backgroundColor: '#E0E0E0'},
-  orText: {marginHorizontal: 10, fontSize: 14, color: '#888'},
-  options: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  rememberMe: {flexDirection: 'row', alignItems: 'center'},
-  rememberText: {fontSize: 14, color: '#333'},
-  forgotText: {fontSize: 14, color: '#007BFF'},
-  footerText: {textAlign: 'center', marginTop: 10},
-  linkText: {color: '#53a1fd'},
-  buttonTitleStyle: {
-    color: '#C471ED',
-  },
-});
 
 export default Login;

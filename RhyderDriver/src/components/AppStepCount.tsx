@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import AppText from './AppText';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import useTheme from '../hooks/useTheme';
 
 interface StepCountProps {
   steps: string[];
@@ -14,6 +15,46 @@ const AppStepCount: React.FC<StepCountProps> = ({
   currentStep,
   style,
 }) => {
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    stepWrapper: {
+      alignItems: 'center',
+      flexDirection: 'column',
+      flex: 1,
+    },
+    line: {
+      position: 'absolute',
+      width: '100%',
+      height: 2,
+      backgroundColor: theme.colors.white,
+      top: 11,
+      left: '50%',
+      zIndex: 0,
+    },
+    completedLine: {
+      backgroundColor: theme.colors.black,
+    },
+    stepText: {
+      fontSize: theme.fontSize.font_12,
+      color: theme.colors.gray,
+      textAlign: 'center',
+      fontWeight: '500',
+    },
+    activeText: {
+      color: theme.colors.black,
+      fontWeight: '500',
+      fontSize: theme.fontSize.font_12,
+      textAlign: 'center',
+    },
+  });
+
   return (
     <View style={[styles.container, style]}>
       {steps.map((step, index) => {
@@ -23,9 +64,17 @@ const AppStepCount: React.FC<StepCountProps> = ({
         return (
           <View key={index} style={styles.stepWrapper}>
             {isCompleted ? (
-              <Icon name="dot-circle-o" size={25} color={'#000000'} />
+              <Icon
+                name="dot-circle-o"
+                size={theme.fontSize.font_25}
+                color={theme.colors.black}
+              />
             ) : (
-              <Icon name="circle-o" size={25} color={'gray'} />
+              <Icon
+                name="circle-o"
+                size={theme.fontSize.font_25}
+                color={theme.colors.gray}
+              />
             )}
 
             {!isLastStep && (
@@ -44,43 +93,5 @@ const AppStepCount: React.FC<StepCountProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  stepWrapper: {
-    alignItems: 'center',
-    flexDirection: 'column',
-    flex: 1,
-  },
-  line: {
-    position: 'absolute',
-    width: '100%',
-    height: 2,
-    backgroundColor: '#ccc',
-    top: 11,
-    left: '50%',
-    zIndex: 0,
-  },
-  completedLine: {
-    backgroundColor: '#000',
-  },
-  stepText: {
-    fontSize: 12,
-    color: '#666',
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-  activeText: {
-    color: '#000',
-    fontWeight: '500',
-    fontSize: 12,
-    textAlign: 'center',
-  },
-});
 
 export default AppStepCount;

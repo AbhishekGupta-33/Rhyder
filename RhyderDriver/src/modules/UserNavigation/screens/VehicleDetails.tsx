@@ -17,8 +17,10 @@ import {useDocuments} from '../../../context/DocumentsContext';
 import AppPreviewModal from '../../../components/AppPreviewModal';
 import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
 import {setVehicleData} from '../redux/userNavigationSlice';
+import useTheme from '../../../hooks/useTheme';
 
 const VehicleDetails: React.FC = (props: any) => {
+  const theme = useTheme();
   const [vehicleDetails, setVehicleDetails] = useState({
     make: '',
     model: '',
@@ -140,6 +142,27 @@ const VehicleDetails: React.FC = (props: any) => {
     [],
   );
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    text: {
+      fontSize: theme.fontSize.font_24,
+    },
+    scrollViewStyle: {
+      paddingHorizontal: theme.spacing.spacing_15,
+    },
+    steperStyle: {
+      marginTop: theme.margin.margin_20,
+    },
+    buttonStyle: {
+      marginTop: theme.margin.margin_10,
+      marginBottom: theme.margin.margin_30,
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollViewStyle}>
@@ -254,26 +277,5 @@ const VehicleDetails: React.FC = (props: any) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 24,
-  },
-  scrollViewStyle: {
-    paddingHorizontal: 15,
-  },
-  steperStyle: {
-    marginTop: 20,
-  },
-  buttonStyle: {
-    marginTop: 10,
-    marginBottom: 30,
-  },
-});
 
 export default VehicleDetails;
