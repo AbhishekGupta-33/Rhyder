@@ -41,7 +41,6 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
         const token = await getStorageItem(STORAGE_KEY.AUTH_TOKEN);
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
-          log('error-----', config.headers.Authorization,config);
         }
         return AxiosLogger.requestLogger(config);
       } catch (error) {
@@ -56,16 +55,15 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
   apiClient.interceptors.response.use(
     response => AxiosLogger.responseLogger(response),
     async error => {
-      log('error-----', error.response.config.url);
-      if (error.response.config.url === ApiName.auth.logout) {
+      if (error.response?.config?.url === ApiName.auth.logout) {
         throw Promise.reject(new Error('Something went wrong'));
       }
-      const originalRequest = error.config;
+      const originalRequest = error?.config;
       if (!originalRequest)
         return Promise.reject(AxiosLogger.errorLogger(error));
 
       if (
-        (error.response?.status === 401 || error.response?.status === 403) &&
+        (error?.response?.status === 401 || error?.response?.status === 403) &&
         !originalRequest._retry
       ) {
         if (isRefreshing) {
@@ -82,21 +80,14 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
 
         try {
           const refreshToken = await getStorageItem(STORAGE_KEY.REFRESH_TOKEN);
-          log('error-----refreshToken', refreshToken);
           if (!refreshToken) throw new Error('No refresh token available');
-          log('error-----newToken-Dtartttttt');
           const response = await getRefreshToken(refreshToken);
 
-          log('error-----newToken', response.isSuccess);
           if (!response.isSuccess) {
-            log('error-----newToken-2', response.isSuccess);
             try {
-              log('error-----newToken-3');
               await callLogoutApi(dispatch);
             } catch (error) {
-              log('error-----newToken-3Erro');
 
-              log('error---', error);
             }
 
             throw new Error(`${response.errors[0]}`);
@@ -121,7 +112,7 @@ export const AppProvider = ({children}: {children: ReactNode}) => {
 
       console.error(
         'API Error:',
-        error.response?.data || error.message || 'Unknown error',
+        error?.response?.data || error?.message || 'Unknown error',
       );
       return Promise.reject(AxiosLogger.errorLogger(error));
     },

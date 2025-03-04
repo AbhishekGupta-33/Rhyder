@@ -90,7 +90,7 @@ export const callLoginApi = async (credential: LoginRequest, dispatch: any) => {
       setStorageItem(STORAGE_KEY.REFRESH_TOKEN, response.data.refreshToken);
       dispatch(loginUserData(response.data));
     } else {
-      dispatch(authenticationError(response.errors[0]));
+      dispatch(authenticationError(response?.errors[0]));
     }
     dispatch(authenticationLoaded());
   } catch (error) {
