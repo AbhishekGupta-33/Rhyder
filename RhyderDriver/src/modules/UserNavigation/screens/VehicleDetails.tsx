@@ -1,108 +1,167 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import React, {useCallback, useMemo, useState} from 'react';
+import {View, StyleSheet, ScrollView, Alert} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppButton, AppHeader, AppText, ButtonType} from '../../../components';
+import {
+  AppButton,
+  AppHeader,
+  AppText,
+  AppTextInput,
+  ButtonType,
+} from '../../../components';
 import {AppString} from '../../../utils/AppString';
 import UploadBox from '../../Authentication/components/UploadBox';
-import {pick, types} from '@react-native-documents/picker';
-import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
-import {
-  isFileSizeValid,
-  prepareFormData,
-} from '../../../utils/ConstantTypes/globalFunctions';
-import {callUploadIdentityApi} from '../../Authentication/redux/thunk';
 import {useDispatch} from 'react-redux';
 import AppStepCount from '../../../components/AppStepCount';
-import {navigate} from '../../../utils/NavigationService';
-
-type eachDocumentType = {
-  id: number | undefined;
-  url: string | number | undefined;
-  name: string | number | undefined;
-  uploadStatus: boolean;
-  uploadProgress: number;
-};
-interface documentType {
-  vehicleImage: eachDocumentType;
-}
-
-const initialDocument = {
-  vehicleImage: {
-    id: 0,
-    url: '',
-    name: '',
-    uploadStatus: false,
-    uploadProgress: 0,
-  },
-};
+import {hasData} from '../../../utils/Validators';
+import {useDocuments} from '../../../context/DocumentsContext';
+import AppPreviewModal from '../../../components/AppPreviewModal';
+import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
+import {setVehicleData} from '../redux/userNavigationSlice';
+import useTheme from '../../../hooks/useTheme';
 
 const VehicleDetails: React.FC = (props: any) => {
-  const [documents, setDocuments] = useState<documentType>(initialDocument);
+  const theme = useTheme();
+  const [vehicleDetails, setVehicleDetails] = useState({
+    make: '',
+    model: '',
+    year: '',
+    vehiclePlateNo: '',
+    vehicleType: '',
+    seater: '',
+    color: '',
+    errors: {
+      make: '',
+      model: '',
+      year: '',
+      vehiclePlateNo: '',
+      vehicleType: '',
+      seater: '',
+      color: '',
+    },
+  });
   const dispatch = useDispatch();
+  const {documents, handleFileUpload, handleDeletePress} = useDocuments();
+  const [showPreview, setShowPreview] = useState(false);
+  const [preViewDocuments, setPreViewDocuments] = useState({});
 
-  // Handle File Upload
-  const handleFileUpload = async (type: string) => {
-    try {
-      if (type === 'vehicleImage') {
-        const [image] = await pick({
-          mode: 'open',
-          type: [types.images],
-          requestLongTermAccess: true,
-          transitionStyle: 'flipHorizontal',
-        });
-        if (image?.size && isFileSizeValid(image.size, 100)) {
-          let fileForm = prepareFormData({
-            uri: image.uri,
-            name: image.name,
-            type: image.type,
-          });
-          const response = await callUploadIdentityApi(
-            dispatch,
-            DocumentType[0],
-            fileForm,
-            progress => {
-              setDocuments({
-                ...documents,
-                vehicleImage: {
-                  ...documents.vehicleImage,
-                  uploadProgress: progress / 100,
-                },
-              });
-            },
-          );
-          console.log('response===', response);
+  const handleInputChange = useCallback((field: string, value: string) => {
+    let error = '';
+    type ErrorKeys =
+      | 'makeError'
+      | 'modelError'
+      | 'yearError'
+      | 'vehiclePlateNoError'
+      | 'vehicleTypeError'
+      | 'seaterError'
+      | 'colorError';
+    if (!hasData(value)) {
+      error =
+        AppString.screens.auth.vehicleDetails[`${field}Error` as ErrorKeys];
+    }
 
-          if (response) {
-            setDocuments({
-              ...documents,
-              vehicleImage: {
-                ...documents.vehicleImage,
-                id: response?.id,
-                url: response?.fileUrl,
-                name: response?.fileName,
-                uploadStatus: true,
-              },
-            });
-          } else {
-            setDocuments({
-              ...documents,
-              vehicleImage: {
-                ...documents.vehicleImage,
-                uploadProgress: 0,
-              },
-            });
-          }
-        } else {
-          Alert.alert(
-            'Invalid File',
-            'Photo must be between 400 KB and 800 KB.',
-          );
-        }
+    setVehicleDetails(prev => ({
+      ...prev,
+      [field]: value,
+      errors: {
+        ...prev.errors,
+        [field]: error,
+      },
+    }));
+  }, []);
+
+  const handleNext = () => {
+    let isValid = true;
+    let newErrors: any = {...vehicleDetails.errors};
+    Object.keys(vehicleDetails).forEach(field => {
+      if (field !== 'errors' && !hasData(vehicleDetails[field])) {
+        newErrors[field] =
+          AppString.screens.auth.vehicleDetails[`${field}Error`] ||
+          'This field is required';
+        isValid = false;
+      } else {
+        newErrors[field] = '';
       }
-    } catch (error) {
-      console.log('File Picker Error:', error);
+    });
+
+    setVehicleDetails(prev => ({
+      ...prev,
+      errors: newErrors,
+    }));
+
+    if (isValid) {
+      let vehicleData = {
+        make: vehicleDetails.make,
+        model: vehicleDetails.model,
+        year: vehicleDetails.year,
+        vehiclePlateNo: vehicleDetails.vehiclePlateNo,
+        vehicleType: vehicleDetails.vehicleType,
+        seater: vehicleDetails.seater,
+        color: vehicleDetails.color,
+      };
+      dispatch(setVehicleData(vehicleData));
+      props.navigation.navigate('vehicleDocuments');
+    } else {
+      Alert.alert('Validation Error', 'Please fill in all required fields.');
     }
   };
+
+  const handleViewPress = (docUrl: string) => {
+    if (docUrl) {
+      const finalURL = `${'https://rhyderapi.k-asoftech.com'}${docUrl}`;
+      setPreViewDocuments(finalURL);
+      setShowPreview(true);
+    } else {
+      Alert.alert('Error', 'No document available to view.');
+    }
+  };
+
+  const InputField = useMemo(
+    () =>
+      ({
+        label,
+        placeholder,
+        value,
+        onChangeText,
+        error,
+        secureTextEntry,
+        disabled,
+        isLastField,
+      }: any) =>
+        (
+          <AppTextInput
+            label={label}
+            placeholder={placeholder}
+            value={value}
+            onChangeText={onChangeText}
+            error={error}
+            secureTextEntry={secureTextEntry}
+            disabled={disabled}
+            isLastField={isLastField}
+          />
+        ),
+    [],
+  );
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    text: {
+      fontSize: theme.fontSize.font_24,
+    },
+    scrollViewStyle: {
+      paddingHorizontal: theme.spacing.spacing_15,
+    },
+    steperStyle: {
+      marginTop: theme.margin.margin_20,
+    },
+    buttonStyle: {
+      marginTop: theme.margin.margin_10,
+      marginBottom: theme.margin.margin_30,
+    },
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -126,50 +185,97 @@ const VehicleDetails: React.FC = (props: any) => {
             fileSize={
               AppString.screens.auth.vehicleDetails.sections[0].fileSize
             }
-            // uploadProgress={documents.image.uploadProgress}
-            // uploadStatus={documents.image.uploadStatus}
+            uploadProgress={documents.vehicleImage.uploadProgress}
+            uploadStatus={documents.vehicleImage.uploadStatus}
             onPress={() =>
               handleFileUpload(
                 AppString.screens.auth.vehicleDetails.sections[0].id,
               )
             }
-            // onDeletePress={() =>
-            //   handleDeletePress(documents.image, DocumentType[0])
-            // }
-            // onViewPress={() => {
-            //   handleViewPress(documents.image.url);
-            // }}
+            onDeletePress={() =>
+              handleDeletePress(
+                documents.vehicleImage,
+                DocumentType.VehichleImages,
+              )
+            }
+            onViewPress={() => {
+              handleViewPress(documents.vehicleImage.url);
+            }}
+          />
+          <InputField
+            label={AppString.screens.auth.vehicleDetails.make}
+            placeholder={AppString.screens.auth.vehicleDetails.make}
+            value={vehicleDetails.make}
+            onChangeText={(text: string) => handleInputChange('make', text)}
+            error={vehicleDetails.errors.make}
+          />
+          <InputField
+            label={AppString.screens.auth.vehicleDetails.model}
+            placeholder={AppString.screens.auth.vehicleDetails.model}
+            value={vehicleDetails.model}
+            onChangeText={(text: string) => handleInputChange('model', text)}
+            error={vehicleDetails.errors.model}
+          />
+          <InputField
+            label={AppString.screens.auth.vehicleDetails.year}
+            placeholder={AppString.screens.auth.vehicleDetails.year}
+            value={vehicleDetails.year}
+            onChangeText={(text: string) => handleInputChange('year', text)}
+            error={vehicleDetails.errors.year}
+          />
+          <InputField
+            label={AppString.screens.auth.vehicleDetails.vehicleNumber}
+            placeholder={AppString.screens.auth.vehicleDetails.vehicleNumber}
+            value={vehicleDetails.vehiclePlateNo}
+            onChangeText={(text: string) =>
+              handleInputChange('vehiclePlateNo', text)
+            }
+            error={vehicleDetails.errors.vehiclePlateNo}
+          />
+          <InputField
+            label={AppString.screens.auth.vehicleDetails.vehicleType}
+            placeholder={AppString.screens.auth.vehicleDetails.vehicleType}
+            value={vehicleDetails.vehicleType}
+            onChangeText={(text: string) =>
+              handleInputChange('vehicleType', text)
+            }
+            error={vehicleDetails.errors.vehicleType}
+          />
+          <InputField
+            label={AppString.screens.auth.vehicleDetails.seater}
+            placeholder={AppString.screens.auth.vehicleDetails.seater}
+            value={vehicleDetails.seater}
+            onChangeText={(text: string) => handleInputChange('seater', text)}
+            error={vehicleDetails.errors.seater}
+          />
+          <InputField
+            label={AppString.screens.auth.vehicleDetails.color}
+            placeholder={AppString.screens.auth.vehicleDetails.color}
+            value={vehicleDetails.color}
+            onChangeText={(text: string) => handleInputChange('color', text)}
+            error={vehicleDetails.errors.color}
           />
           <AppButton
             buttonTitle={AppString.screens.auth.vehicleDetails.button}
             onPress={() => {
-              navigate(AppString.NavigationScreens.user.vehicleDocuments);
+              handleNext();
             }}
             buttonType={ButtonType.PRIMARY}
-            buttonTitleStyle={styles.buttonTitleStyle}
             buttonStyle={styles.buttonStyle}
           />
         </View>
+        {showPreview && (
+          <AppPreviewModal
+            visible={showPreview}
+            onCancelPress={() => {
+              setShowPreview(false);
+            }}
+            selectedDocument={preViewDocuments}
+          />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 24,
-  },
-  scrollViewStyle: {
-    paddingHorizontal: 15,
-  },
-  steperStyle: {
-    marginTop: 20,
-  },
-});
 
 export default VehicleDetails;

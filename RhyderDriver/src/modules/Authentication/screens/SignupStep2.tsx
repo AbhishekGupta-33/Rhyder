@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
-import { IconButton } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useState, useCallback, useMemo, useEffect} from 'react';
+import {View, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
+import {IconButton} from 'react-native-paper';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   AppButton,
   AppHeader,
@@ -10,16 +10,22 @@ import {
   AppTextInput,
   ButtonType,
 } from '../../../components';
-import { AppString } from '../../../utils/AppString';
-import { hasData, hasValidateEmail } from '../../../utils/Validators';
-import { authenticationLoading, authenticationSignUp, signUpResponseData } from '../redux/selector';
-import { callSignupApi } from '../redux/thunk';
+import {AppString} from '../../../utils/AppString';
+import {hasData, hasValidateEmail} from '../../../utils/Validators';
+import {
+  authenticationLoading,
+  authenticationSignUp,
+  signUpResponseData,
+} from '../redux/selector';
+import {callSignupApi} from '../redux/thunk';
 import Loader from '../../../components/AppLoader';
-import { appImage } from '../../../utils/Constants';
-import { RoleType } from '../../../utils/ConstantTypes/authTypes';
-import { signupResponse } from '../redux/authSlice';
+import {appImage} from '../../../utils/Constants';
+import {RoleType} from '../../../utils/ConstantTypes/authTypes';
+import {signupResponse} from '../redux/authSlice';
+import useTheme from '../../../hooks/useTheme';
 
 const SignupStep2: React.FC = (props: any) => {
+  const theme = useTheme();
   const [userDetails, setUserDetails] = useState({
     firstName: '',
     lastName: '',
@@ -36,20 +42,24 @@ const SignupStep2: React.FC = (props: any) => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const { phoneNumber } = useSelector(authenticationSignUp);
-  const signUpSuccessResponse = useSelector(signUpResponseData)
+  const {phoneNumber} = useSelector(authenticationSignUp);
+  const signUpSuccessResponse = useSelector(signUpResponseData);
   const isAuthenticationLoading = useSelector(authenticationLoading);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (signUpSuccessResponse) {
       setShowModal(true);
     }
-  }, [signUpSuccessResponse])
+  }, [signUpSuccessResponse]);
 
   const handleInputChange = useCallback((field: string, value: string) => {
     let error = '';
-    type ErrorKeys = "firstNameError" | "lastNameError" | "emailError" | "passwordError";
+    type ErrorKeys =
+      | 'firstNameError'
+      | 'lastNameError'
+      | 'emailError'
+      | 'passwordError';
     if (!hasData(value)) {
       error = AppString.screens.auth.signupStep2[`${field}Error` as ErrorKeys];
     } else if (field === 'email' && !hasValidateEmail(value)) {
@@ -67,45 +77,96 @@ const SignupStep2: React.FC = (props: any) => {
   }, []);
 
   const validateEmail = useCallback((email: string) => {
-    return hasValidateEmail(email) ? '' : AppString.screens.auth.signupStep2.emailError;
+    return hasValidateEmail(email)
+      ? ''
+      : AppString.screens.auth.signupStep2.emailError;
   }, []);
 
   const handleSignupStep2 = useCallback(() => {
-    const { firstName, lastName, email, password } = userDetails;
+    const {firstName, lastName, email, password} = userDetails;
     const errors = {
-      firstName: hasData(firstName) ? '' : AppString.screens.auth.signupStep2.firstNameError,
-      lastName: hasData(lastName) ? '' : AppString.screens.auth.signupStep2.lastNameError,
-      email: hasData(email) ? validateEmail(email) : AppString.screens.auth.signupStep2.emailError,
-      password: hasData(password) ? '' : AppString.screens.auth.signupStep2.passwordError,
+      firstName: hasData(firstName)
+        ? ''
+        : AppString.screens.auth.signupStep2.firstNameError,
+      lastName: hasData(lastName)
+        ? ''
+        : AppString.screens.auth.signupStep2.lastNameError,
+      email: hasData(email)
+        ? validateEmail(email)
+        : AppString.screens.auth.signupStep2.emailError,
+      password: hasData(password)
+        ? ''
+        : AppString.screens.auth.signupStep2.passwordError,
     };
 
     if (!rememberMe || Object.values(errors).some(error => error !== '')) {
-      setUserDetails(prev => ({ ...prev, errors }));
+      setUserDetails(prev => ({...prev, errors}));
     } else {
       const userSignupData = {
-        firstName:userDetails.firstName,
-        lastName:userDetails.lastName,
-        phoneNumber:phoneNumber,
-        email:userDetails.email,
+        firstName: userDetails.firstName,
+        lastName: userDetails.lastName,
+        phoneNumber: phoneNumber,
+        email: userDetails.email,
         password,
-        role: RoleType[1]
+        role: RoleType.Driver,
       };
-      callSignupApi(userSignupData, dispatch)
+      callSignupApi(userSignupData, dispatch);
     }
   }, [userDetails, phoneNumber, rememberMe, validateEmail]);
 
-  const InputField = useMemo(() => ({ label, placeholder, value, onChangeText, error, secureTextEntry, disabled, isLastField }: any) => (
-    <AppTextInput
-      label={label}
-      placeholder={placeholder}
-      value={value}
-      onChangeText={onChangeText}
-      error={error}
-      secureTextEntry={secureTextEntry}
-      disabled={disabled}
-      isLastField={isLastField}
-    />
-  ), []);
+  const InputField = useMemo(
+    () =>
+      ({
+        label,
+        placeholder,
+        value,
+        onChangeText,
+        error,
+        secureTextEntry,
+        disabled,
+        isLastField,
+      }: any) =>
+        (
+          <AppTextInput
+            label={label}
+            placeholder={placeholder}
+            value={value}
+            onChangeText={onChangeText}
+            error={error}
+            secureTextEntry={secureTextEntry}
+            disabled={disabled}
+            isLastField={isLastField}
+          />
+        ),
+    [],
+  );
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.white,
+    },
+    scrollView: {
+      flexGrow: 1,
+      paddingHorizontal: theme.spacing.spacing_20,
+      backgroundColor: theme.colors.white,
+    },
+    rememberMe: {flexDirection: 'row', alignItems: 'center'},
+    confirmationText: {
+      fontSize: theme.fontSize.font_14,
+      color: theme.colors.input_label_color,
+      maxWidth: '85%',
+    },
+    subHeaderStyle: {
+      color: theme.colors.gray,
+      fontSize: theme.fontSize.font_12,
+      marginVertical: theme.margin.margin_10,
+    },
+    buttonStyle: {
+      marginBottom: theme.margin.margin_20,
+      backgroundColor: theme.colors.red,
+    },
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -121,9 +182,13 @@ const SignupStep2: React.FC = (props: any) => {
 
           <InputField
             label={AppString.screens.auth.signupStep2.firstNameLabel}
-            placeholder={AppString.screens.auth.signupStep2.firstNamePlaceholder}
+            placeholder={
+              AppString.screens.auth.signupStep2.firstNamePlaceholder
+            }
             value={userDetails.firstName}
-            onChangeText={(text: string) => handleInputChange('firstName', text)}
+            onChangeText={(text: string) =>
+              handleInputChange('firstName', text)
+            }
             error={userDetails.errors.firstName}
           />
           <InputField
@@ -159,7 +224,7 @@ const SignupStep2: React.FC = (props: any) => {
           <View style={styles.rememberMe}>
             <IconButton
               icon={rememberMe ? 'checkbox-outline' : 'checkbox-blank-outline'}
-              iconColor={'#FF5F9B'}
+              iconColor={theme.colors.pink}
               size={20}
               onPress={() => setRememberMe(!rememberMe)}
             />
@@ -172,7 +237,6 @@ const SignupStep2: React.FC = (props: any) => {
           buttonTitle={AppString.screens.auth.signupStep2.signUpButton}
           onPress={handleSignupStep2}
           buttonType={ButtonType.PRIMARY}
-          buttonTitleStyle={styles.buttonTitleStyle}
           buttonStyle={styles.buttonStyle}
         />
         <AppModal
@@ -181,9 +245,9 @@ const SignupStep2: React.FC = (props: any) => {
           subTitle={AppString.screens.auth.signupSuccessModal.subTitle}
           visible={showModal}
           onCancelPress={() => {
-            setShowModal(false)
+            setShowModal(false);
             dispatch(signupResponse(''));
-            props.navigation.navigate(AppString.NavigationScreens.auth.Welcome)
+            props.navigation.navigate(AppString.NavigationScreens.auth.Welcome);
           }}
           cancelButtonTitle={AppString.screens.auth.signupSuccessModal.okButton}
         />
@@ -192,27 +256,5 @@ const SignupStep2: React.FC = (props: any) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  scrollView: { flexGrow: 1, paddingHorizontal: 20, backgroundColor: 'white' },
-  rememberMe: { flexDirection: 'row', alignItems: 'center' },
-  confirmationText: { fontSize: 14, color: '#333', maxWidth: '85%' },
-  buttonTitleStyle: {
-    color: 'white',
-  },
-  subHeaderStyle: {
-    color: 'gray',
-    fontSize: 12,
-    marginVertical: 10,
-  },
-  buttonStyle: {
-    marginBottom: 20,
-    backgroundColor: 'red',
-  },
-});
 
 export default SignupStep2;

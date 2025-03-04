@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { ImageBackground, StyleSheet, Alert} from 'react-native';
+import {ImageBackground, StyleSheet, Alert} from 'react-native';
 import {
   AppButton,
   AppHeader,
@@ -20,9 +20,11 @@ import AuthenticationBottomView from '../components/AuthenticationBottomView';
 import {authenticationLoading, otpSendResponseData} from '../redux/selector';
 import {callSendOtpApi} from '../redux/thunk';
 import Loader from '../../../components/AppLoader';
-import { TextInput } from 'react-native-paper';
+import {TextInput} from 'react-native-paper';
+import useTheme from '../../../hooks/useTheme';
 
 const SignupStep1: React.FC = (props: any) => {
+  const theme = useTheme();
   const dispatch = useDispatch();
   const [userSignupStep1Detail, setUserSignupStep1Detail] = useState({
     phoneNumber: '',
@@ -34,19 +36,15 @@ const SignupStep1: React.FC = (props: any) => {
   useEffect(() => {
     if (otpSendSuccessResponse) {
       dispatch(authenticationSignupNumber(userSignupStep1Detail.phoneNumber));
-      Alert.alert(
-        '',
-        `${otpSendSuccessResponse}`,
-        [
-          {
-            text: 'OK',
-            onPress: () =>{ 
-              props.navigation.navigate('signupVerification')
-              dispatch(otpSendResponse(''));
-            },
+      Alert.alert('', `${otpSendSuccessResponse}`, [
+        {
+          text: 'OK',
+          onPress: () => {
+            props.navigation.navigate('signupVerification');
+            dispatch(otpSendResponse(''));
           },
-        ],
-      );
+        },
+      ]);
     }
   }, [otpSendSuccessResponse]);
 
@@ -73,6 +71,28 @@ const SignupStep1: React.FC = (props: any) => {
     }));
   };
 
+  const styles = StyleSheet.create({
+    background: {
+      flex: 1,
+      justifyContent: 'flex-end',
+    },
+    container: {
+      paddingHorizontal: theme.margin.margin_20,
+      paddingBottom: theme.spacing.spacing_20,
+      paddingTop: theme.spacing.spacing_10,
+      backgroundColor: theme.colors.white,
+      borderTopLeftRadius: theme.radius.borderRadius_20,
+      borderTopRightRadius: theme.radius.borderRadius_20,
+    },
+    footerText: {
+      textAlign: 'center',
+      marginTop: theme.margin.margin_10,
+    },
+    linkText: {
+      color: theme.colors.link,
+    },
+  });
+
   return (
     <ImageBackground
       source={{uri: appImage.staticImage}}
@@ -97,11 +117,7 @@ const SignupStep1: React.FC = (props: any) => {
           onChangeText={fetchInputfieldPhoneNumberData}
           error={userSignupStep1Detail.phoneNumberError}
           isLastField={true}
-          leftIcon={
-            <TextInput.Icon
-              icon={'numeric-positive-1'}
-            />
-          }
+          leftIcon={<TextInput.Icon icon={'numeric-positive-1'} />}
           // required={true}
         />
 
@@ -109,8 +125,7 @@ const SignupStep1: React.FC = (props: any) => {
           buttonTitle={AppString.screens.auth.signupStep1.signupButton}
           onPress={handleSignupStep1}
           buttonType={ButtonType.PRIMARY}
-          buttonTitleStyle={{color: '#ffffff'}}
-          buttonStyle={{marginVertical: 5}}
+          buttonStyle={{marginVertical: theme.margin.margin_5}}
         />
 
         <AppText style={styles.footerText}>
@@ -127,27 +142,5 @@ const SignupStep1: React.FC = (props: any) => {
     </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  container: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    paddingTop: 10,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  footerText: {
-    textAlign: 'center',
-    marginTop: 10,
-  },
-  linkText: {
-    color: '#53a1fd',
-  },
-});
 
 export default SignupStep1;

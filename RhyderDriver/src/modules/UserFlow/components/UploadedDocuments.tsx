@@ -11,6 +11,7 @@ import {useDispatch} from 'react-redux';
 import {log} from '../../../utils/Logger';
 import {DocumentType} from '../../../utils/ConstantTypes/authTypes';
 import AppPreviewModal from '../../../components/AppPreviewModal';
+import useTheme from '../../../hooks/useTheme';
 
 type eachDocumentType = {
   id: number | undefined;
@@ -42,9 +43,10 @@ const initialDocument = {
 };
 
 const UploadDocuments: React.FC = () => {
+  const theme = useTheme();
   const [documents, setDocuments] = useState<documentType>(initialDocument);
   const dispatch = useDispatch();
-  const [showPreview, setShowPreview] = useState<Boolean>(false);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
   const [preViewDocuments, setPreViewDocuments] = useState({});
 
   useEffect(() => {
@@ -140,7 +142,11 @@ const UploadDocuments: React.FC = () => {
               onPress={() => {
                 handleDeletePress(documents.image, DocumentType[0]);
               }}>
-              <IconButton icon="delete" iconColor="#FF69B4" size={15} />
+              <IconButton
+                icon="delete"
+                iconColor={theme.colors.pink}
+                size={15}
+              />
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
@@ -164,7 +170,11 @@ const UploadDocuments: React.FC = () => {
               onPress={() => {
                 handleDeletePress(documents.idProof, DocumentType[1]);
               }}>
-              <IconButton icon="delete" iconColor="#FF69B4" size={15} />
+              <IconButton
+                icon="delete"
+                iconColor={theme.colors.pink}
+                size={15}
+              />
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
@@ -188,7 +198,11 @@ const UploadDocuments: React.FC = () => {
               onPress={() => {
                 handleDeletePress(documents.genderProof, DocumentType[2]);
               }}>
-              <IconButton icon="delete" iconColor="#FF69B4" size={15} />
+              <IconButton
+                icon="delete"
+                iconColor={theme.colors.pink}
+                size={15}
+              />
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
